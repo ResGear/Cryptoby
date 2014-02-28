@@ -10,8 +10,8 @@ It uses two forms of encryption:
 These cryptograhic algorithms are directly implemented in the source code of the tool.  
 That means, it doesn't use any cryptographic libraries from Java or elsewhere. Further needed stuff is implemented:
 
-* Prime Number Test with Miller-Rabin (http://de.wikipedia.org/wiki/Miller-Rabin-Test)
-* Key Generator with SHA-3 (http://de.wikipedia.org/wiki/SHA-3)
+* __Prime Number Test__ with Miller-Rabin (http://de.wikipedia.org/wiki/Miller-Rabin-Test)
+* __Key Generator__ with SHA-3 (http://de.wikipedia.org/wiki/SHA-3)
 
 ## Project Setup
 
