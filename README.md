@@ -1,7 +1,5 @@
-Cryptoby
+Project: Cryptoby
 ========
-
-# _Project_
 
 Cryptoby is a simple Java Tool for end- and dectyption of files.
 
