@@ -5,17 +5,21 @@ Cryptoby is a simple Java Tool for end- and dectyption of files.
 
 It uses two forms of encyrption:
 
-1. A symmetric encyrption based on AES ??
-2. A asymmetric encryption based on ?? (ECDH, ECDSA)
+* A symmetric encyrption based on AES-256 (http://www.cryptopp.com/wiki/Aes)
+* A asymmetric encryption based on ECDH (http://www.cryptopp.com/wiki/ECMQV)
 
-These cryptograhic algorithms are directly implemented in the source code of tool. That means, it doesn't use any cryptographic libraries from Java or elsewhere. Further, the random number generator and primnumber test are also implemented.
+These cryptograhic algorithms are directly implemented in the source code of the tool. That means, it doesn't use any cryptographic libraries from Java or elsewhere. Further needed stuff is implemented:
+
+* Random Number Generator for private Key Prime Number Test: http://de.wikipedia.org/wiki/SHA-3
+* Prime Number Test for public Key (Miller-Rabin)
 
 ## Project Setup
 
-_How do I, as a developer, start working on the project?_ 
-
-1. _What dependencies does it have (where are they expressed) and how do I install them?_
-2. _How can I see the project working before I change anything?_
+1. Project Methode: Scum (http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1)
+2. IDE: Netbeans 8 beta
+3. Language: Java (JDK 1.7)
+4. Build-Management-Tool: Maven
+5. Design Pattern: Stragety http://de.wikipedia.org/wiki/Strategie_(Entwurfsmuster)
 
 ## Testing
 
@@ -63,4 +67,3 @@ _Examples of common tasks_
 Links:
 * http://www.codeplanet.eu/tutorials/cpp/51-advanced-encryption-standard.html AES implementation explained
 * http://www.codeplanet.eu/files/flash/Rijndael_Animation_v4_eng.swf Flash AES eexplained
-* http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1 Scrum
