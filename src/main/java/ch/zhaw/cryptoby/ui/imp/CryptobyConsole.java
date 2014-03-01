@@ -6,10 +6,13 @@
 
 package ch.zhaw.cryptoby.ui.imp;
 
+import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
+
+
 /**
  *
  * @author Toby
  */
-public class CryptobyConsole {
+public class CryptobyConsole implements CryptobyUI {
     
 }

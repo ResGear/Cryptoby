@@ -12,4 +12,7 @@ package ch.zhaw.cryptoby.prime.itf;
  */
 public interface PrimeTest {
     
+    public boolean isPrime();
+    public int getProbability();
+    
 }
