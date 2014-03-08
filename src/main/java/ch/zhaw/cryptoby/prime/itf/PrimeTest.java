@@ -6,13 +6,16 @@
 
 package ch.zhaw.cryptoby.prime.itf;
 
+import java.math.BigInteger;
+
 /**
  *
  * @author Toby
  */
 public interface PrimeTest {
     
-    public boolean isPrime();
-    public int getProbability();
+    public boolean isPrime(BigInteger n);
+    public boolean isPrime(BigInteger number, int rounds);
+    public double  getProbability();
     
 }
