@@ -16,7 +16,7 @@ That means, it doesn't use any cryptographic libraries from Java or elsewhere. F
 ## Project Setup
 
 1. Project Methode: Scum (http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1)
-2. IDE: Netbeans 8 beta
+2. IDE: Netbeans 8
 3. Language: Java (JDK 1.7)
 4. Build-Management-Tool: Maven
 5. Design Pattern: Stragety http://de.wikipedia.org/wiki/Strategie_(Entwurfsmuster)
@@ -28,11 +28,6 @@ _How do I run the project's automated tests?_
 ### Unit Tests
 
 1. `rake spec`
-
-### Integration Tests
-
-1. _Run other local services / provide credentials for external services._
-2. `rake spec:integration`
 
 ## Deploying
 
