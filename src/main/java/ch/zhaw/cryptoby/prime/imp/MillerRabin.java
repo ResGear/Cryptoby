@@ -8,11 +8,10 @@ package ch.zhaw.cryptoby.prime.imp;
 
 import ch.zhaw.cryptoby.prime.itf.PrimeTest;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * http://www4.in.tum.de/lehre/vorlesungen/perlen/SS08/Unterlagen/Miller-Rabin.pdf
+ * 
  * @author Toby
  */
 public class MillerRabin implements PrimeTest {
@@ -20,8 +19,6 @@ public class MillerRabin implements PrimeTest {
         public static final BigInteger ZERO = BigInteger.ZERO;  // declaring constants
         public static final BigInteger ONE  = BigInteger.ONE;
         public static final BigInteger TWO = BigInteger.valueOf(2);
-        BigInteger testNumber;
-        SecureRandom random;
         int rounds;
         
         public MillerRabin(){
@@ -43,7 +40,7 @@ public class MillerRabin implements PrimeTest {
 		// Screen out n if our random number happens to share a factor with n.
 		if (!number.gcd(temp).equals(BigInteger.ONE)) return false;
 		// For debugging, prints out the integer to test with.
-//		System.out.println("Testing with " + temp);
+		//System.out.println("Testing with " + temp);
 		
 		BigInteger base = number.subtract(BigInteger.ONE);
 		BigInteger TWO = new BigInteger("2");
@@ -104,12 +101,12 @@ public class MillerRabin implements PrimeTest {
 
     @Override
     public boolean isPrime(BigInteger number, int rounds) {
-        return this.millerRabin(number, rounds);
+        return MillerRabin.millerRabin(number, rounds);
     }
 
     @Override
     public boolean isPrime(BigInteger number) {
-        return this.millerRabin(number, 5);
+        return MillerRabin.millerRabin(number, 5);
     }
 
     
