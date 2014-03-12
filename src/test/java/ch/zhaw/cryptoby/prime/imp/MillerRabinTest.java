@@ -52,6 +52,11 @@ public class MillerRabinTest {
         boolean expResult = true;
         boolean result = MillerRabin.millerRabin(number, rounds);
         assertEquals(expResult, result);
+        // positive false test
+        number = BigInteger.ONE.add(number);
+        expResult = false;
+        result = MillerRabin.millerRabin(number, rounds);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -71,13 +76,18 @@ public class MillerRabinTest {
      */
     @Test
     public void testIsPrime_BigInteger_int() {
-        System.out.println("isPrime");
+        System.out.println("isPrimeParaRounds");
         SecureRandom random = new SecureRandom();
         BigInteger number = BigInteger.probablePrime(1000, random);
         int rounds = 10;
         MillerRabin instance = new MillerRabin();
         boolean expResult = true;
         boolean result = instance.isPrime(number, rounds);
+        assertEquals(expResult, result);
+        // positive false test
+        number = BigInteger.ONE.add(number);
+        expResult = false;
+        result = instance.isPrime(number, rounds);
         assertEquals(expResult, result);
     }
 
@@ -92,6 +102,11 @@ public class MillerRabinTest {
         MillerRabin instance = new MillerRabin();
         boolean expResult = true;
         boolean result = instance.isPrime(number);
+        assertEquals(expResult, result);
+        // positive false test
+        number = BigInteger.ONE.add(number);
+        expResult = false;
+        result = instance.isPrime(number);
         assertEquals(expResult, result);
     }
     
