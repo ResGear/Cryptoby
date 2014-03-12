@@ -20,13 +20,16 @@ public class MillerRabin implements PrimeTest {
         public static final BigInteger ONE  = BigInteger.ONE;
         public static final BigInteger TWO = BigInteger.valueOf(2);
         int rounds;
+        double probably;
         
         public MillerRabin(){
             this.rounds = 5;
+            this.probably = 0;
         }
         
         public MillerRabin(int rounds){
-            this.rounds = rounds;
+            this.rounds = 5;
+            this.probably = 0;
         }
         
         private static boolean runMillerRabin(BigInteger number, SecureRandom random) {
@@ -86,28 +89,52 @@ public class MillerRabin implements PrimeTest {
 		SecureRandom random = new SecureRandom();
 		
 		// Run Miller-Rabin numTimes number of times.
-		for (int i=0; i<rounds; i++) 
-			if (!runMillerRabin(number,random)) return false;
-			
+		for (int i=0; i<rounds; i++) {
+			if (!runMillerRabin(number,random)) {
+                            return false;
+                        }
+                }
 		// If we get here, we assume n is prime. This will be incorrect with
 		// a probability no greater than 1/4^numTimes.
 		return true;
 	}
 
+    private double calcProbability(int rounds) {
+         return 100 - (1/(4^rounds));
+    }
+        
     @Override
     public double getProbability() {
-        return 100-(1/4^this.rounds); // in percent
-    }
-
-    @Override
-    public boolean isPrime(BigInteger number, int rounds) {
-        return MillerRabin.millerRabin(number, rounds);
+        return this.probably;
     }
 
     @Override
     public boolean isPrime(BigInteger number) {
-        return MillerRabin.millerRabin(number, 5);
+        boolean result = MillerRabin.millerRabin(number, this.rounds);
+        if(result==false){
+            this.probably = this.calcProbability(0);
+        } else {
+            this.probably = this.calcProbability(this.rounds);
+        }
+        return result;
     }
 
+    public void setRounds(int rounds) {
+        this.rounds = rounds;
+    }
+
+    public int getRounds() {
+        return rounds;
+    }
+
+    public double getProbably() {
+        return probably;
+    }
+
+    public void setProbably(double probably) {
+        this.probably = probably;
+    }
+    
+    
     
 }

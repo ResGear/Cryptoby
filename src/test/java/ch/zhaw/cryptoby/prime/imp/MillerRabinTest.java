@@ -75,26 +75,6 @@ public class MillerRabinTest {
      * Test of isPrime method, of class MillerRabin.
      */
     @Test
-    public void testIsPrime_BigInteger_int() {
-        System.out.println("isPrimeParaRounds");
-        SecureRandom random = new SecureRandom();
-        BigInteger number = BigInteger.probablePrime(1000, random);
-        int rounds = 10;
-        MillerRabin instance = new MillerRabin();
-        boolean expResult = true;
-        boolean result = instance.isPrime(number, rounds);
-        assertEquals(expResult, result);
-        // positive false test
-        number = BigInteger.ONE.add(number);
-        expResult = false;
-        result = instance.isPrime(number, rounds);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of isPrime method, of class MillerRabin.
-     */
-    @Test
     public void testIsPrime_BigInteger() {
         System.out.println("isPrime");
         SecureRandom random = new SecureRandom();

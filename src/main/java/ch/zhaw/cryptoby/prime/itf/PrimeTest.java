@@ -14,8 +14,7 @@ import java.math.BigInteger;
  */
 public interface PrimeTest {
     
-    public boolean isPrime(BigInteger n);
-    public boolean isPrime(BigInteger number, int rounds);
+    public boolean isPrime(BigInteger number);
     public double  getProbability();
     
 }
