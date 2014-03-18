@@ -103,7 +103,7 @@ public class CryptobyConsole implements CryptobyUI {
                 scanner.next();
             }
             number = scanner.nextBigInteger();
-        } while (number.intValue() <= 0);
+        } while (number.compareTo(BigInteger.ONE) <= 0 );
         
         // Set the rounds of the Miller Rabin Test
         do {

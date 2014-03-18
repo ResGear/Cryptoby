@@ -27,8 +27,8 @@ public class MillerRabin implements PrimeTest {
     }
 
     private static boolean runMillerRabin(BigInteger number, SecureRandom random) {
-        if(number.intValue() < 4 ){
-            return number.intValue() != 1;
+        if(number.compareTo(BigInteger.valueOf(3)) <= 0 ){
+            return number.compareTo(BigInteger.ONE) != 0 ;
         }
 
         // Ensures that temp > 1 and temp < n.
