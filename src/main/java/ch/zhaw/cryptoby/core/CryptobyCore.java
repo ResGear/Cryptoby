@@ -14,7 +14,7 @@ import ch.zhaw.cryptoby.prime.itf.PrimeTest;
  *
  * @author Toby
  */
-public class CryptobyCore {
+public final class CryptobyCore {
     
 //    private DecSym decsym;
 //    private EncSym encsym;
@@ -61,5 +61,4 @@ public class CryptobyCore {
             this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
         }
     }
-    
 }

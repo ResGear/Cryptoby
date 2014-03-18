@@ -20,7 +20,7 @@
                           <mainClass>ch.zhaw.cryptoby.client.CryptobyClient</mainClass>
                         </manifest>
                     </archive>
-                    <goal>install</goal>
+                    <goal>jar</goal>
                 </configuration>
             </plugin>
         </plugins>

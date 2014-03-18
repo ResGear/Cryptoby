@@ -8,8 +8,11 @@ package ch.zhaw.cryptoby.ui.imp;
 
 import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -19,72 +22,122 @@ import java.util.Scanner;
 public class CryptobyConsole implements CryptobyUI {
 
     private final CryptobyClient client;
+    private final Scanner scanner = new Scanner(System.in);
     
     public CryptobyConsole(CryptobyClient client){
         this.client = client;
     }
     
     @Override
-    public void startUI(){
-        System.out.println("Choose from these choices");
-        System.out.println("-------------------------\n");
-        System.out.println("1 - Primetest");
-        System.out.println("2 - Quit");
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+    public void run(){
+        int choice;
+        
+        do {
+            System.out.println("Cryptoby - Enter one these menus!");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - Primetest");
+            System.out.println("2 - Quit");
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number! Enter 1 or 2:");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 2);
+        
         switch (choice) {
             case 1:
                 this.choosePrimeTest();
                 break;
             case 2:
-                this.client.stop();
+                this.client.exitApp();
                 break;
             default:
-                this.startUI();
+                this.run();
         }
     }
 
     private void choosePrimeTest() {
-        System.out.println("Choose PrimeTest Methode");
-        System.out.println("-------------------------\n");
-        System.out.println("1 - Miller Rabin");
-        System.out.println("2 - Back");
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        int choice;
+        
+        do {
+            System.out.println("Choose PrimeTest Methode");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - Miller Rabin");
+            System.out.println("2 - Back");
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number! Enter 1 or 2:");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 2);
+        
         switch (choice) {
             case 1:
                 testMillerRabin();
                 break;
             case 2:
-                this.startUI();
+                this.run();
                 break;
             default:
                 this.choosePrimeTest();
         }
     }
 
-    private void testMillerRabin() {
-        int rounds = 5;
-        System.out.println("Set Primenumber to Test: ");
-        Scanner scanner = new Scanner(System.in);
-        BigInteger number = scanner.nextBigInteger();
-        System.out.println("Set count of rounds.");
-        System.out.println("If 0 then default of 5 rounds.");
-        rounds = scanner.nextInt();
+    private void testMillerRabin(){
+        // Initial Variables
+        int rounds;
         String result;
+        String percent;
+        BigInteger number;
+        
+        // Input Number for Primenumber Testing
+        do {
+            System.out.println("Set Primenumber to Test.");
+            System.out.println("Please enter a positive number:");
+            while (!scanner.hasNextBigInteger()) {
+                System.out.println("That's not a number! Enter a positive number:");
+                scanner.next();
+            }
+            number = scanner.nextBigInteger();
+        } while (number.compareTo(number)<= 0);
+        
+        // Set the rounds of the Miller Rabin Test
+        do {
+            System.out.println("Set rounds parameter between 1 and 15.");
+            System.out.println("Please enter the number of rounds:");
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number! Enter a valid number:");
+                scanner.next();
+            }
+            rounds = scanner.nextInt();
+        } while (rounds < 1 || rounds > 15);
+        
+        // Initial Miller Rabin Object
         this.client.setPrimetest("MillerRabin");
         this.client.setPrimetestrounds(rounds);
         this.client.getCore().initPrimeTest();
+        
+        // Get Result of Test
         if(this.client.getCore().getPrimetest().isPrime(number)) {
             result = "is probably a Primenumber";
         } else {
             result = "is not a Primenumber";
         }
-        String percent = String.valueOf(this.client.getCore().getPrimetest().getProbability());
+        
+        // Get Probably
+        percent = String.valueOf(this.client.getCore().getPrimetest().getProbability());
+        
+        // Print Results
         System.out.println("Result: "+result+", Probably: "+percent);
+        
+        // Enter for Continues
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // Back to Menu Choose PrimeTest
         this.choosePrimeTest();
     }
-   
-
-    
 }

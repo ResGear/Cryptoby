@@ -12,6 +12,6 @@ package ch.zhaw.cryptoby.ui.itf;
  */
 public interface CryptobyUI {
     
-    public void startUI();
+    public void run();
     
 }

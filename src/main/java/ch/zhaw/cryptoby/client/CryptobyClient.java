@@ -14,16 +14,16 @@ import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
  *
  * @author Toby
  */
-public class CryptobyClient {
+public final class CryptobyClient {
     
     private CryptobyCore core;
     private CryptobyUI ui;
     private String primetest;
     private int primetestrounds;
     
-    public CryptobyClient(){
-        this.primetest = "MillerRabin";
-        this.primetestrounds = 5;
+    public CryptobyClient() {
+        this.setPrimetest("MillerRabin");
+        this.setPrimetestrounds(5);
         this.core = new CryptobyCore(this);
         this.ui = new CryptobyConsole(this);
     }
@@ -33,12 +33,10 @@ public class CryptobyClient {
      */
     public static void main(String[] args) {
         CryptobyClient client = new CryptobyClient();
-        client.getUi().startUI();
-        
-        
+        client.getUi().run();
     }
     
-    public void stop(){
+    public void exitApp(){
         System.exit(1);
     }
 
@@ -73,8 +71,4 @@ public class CryptobyClient {
     public void setPrimetestrounds(int primetestrounds) {
         this.primetestrounds = primetestrounds;
     }
-    
-    
-    
-    
 }
