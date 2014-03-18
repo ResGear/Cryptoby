@@ -9,6 +9,8 @@ package ch.zhaw.cryptoby.core;
 import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.prime.imp.MillerRabin;
 import ch.zhaw.cryptoby.prime.itf.PrimeTest;
+import ch.zhaw.cryptoby.ui.imp.CryptobyConsole;
+import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 
 /**
  *
@@ -22,10 +24,10 @@ public final class CryptobyCore {
 //    private EncAsym encasym;
     private PrimeTest primetest;
     private CryptobyClient client;
+    private CryptobyUI ui;
     
     public CryptobyCore(CryptobyClient client){
         this.setClient(client);
-        this.initPrimeTest();
         
     }
     
@@ -37,7 +39,23 @@ public final class CryptobyCore {
 //        this.primetest = primetest;
 //    }
     
-       
+    public void initPrimeTest() {
+        if(this.client.getPrimTestArt().equals("MillerRabin")){
+            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
+        } else {
+            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
+        }
+    }
+    
+    public void initUI() {
+        if(this.client.getUi().equals("console")){
+            this.ui = new CryptobyConsole(this);
+        } else {
+            this.ui = new CryptobyConsole(this);
+        }
+        
+    }
+    
     public PrimeTest getPrimetest() {
         return primetest;
     }
@@ -54,11 +72,12 @@ public final class CryptobyCore {
         this.client = client;
     }
 
-    public void initPrimeTest() {
-        if(this.client.getPrimetest().equals("MillerRabin")){
-            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
-        } else {
-            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
-        }
+    public CryptobyUI getUi() {
+        return ui;
     }
+
+    public void setUi(CryptobyUI ui) {
+        this.ui = ui;
+    }
+    
 }

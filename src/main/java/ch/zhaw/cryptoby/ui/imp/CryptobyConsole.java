@@ -2,11 +2,15 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package ch.zhaw.cryptoby.ui.imp;
 
-import ch.zhaw.cryptoby.client.CryptobyClient;
+import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -21,11 +25,11 @@ import java.util.logging.Logger;
  */
 public class CryptobyConsole implements CryptobyUI {
 
-    private final CryptobyClient client;
+    private final CryptobyCore core;
     private final Scanner scanner = new Scanner(System.in);
     
-    public CryptobyConsole(CryptobyClient client){
-        this.client = client;
+    public CryptobyConsole(CryptobyCore core){
+        this.core = core;
     }
     
     @Override
@@ -49,7 +53,7 @@ public class CryptobyConsole implements CryptobyUI {
                 this.choosePrimeTest();
                 break;
             case 2:
-                this.client.exitApp();
+                this.core.getClient().exitApp();
                 break;
             default:
                 this.run();
@@ -99,7 +103,7 @@ public class CryptobyConsole implements CryptobyUI {
                 scanner.next();
             }
             number = scanner.nextBigInteger();
-        } while (number.compareTo(number)<= 0);
+        } while (number.intValue() <= 0);
         
         // Set the rounds of the Miller Rabin Test
         do {
@@ -113,19 +117,19 @@ public class CryptobyConsole implements CryptobyUI {
         } while (rounds < 1 || rounds > 15);
         
         // Initial Miller Rabin Object
-        this.client.setPrimetest("MillerRabin");
-        this.client.setPrimetestrounds(rounds);
-        this.client.getCore().initPrimeTest();
+        this.core.getClient().setPrimTestArt("MillerRabin");
+        this.core.getClient().setPrimetestrounds(rounds);
+        this.core.initPrimeTest();
         
         // Get Result of Test
-        if(this.client.getCore().getPrimetest().isPrime(number)) {
+        if(this.core.getPrimetest().isPrime(number)) {
             result = "is probably a Primenumber";
         } else {
             result = "is not a Primenumber";
         }
         
         // Get Probably
-        percent = String.valueOf(this.client.getCore().getPrimetest().getProbability());
+        percent = String.valueOf(this.core.getPrimetest().getProbability());
         
         // Print Results
         System.out.println("Result: "+result+", Probably: "+percent);

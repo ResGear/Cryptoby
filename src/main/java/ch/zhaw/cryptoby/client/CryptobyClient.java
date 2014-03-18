@@ -2,13 +2,24 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package ch.zhaw.cryptoby.client;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
-import ch.zhaw.cryptoby.ui.imp.CryptobyConsole;
-import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
+
 
 /**
  *
@@ -17,15 +28,16 @@ import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 public final class CryptobyClient {
     
     private CryptobyCore core;
-    private CryptobyUI ui;
-    private String primetest;
+    
+    private String primTestArt;
     private int primetestrounds;
+    private String ui;
     
     public CryptobyClient() {
-        this.setPrimetest("MillerRabin");
+        this.setPrimTestArt("MillerRabin");
         this.setPrimetestrounds(5);
+        this.setUi("console");
         this.core = new CryptobyCore(this);
-        this.ui = new CryptobyConsole(this);
     }
     
     /**
@@ -33,7 +45,9 @@ public final class CryptobyClient {
      */
     public static void main(String[] args) {
         CryptobyClient client = new CryptobyClient();
-        client.getUi().run();
+        client.getCore().initPrimeTest();
+        client.getCore().initUI();
+        client.getCore().getUi().run();
     }
     
     public void exitApp(){
@@ -48,20 +62,12 @@ public final class CryptobyClient {
         this.core = core;
     }
 
-    public CryptobyUI getUi() {
-        return ui;
+    public String getPrimTestArt() {
+        return primTestArt;
     }
 
-    public void setUi(CryptobyConsole ui) {
-        this.ui = ui;
-    }
-
-    public String getPrimetest() {
-        return primetest;
-    }
-
-    public void setPrimetest(String primetest) {
-        this.primetest = primetest;
+    public void setPrimTestArt(String primTestArt) {
+        this.primTestArt = primTestArt;
     }
 
     public int getPrimetestrounds() {
@@ -71,4 +77,13 @@ public final class CryptobyClient {
     public void setPrimetestrounds(int primetestrounds) {
         this.primetestrounds = primetestrounds;
     }
+
+    public String getUi() {
+        return ui;
+    }
+
+    public void setUi(String ui) {
+        this.ui = ui;
+    }
+    
 }

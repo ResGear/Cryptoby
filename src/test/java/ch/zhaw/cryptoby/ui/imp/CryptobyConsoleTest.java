@@ -46,7 +46,7 @@ public class CryptobyConsoleTest {
     public void testStartUI() {
         System.out.println("startUI");
         CryptobyClient client = new CryptobyClient();
-        CryptobyConsole instance = new CryptobyConsole(client);
+        CryptobyConsole instance = new CryptobyConsole(client.getCore());
 //        instance.startUI();
     }
     
