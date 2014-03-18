@@ -31,11 +31,11 @@ public class CryptobyConsole implements CryptobyUI {
         int choice = scanner.nextInt();
         System.out.println("Choose from these choices");
         System.out.println("-------------------------\n");
-        System.out.println("1 - Enter an number");
+        System.out.println("1 - Primetest");
         System.out.println("2 - Quit");
         switch (choice) {
             case 1:
-                
+                this.choosePrimeTest();
                 break;
             case 2:
                 this.client.stop();
@@ -60,38 +60,30 @@ public class CryptobyConsole implements CryptobyUI {
                 this.startUI();
                 break;
             default:
-                // The user input an unexpected choice.
+                this.choosePrimeTest();
         }
     }
 
-    private String testMillerRabin() {
+    private void testMillerRabin() {
         int rounds = 5;
-        this.client.getCore().setPrimetest(new MillerRabin(rounds));
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-        System.out.println("Insert Number for Testing");
-        System.out.println("-------------------------\n");
-        System.out.println("-------------------------\n");
-        System.out.println("1 - Miller Rabin");
-        System.out.println("2 - Back");
-        switch (choice) {
-            case 1:
-                testMillerRabin();
-                break;
-            case 2:
-                this.startUI();
-                break;
-            default:
-                // The user input an unexpected choice.
-        }
+        String number = scanner.nextLine();
+        System.out.println("Set Primenumber to Test: ");
+        rounds = Integer.getInteger(scanner.nextLine());
+        System.out.println("Set count of rounds.");
+        System.out.println("If 0 then default of 5 rounds.");
         String result;
-        if(this.client.getCore().getPrimetest().isPrime(BigInteger.ZERO)) {
+        BigInteger bignumber = new BigInteger(number);
+        this.client.setPrimetest("MillerRabin");
+        this.client.setPrimetestrounds(rounds);
+        this.client.getCore().initPrimeTest();
+        if(this.client.getCore().getPrimetest().isPrime(bignumber)) {
             result = "is probably a Primenumber";
         } else {
             result = "is not a Primenumber";
         }
         String percent = String.valueOf(this.client.getCore().getPrimetest().getProbability());
-        return "Result: "+result+", Probably: "+percent;
+        System.out.println("Result: "+result+", Probably: "+percent);
     }
    
 
