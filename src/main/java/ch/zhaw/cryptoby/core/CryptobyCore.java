@@ -56,11 +56,9 @@ public class CryptobyCore {
 
     public void initPrimeTest() {
         if(this.client.getPrimetest().equals("MillerRabin")){
-            int rounds = this.client.getPrimetestrounds();
-            this.setPrimetest(new MillerRabin(rounds));
+            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
         } else {
-            int rounds = this.client.getPrimetestrounds();
-            this.setPrimetest(new MillerRabin(rounds));
+            this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
         }
     }
     

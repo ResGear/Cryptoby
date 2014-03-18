@@ -65,8 +65,11 @@ public class MillerRabinTest {
     @Test
     public void testGetProbability() {
         System.out.println("getProbability");
+        SecureRandom random = new SecureRandom();
         MillerRabin instance = new MillerRabin(5);
-        double expResult = 100-(1/4^5);
+        BigInteger number = BigInteger.probablePrime(1000, random);
+        instance.isPrime(number);
+        double expResult = 100 - (1/(Math.pow(4, 5)))*100;
         double result = instance.getProbability();
         assertEquals(expResult, result, 10^-5);
     }

@@ -28,7 +28,7 @@ public class MillerRabin implements PrimeTest {
         }
         
         public MillerRabin(int rounds){
-            this.rounds = 5;
+            this.rounds = rounds;
             this.probably = 0;
         }
         
@@ -100,7 +100,7 @@ public class MillerRabin implements PrimeTest {
 	}
 
     private double calcProbability(int rounds) {
-         return 100 - (1/(4^rounds));
+        return 100 - (1/(Math.pow(4, rounds)))*100;
     }
         
     @Override
@@ -111,7 +111,7 @@ public class MillerRabin implements PrimeTest {
     @Override
     public boolean isPrime(BigInteger number) {
         boolean result = MillerRabin.millerRabin(number, this.rounds);
-        if(result==false){
+        if(result == false){
             this.probably = this.calcProbability(0);
         } else {
             this.probably = this.calcProbability(this.rounds);

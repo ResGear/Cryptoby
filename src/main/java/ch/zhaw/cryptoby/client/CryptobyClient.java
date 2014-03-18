@@ -22,10 +22,10 @@ public class CryptobyClient {
     private int primetestrounds;
     
     public CryptobyClient(){
+        this.primetest = "MillerRabin";
+        this.primetestrounds = 5;
         this.core = new CryptobyCore(this);
         this.ui = new CryptobyConsole(this);
-        this.primetest = "MillerRabin";
-        this.primetestrounds = 10;
     }
     
     /**
@@ -33,8 +33,8 @@ public class CryptobyClient {
      */
     public static void main(String[] args) {
         CryptobyClient client = new CryptobyClient();
-        
         client.getUi().startUI();
+        
         
     }
     
