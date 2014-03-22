@@ -37,7 +37,7 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
         
         do {
-            System.out.println("Cryptoby - Enter one these menus!");
+            System.out.println("Cryptoby - Select a menupoint!");
             System.out.println("-------------------------\n");
             System.out.println("1 - Primetest");
             System.out.println("2 - Quit");
