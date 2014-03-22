@@ -41,36 +41,6 @@ public class MillerRabinTest {
     }
 
     /**
-     * Test of millerRabin method, of class MillerRabin.
-     */
-    @Test
-    public void testMillerRabin() {
-        System.out.println("millerRabin");
-        SecureRandom random = new SecureRandom();
-        BigInteger number = BigInteger.probablePrime(1000, random);
-        int rounds = 10;
-        boolean expResult = true;
-        boolean result = MillerRabin.millerRabin(number, rounds);
-        assertEquals(expResult, result);
-        // Test number 2
-        number = BigInteger.valueOf(2);
-        result = MillerRabin.millerRabin(number, rounds);
-        assertEquals(expResult, result);
-        // Test number 3
-        number = BigInteger.valueOf(3);
-        result = MillerRabin.millerRabin(number, rounds);
-        assertEquals(expResult, result);
-        // positive false test
-        number = BigInteger.ONE.add(number);
-        expResult = false;
-        result = MillerRabin.millerRabin(number, rounds);
-        assertEquals(expResult, result);
-        // Test number 1
-        result = MillerRabin.millerRabin(BigInteger.ONE, rounds);
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getProbability method, of class MillerRabin.
      */
     @Test
@@ -97,10 +67,21 @@ public class MillerRabinTest {
         boolean expResult = true;
         boolean result = instance.isPrime(number);
         assertEquals(expResult, result);
-        // positive false test
-        number = BigInteger.ONE.add(number);
-        expResult = false;
+        // Test number 2, expects true
+        number = BigInteger.valueOf(2);
         result = instance.isPrime(number);
+        assertEquals(expResult, result);
+        // Test number 3, expects true
+        number = BigInteger.valueOf(3);
+        result = instance.isPrime(number);
+        assertEquals(expResult, result);
+        // positive false test
+        expResult = false;
+        number = BigInteger.ONE.add(BigInteger.probablePrime(1000, random));
+        result = instance.isPrime(number);
+        assertEquals(expResult, result);
+        // Test number 1, expects false
+        result = instance.isPrime(BigInteger.ONE);
         assertEquals(expResult, result);
     }
     
