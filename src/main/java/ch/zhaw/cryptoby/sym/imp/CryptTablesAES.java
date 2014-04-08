@@ -21,12 +21,12 @@ public class CryptTablesAES {
         loadPowX();
     }
 
-    private byte[] E = new byte[256]; // "exp" table (base 0x03)
-    private byte[] L = new byte[256]; // "Log" table (base 0x03)
-    private byte[] S = new byte[256]; // SubBytes table
-    private byte[] invS = new byte[256]; // inverse of SubBytes table
-    private byte[] inv = new byte[256]; // multiplicative inverse table
-    private byte[] powX = new byte[15]; // powers of x = 0x02
+    private final byte[] E = new byte[256]; // "exp" table (base 0x03)
+    private final byte[] L = new byte[256]; // "Log" table (base 0x03)
+    private final byte[] S = new byte[256]; // SubBytes table
+    private final byte[] invS = new byte[256]; // inverse of SubBytes table
+    private final byte[] inv = new byte[256]; // multiplicative inverse table
+    private final byte[] powX = new byte[15]; // powers of x = 0x02
 
     // Routines to access table entries
     public byte SBox(byte b) {

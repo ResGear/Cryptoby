@@ -6,16 +6,14 @@
 
 package ch.zhaw.cryptoby.sym.imp;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import org.apache.commons.codec.DecoderException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  *
@@ -42,42 +40,89 @@ public class CryptAESTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of decrypt method, of class CryptAES.
-     * @throws java.security.NoSuchAlgorithmException
-     */
-//    @Test
-//    public void testDecrypt() throws NoSuchAlgorithmException {
-//        System.out.println("decrypt");
-//        byte[] plainInput = "Text to Test!".getBytes();
-//        byte[] key =  "B374A26A71490437AA024E4FADD5B497FDFF1A8EA6FF12F6FB65AF2720B59CCF".getBytes();
-//        CryptAES instance = new CryptAES();
-//        byte[] expResult = null;
-//        byte[] result = instance.decrypt(plainInput, key);
-//        System.out.println(new String(result));
-//        assertArrayEquals(expResult, result);
-//        
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-
-    /**
-     * Test of encrypt method, of class CryptAES.
-     */
     @Test
-    public void testEncrypt() {
-        System.out.println("encrypt");
-        byte[] plainInput = "Text to Test!".getBytes();
-        byte[] key = "B374A26A71490437AA024E4FADD5B497FDFF1A8EA6FF12F6FB65AF2720B59CCF".getBytes();
+    public void testEncryptDecrypt224() throws DecoderException {
+        System.out.println("encrypt and decrypt testphrase");
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String hexKey = "218730F26D36BC8F7225046709D9D6FB73C08ECC698513C8A259DB34";
+        System.out.println(hexKey);
         CryptAES instance = new CryptAES();
-        byte[] expResult = null;
-        byte[] result = instance.encrypt(plainInput, key);
+        byte[] expResult = plainInput;
+        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
         System.out.println(new String(result));
-        result = instance.decrypt(result, key);
+        char[] resChar = Hex.encodeHex(result);
+        System.out.println(String.copyValueOf(resChar));
+        String resString = String.copyValueOf(resChar);
+        resChar = resString.toCharArray();
+        result = Hex.decodeHex(resChar);
+        result = instance.decrypt(result, hexKey.getBytes());
         System.out.println(new String(result));
         assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(new String(expResult), new String(result));
+    }
+    
+    @Test
+    public void testEncryptDecrypt256() throws DecoderException {
+        System.out.println("encrypt and decrypt testphrase");
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String hexKey = "2F38CDDB64D26063D576C7CB45D0BF67881D90AA4F6E813E42110A77CF54C0F0";
+        System.out.println(hexKey);
+        CryptAES instance = new CryptAES();
+        byte[] expResult = plainInput;
+        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
+        System.out.println(new String(result));
+        char[] resChar = Hex.encodeHex(result);
+        System.out.println(String.copyValueOf(resChar));
+        String resString = String.copyValueOf(resChar);
+        resChar = resString.toCharArray();
+        result = Hex.decodeHex(resChar);
+        result = instance.decrypt(result, hexKey.getBytes());
+        System.out.println(new String(result));
+        assertArrayEquals(expResult, result);
+        assertEquals(new String(expResult), new String(result));
+    }
+    
+    
+    @Test
+    public void testEncryptDecrypt384() throws DecoderException {
+        System.out.println("encrypt and decrypt testphrase");
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String hexKey = "49C3A39404E40991539089F4CA6C2B57939F6013780BAEC7BFBAEF4E7E0806421E6F4CC261E01C521202665ECC367A85";
+        System.out.println(hexKey);
+        CryptAES instance = new CryptAES();
+        byte[] expResult = plainInput;
+        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
+        System.out.println(new String(result));
+        char[] resChar = Hex.encodeHex(result);
+        System.out.println(String.copyValueOf(resChar));
+        String resString = String.copyValueOf(resChar);
+        resChar = resString.toCharArray();
+        result = Hex.decodeHex(resChar);
+        result = instance.decrypt(result, hexKey.getBytes());
+        System.out.println(new String(result));
+        assertArrayEquals(expResult, result);
+        assertEquals(new String(expResult), new String(result));
+    }
+    
+    @Test
+    public void testEncryptDecrypt512() throws DecoderException {
+        System.out.println("encrypt and decrypt testphrase");
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String hexKey = "ACCF63DAE697F256110304A2F243B421AFD7275A0983748EEFEA1A0F4B040C4198C75FF0603BB0541C4737EAFDC32EE24864DDEEC0B2226A4B6AC6025DB4B672";
+        System.out.println(hexKey);
+        CryptAES instance = new CryptAES();
+        byte[] expResult = plainInput;
+        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
+        System.out.println(new String(result));
+        char[] resChar = Hex.encodeHex(result);
+        System.out.println(String.copyValueOf(resChar));
+        String resString = String.copyValueOf(resChar);
+        resChar = resString.toCharArray();
+        result = Hex.decodeHex(resChar);
+        result = instance.decrypt(result, hexKey.getBytes());
+        System.out.println(new String(result));
+        assertArrayEquals(expResult, result);
+        assertEquals(new String(expResult), new String(result));
     }
     
 }

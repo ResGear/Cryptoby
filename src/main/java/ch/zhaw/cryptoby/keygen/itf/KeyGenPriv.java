@@ -12,4 +12,7 @@ package ch.zhaw.cryptoby.keygen.itf;
  */
 public interface KeyGenPriv {
     
+    public String generateKey(int keySize);
+    public String generateKey(int keySize, String password);
+    
 }

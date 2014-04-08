@@ -7,8 +7,12 @@
 package ch.zhaw.cryptoby.core;
 
 import ch.zhaw.cryptoby.client.CryptobyClient;
+import ch.zhaw.cryptoby.keygen.imp.KeyGenPrivSHA3;
+import ch.zhaw.cryptoby.keygen.itf.KeyGenPriv;
 import ch.zhaw.cryptoby.prime.imp.MillerRabin;
 import ch.zhaw.cryptoby.prime.itf.PrimeTest;
+import ch.zhaw.cryptoby.sym.imp.CryptAES;
+import ch.zhaw.cryptoby.sym.itf.CryptSym;
 import ch.zhaw.cryptoby.ui.imp.CryptobyConsole;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 
@@ -18,27 +22,32 @@ import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
  */
 public final class CryptobyCore {
     
-//    private DecSym decsym;
-//    private EncSym encsym;
-//    private DecAsym decasym;
-//    private EncAsym encasym;
+    private CryptSym cryptSym;
+    private KeyGenPriv keyGenPriv;
     private PrimeTest primetest;
     private CryptobyClient client;
     private CryptobyUI ui;
     
     public CryptobyCore(CryptobyClient client){
-        this.setClient(client);
-        
+        this.setClient(client);    
     }
     
-//    public CryptobyCore(DecSym decsym, EncSym encsym, DecAsym decasym, EncAsym encasym, PrimeTest primetest){
-//        this.decsym = decsym;
-//        this.encsym = encsym;
-//        this.decasym = decasym;
-//        this.encasym = encasym;
-//        this.primetest = primetest;
-//    }
+    public void initCryptSym() {
+        if(this.client.getCryptSymArt().equals("AES")){
+            this.setCryptSym(new CryptAES());
+        } else {
+            this.setCryptSym(new CryptAES());
+        }
+    }
     
+    public void initKeyGen() {
+        if(this.client.getKeyGenArt().equals("SHA3")){
+            this.setKeyGenPriv(new KeyGenPrivSHA3());
+        } else {
+            this.setKeyGenPriv(new KeyGenPrivSHA3());
+        }
+    }
+
     public void initPrimeTest() {
         if(this.client.getPrimTestArt().equals("MillerRabin")){
             this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
@@ -78,6 +87,22 @@ public final class CryptobyCore {
 
     public void setUi(CryptobyUI ui) {
         this.ui = ui;
+    }
+    
+    public KeyGenPriv getKeyGenPriv() {
+        return keyGenPriv;
+    }
+
+    public void setKeyGenPriv(KeyGenPriv keyGenPriv) {
+        this.keyGenPriv = keyGenPriv;
+    }
+
+    public CryptSym getCryptSym() {
+        return cryptSym;
+    }
+
+    public void setCryptSym(CryptSym cryptSym) {
+        this.cryptSym = cryptSym;
     }
     
 }

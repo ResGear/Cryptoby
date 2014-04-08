@@ -12,4 +12,6 @@ package ch.zhaw.cryptoby.keygen.itf;
  */
 public interface KeyGenPub {
     
+    public String genPrivateKey(int keyLength);
+    public String genpublicKey(int keyLength);
 }

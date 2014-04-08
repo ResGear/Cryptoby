@@ -28,9 +28,10 @@ import ch.zhaw.cryptoby.core.CryptobyCore;
 public final class CryptobyClient {
     
     private CryptobyCore core;
-    
     private String primTestArt;
     private int primetestrounds;
+    private String keyGenArt;
+    private String cryptSymArt;
     private String ui;
     
     public CryptobyClient() {
@@ -86,4 +87,20 @@ public final class CryptobyClient {
         this.ui = ui;
     }
     
+    public String getKeyGenArt() {
+        return keyGenArt;
+    }
+
+    public void setKeyGenArt(String keyGenArt) {
+        this.keyGenArt = keyGenArt;
+    }
+
+    public String getCryptSymArt() {
+        return cryptSymArt;
+    }
+
+    public void setCryptSymArt(String cryptSymArt) {
+        this.cryptSymArt = cryptSymArt;
+    }
+
 }
