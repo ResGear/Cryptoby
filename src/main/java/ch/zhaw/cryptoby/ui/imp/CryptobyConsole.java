@@ -140,6 +140,7 @@ public class CryptobyConsole implements CryptobyUI {
               
         // Input your String Text to encrypt
         System.out.println("Your Text to encrypt:");
+        scanner.useDelimiter("\\n");
         plainText = scanner.next().getBytes();
         do {
             // Input your Key for encryption
