@@ -143,13 +143,13 @@ public class CryptobyConsole implements CryptobyUI {
         plainText = scanner.next().getBytes();
         do {
             // Input your Key for encryption
-            System.out.println("Enter the Key. It has to be a 224,256,384 or 512bit Size Key in Hex Code");
+            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
             key = scanner.next().getBytes();
-            keySize = key.length*4;
+            keySize = key.length * 4;
             System.out.println(keySize);
-        } while (keySize != 224 && keySize != 256 && keySize != 384 && keySize != 512 );
+        } while (keySize != 128 && keySize != 192 && keySize != 256);
         
-        // Initial Miller Rabin Object
+        // Initial AES Crypt Object
         this.core.getClient().setCryptSymArt("AES");
         this.core.initCryptSym();
         
@@ -176,23 +176,23 @@ public class CryptobyConsole implements CryptobyUI {
     
     private void aesDecrypter(){
         // Initial Variables
-        byte[] plainText;
+        byte[] plainText = null;
         byte[] cryptText = null;
         String cryptTextHex;
         byte[] key;
         int keySize;
               
-        // Input your String Text to decrypt
+        // Input String Text to decrypt
         System.out.println("Your Text to decrypt:");
         cryptTextHex = scanner.next();
         do {
-            // Input your Key for decryption
-            System.out.println("Enter the Key. It has to be a 224,256,384 or 512bit Size Key in Hex Code");
+            // Input Key for decryption
+            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
             key = scanner.next().getBytes();
-            keySize = key.length*4;
-        } while (keySize != 224 && keySize != 256 && keySize != 384 && keySize != 512 );
+            keySize = key.length * 4;
+        } while (keySize != 128 && keySize != 192 && keySize != 256);
         
-        // Initial Miller Rabin Object
+        // Initial AES Crypt Object
         this.core.getClient().setCryptSymArt("AES");
         this.core.initCryptSym();
         
@@ -203,12 +203,23 @@ public class CryptobyConsole implements CryptobyUI {
             Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        // Encrypt the String Text with given Key
+        // Decrypt the String Text with given Key
+        try{
         plainText = this.core.getCryptSym().decrypt(cryptText, key);
+        } catch(Exception e){
+            System.out.println("Unable to decrypt this String!!");
+            // Enter for Continues
+            try {
+                System.in.read();
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.aesCrypter();
+        }
         
         // Print decrypted Text
         System.out.println("AES-"+keySize+" decrypted Text:");
-        System.out.println(plainText);
+        System.out.println(new String(plainText));
         
         // Enter for Continues
         try {

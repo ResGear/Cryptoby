@@ -15,7 +15,7 @@ public class CryptAES implements CryptSym {
     private CryptTablesAES tab; // all the tables needed for AESy
 
     private byte[] initKeyExpand(byte[] key) {
-        keyLength = (key.length / 8); // words in a key, = 4, or 6, or 8
+        keyLength = (key.length / 4); // words in a key, = 4, or 6, or 8
         nRounds = keyLength + 6; // corresponding number of rounds
         tab = new CryptTablesAES(); // class to give values of various functions
         return expandKey(key);
@@ -29,12 +29,12 @@ public class CryptAES implements CryptSym {
         byte[] cryptOutput = new byte[(inputLength - restInput) + 16];
         int outputLength = cryptOutput.length;
         byte[] cipher = new byte[16];
-        
+
         // Copy plaintext Array into crypt Array
         System.arraycopy(plainInput, 0, cryptOutput, 0, inputLength);
         // Add in the last Arrayindex the origin length of plaintext Array
-        cryptOutput[outputLength-1] = (byte)inputLength;
-        
+        cryptOutput[outputLength - 1] = (byte) inputLength;
+
         for (int i = 0; i < outputLength; i += 16) {
             // Create 16 Block Cipher Arrays
             for (int j = i; j < i + 16; j++) {
@@ -56,6 +56,7 @@ public class CryptAES implements CryptSym {
         byte[] decryptOutput = cryptInput;
         int outputLength = decryptOutput.length;
         byte[] cipher = new byte[16];
+        byte[] plainOutput;
 
         for (int i = 0; i < outputLength; i += 16) {
             // Create 16 Block Cipher Arrays
@@ -71,10 +72,14 @@ public class CryptAES implements CryptSym {
         }
         // Read last Index of encryptet Output  
         // and use the Integer Content for lenght of plainOutput
-        int lengthOriginArray = decryptOutput[decryptOutput.length-1];
-        byte[] plainOutput = new byte[lengthOriginArray];
-        System.arraycopy(decryptOutput, 0, plainOutput, 0, lengthOriginArray);
-        
+        int lengthOriginArray = decryptOutput[decryptOutput.length - 1];
+        if(lengthOriginArray < 1){
+            plainOutput = cryptInput;
+        } else {
+            plainOutput = new byte[lengthOriginArray];
+            System.arraycopy(decryptOutput, 0, plainOutput, 0, lengthOriginArray);
+        }
+
         return plainOutput;
     }
 
@@ -120,13 +125,13 @@ public class CryptAES implements CryptSym {
         state = subBytes(state);
         state = shiftRows(state);
         state = addRoundKey(state, exKey);
-        
+
         return matrixToArray(state);
     }
 
     // Expand Key in 4xnk Matrix
     private byte[] expandKey(byte[] key) {
-        byte[] tempKey = new byte[4 * nBlocks * (nRounds + 2)]; // room for expanded key
+        byte[] tempKey = new byte[4 * nBlocks * (nRounds + 1)]; // room for expanded key
         byte[] temp = new byte[4];
         // first just copy key to tempKey
         int j = 0;

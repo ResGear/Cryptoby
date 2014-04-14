@@ -6,14 +6,16 @@
 
 package ch.zhaw.cryptoby.sym.imp;
 
+import ch.zhaw.cryptoby.keygen.imp.KeyGenPrivSHA3;
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  *
@@ -39,90 +41,68 @@ public class CryptAESTest {
     @After
     public void tearDown() {
     }
-
-    @Test
-    public void testEncryptDecrypt224() throws DecoderException {
-        System.out.println("encrypt and decrypt testphrase");
-        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        String hexKey = "218730F26D36BC8F7225046709D9D6FB73C08ECC698513C8A259DB34";
-        System.out.println(hexKey);
-        CryptAES instance = new CryptAES();
-        byte[] expResult = plainInput;
-        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
-        System.out.println(new String(result));
-        char[] resChar = Hex.encodeHex(result);
-        System.out.println(String.copyValueOf(resChar));
-        String resString = String.copyValueOf(resChar);
-        resChar = resString.toCharArray();
-        result = Hex.decodeHex(resChar);
-        result = instance.decrypt(result, hexKey.getBytes());
-        System.out.println(new String(result));
-        assertArrayEquals(expResult, result);
-        assertEquals(new String(expResult), new String(result));
-    }
     
     @Test
     public void testEncryptDecrypt256() throws DecoderException {
         System.out.println("encrypt and decrypt testphrase");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        String hexKey = "2F38CDDB64D26063D576C7CB45D0BF67881D90AA4F6E813E42110A77CF54C0F0";
+        KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
+        String hexKey = keyGen.generateKey(256, "password");
+        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
-        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
-        System.out.println(new String(result));
+        byte[] result = instance.encrypt(plainInput, bKey);
         char[] resChar = Hex.encodeHex(result);
         System.out.println(String.copyValueOf(resChar));
         String resString = String.copyValueOf(resChar);
         resChar = resString.toCharArray();
         result = Hex.decodeHex(resChar);
-        result = instance.decrypt(result, hexKey.getBytes());
+        result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
         assertArrayEquals(expResult, result);
-        assertEquals(new String(expResult), new String(result));
     }
     
-    
-    @Test
-    public void testEncryptDecrypt384() throws DecoderException {
-        System.out.println("encrypt and decrypt testphrase");
+        @Test
+        public void testEncryptDecrypt256_falseKey() throws DecoderException {
+        System.out.println("crypt false key");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        String hexKey = "49C3A39404E40991539089F4CA6C2B57939F6013780BAEC7BFBAEF4E7E0806421E6F4CC261E01C521202665ECC367A85";
+        KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
+        String hexKey = keyGen.generateKey(256, "password");
+        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
-        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
-        System.out.println(new String(result));
+        byte[] result = instance.encrypt(plainInput, bKey);
         char[] resChar = Hex.encodeHex(result);
         System.out.println(String.copyValueOf(resChar));
         String resString = String.copyValueOf(resChar);
         resChar = resString.toCharArray();
         result = Hex.decodeHex(resChar);
-        result = instance.decrypt(result, hexKey.getBytes());
+        hexKey = keyGen.generateKey(256, "passwordFalse");
+        bKey = Hex.decodeHex(hexKey.toCharArray());
+        result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
-        assertArrayEquals(expResult, result);
-        assertEquals(new String(expResult), new String(result));
+        assertFalse(new String(expResult).equals(new  String(result)));
     }
-    
-    @Test
-    public void testEncryptDecrypt512() throws DecoderException {
-        System.out.println("encrypt and decrypt testphrase");
+        
+        @Test
+        public void testEncryptDecrypt256_false() throws DecoderException {
+        System.out.println("crypt almost false key");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        String hexKey = "ACCF63DAE697F256110304A2F243B421AFD7275A0983748EEFEA1A0F4B040C4198C75FF0603BB0541C4737EAFDC32EE24864DDEEC0B2226A4B6AC6025DB4B672";
+        String hexKey = "13A9489AF957FF7B5E8E712737D0B4A0C92AE8EBAE9DD11E9C11B8CB79707017";
+        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
-        byte[] result = instance.encrypt(plainInput, hexKey.getBytes());
+        byte[] result = instance.encrypt(plainInput, bKey);
+        String resString = String.copyValueOf(Hex.encodeHex(result));
+        System.out.println(resString);
+        result = Hex.decodeHex(resString.toCharArray());
+        hexKey = "13A9489AF957FF7B5E8E712737D0B4A0C92AE8EBAE9DD11E9C11B8CB79707011";
+        bKey = Hex.decodeHex(hexKey.toCharArray());
+        result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
-        char[] resChar = Hex.encodeHex(result);
-        System.out.println(String.copyValueOf(resChar));
-        String resString = String.copyValueOf(resChar);
-        resChar = resString.toCharArray();
-        result = Hex.decodeHex(resChar);
-        result = instance.decrypt(result, hexKey.getBytes());
-        System.out.println(new String(result));
-        assertArrayEquals(expResult, result);
-        assertEquals(new String(expResult), new String(result));
+        assertFalse(new String(expResult).equals(new  String(result)));
     }
-    
 }
