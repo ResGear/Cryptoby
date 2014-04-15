@@ -62,7 +62,6 @@ public final class CryptobyCore {
         } else {
             this.ui = new CryptobyConsole(this);
         }
-        
     }
     
     public PrimeTest getPrimetest() {
