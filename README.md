@@ -5,7 +5,7 @@ __Cryptoby__ is a simple Java Tool for end- and decryption of any files.
 
 It uses two forms of encryption:  
 * A __symmetric__ encryption based on AES-256 (http://www.cryptopp.com/wiki/Aes)
-* An __asymmetric__ encryption based on RSA (http://www.cryptopp.com/wiki/ECMQV)
+* An __asymmetric__ encryption based on RSA (https://de.wikipedia.org/wiki/RSA-Kryptosystem)
 
 These cryptograhic algorithms are directly implemented in the source code of the tool.  
 That means, it doesn't use any cryptographic libraries from Java or elsewhere. Further needed stuff is implemented:
