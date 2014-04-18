@@ -6,9 +6,8 @@
 
 package ch.zhaw.cryptoby.sym.imp;
 
+import ch.zhaw.cryptoby.core.CryptobyHelper;
 import ch.zhaw.cryptoby.keygen.imp.KeyGenPrivSHA3;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -42,64 +41,57 @@ public class CryptAESTest {
     }
     
     @Test
-    public void testEncryptDecrypt256() throws DecoderException {
+    public void testEncryptDecrypt256() {
         System.out.println("encrypt and decrypt testphrase");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
         KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
         String hexKey = keyGen.generateKey(256, "password");
-        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
+        byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        char[] resChar = Hex.encodeHex(result);
-        System.out.println(String.copyValueOf(resChar));
-        String resString = String.copyValueOf(resChar);
-        resChar = resString.toCharArray();
-        result = Hex.decodeHex(resChar);
+        String resString = CryptobyHelper.bytesToHexString(result);
+        System.out.println(resString);
         result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
         assertArrayEquals(expResult, result);
     }
     
         @Test
-        public void testEncryptDecrypt256_falseKey() throws DecoderException {
+        public void testEncryptDecrypt256_falseKey() {
         System.out.println("crypt false key");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
         KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
         String hexKey = keyGen.generateKey(256, "password");
-        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
+        byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        char[] resChar = Hex.encodeHex(result);
-        System.out.println(String.copyValueOf(resChar));
-        String resString = String.copyValueOf(resChar);
-        resChar = resString.toCharArray();
-        result = Hex.decodeHex(resChar);
+        String resString = CryptobyHelper.bytesToHexString(result);
+        System.out.println(resString);
         hexKey = keyGen.generateKey(256, "passwordFalse");
-        bKey = Hex.decodeHex(hexKey.toCharArray());
+        bKey = CryptobyHelper.hexStringToBytes(hexKey);
         result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
         assertFalse(new String(expResult).equals(new  String(result)));
     }
         
         @Test
-        public void testEncryptDecrypt256_false() throws DecoderException {
+        public void testEncryptDecrypt256_false() {
         System.out.println("crypt almost false key");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
         String hexKey = "13A9489AF957FF7B5E8E712737D0B4A0C92AE8EBAE9DD11E9C11B8CB79707017";
-        byte[] bKey = Hex.decodeHex(hexKey.toCharArray());
+        byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
         System.out.println(hexKey);
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        String resString = String.copyValueOf(Hex.encodeHex(result));
+        String resString = CryptobyHelper.bytesToHexString(result);
         System.out.println(resString);
-        result = Hex.decodeHex(resString.toCharArray());
         hexKey = "13A9489AF957FF7B5E8E712737D0B4A0C92AE8EBAE9DD11E9C11B8CB79707011";
-        bKey = Hex.decodeHex(hexKey.toCharArray());
+        bKey = CryptobyHelper.hexStringToBytes(hexKey);
         result = instance.decrypt(result, bKey);
         System.out.println(new String(result));
         assertFalse(new String(expResult).equals(new  String(result)));

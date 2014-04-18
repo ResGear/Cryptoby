@@ -14,7 +14,7 @@ import ch.zhaw.cryptoby.core.CryptobyCore;
  * @author Toby
  */
 public final class CryptobyClient {
-    
+
     private CryptobyCore core;
     private String primTestArt;
     private int primetestrounds;

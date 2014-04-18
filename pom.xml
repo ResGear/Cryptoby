@@ -20,21 +20,6 @@
                           <mainClass>ch.zhaw.cryptoby.client.CryptobyClient</mainClass>
                         </manifest>
                     </archive>
-                    <instructions>
-                    <Embed-Dependency>
-                            org.apache.sling.commons.osgi;inline="org/apache/sling/commons/osgi/OsgiUtil.*",
-                            commons-lang;inline="org/apache/commons/lang/StringUtils.class",
-                            commons-codec;inline="org/apache/commons/codec/binary/Base64.*
-                            |org/apache/commons/codec/binary/Hex*
-                            |org/apache/commons/codec/binary/StringUtils*
-                            |org/apache/commons/codec/BinaryEncoder*
-                            |org/apache/commons/codec/BinaryDecoder*
-                            |org/apache/commons/codec/Encoder*
-                            |org/apache/commons/codec/Decoder*
-                            |org/apache/commons/codec/EncoderException*
-                            |org/apache/commons/codec/DecoderException*"
-                        </Embed-Dependency>
-                        </instructions>
                 </configuration>
             </plugin>
         </plugins>
@@ -45,12 +30,6 @@
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.9</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
     <properties>
