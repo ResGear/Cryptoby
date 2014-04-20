@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ch.zhaw.cryptoby.ui.imp;
+package ch.zhaw.cryptoby.ui.imp.console;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -46,15 +46,15 @@ public class GenSHA3UI {
             password = "";
         }
         
-        // Initial Miller Rabin Object
-        console.getCore().getClient().setKeyGenArt("SHA3");
-        console.getCore().initKeyGen();
+        // Initial Key Generator
+        console.getCore().getClient().setKeySymArt("SHA3");
+        console.getCore().initSymKey();
         
         // Get Result of Test
         if(password.equals("")) {
-            key = console.getCore().getKeyGenPriv().generateKey(keySize);
+            key = console.getCore().getKeyGenSym().generateKey(keySize);
         } else {
-            key = console.getCore().getKeyGenPriv().generateKey(keySize, password);
+            key = console.getCore().getKeyGenSym().generateKey(keySize, password);
         }
         
         // Print Key
@@ -68,6 +68,6 @@ public class GenSHA3UI {
         }
         
         // Back to Menu Choose PrimeTest
-        console.chooseGenKey();
+        console.menuGenKey();
     }
 }

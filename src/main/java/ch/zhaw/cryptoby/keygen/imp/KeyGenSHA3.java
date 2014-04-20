@@ -2,11 +2,24 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package ch.zhaw.cryptoby.keygen.imp;
 
-import ch.zhaw.cryptoby.keygen.itf.KeyGenPriv;
+import ch.zhaw.cryptoby.core.CryptobyHelper;
+import ch.zhaw.cryptoby.keygen.itf.KeyGenSym;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -15,7 +28,7 @@ import java.util.Arrays;
  *
  * @author Toby
  */
-public class KeyGenPrivSHA3 implements KeyGenPriv {
+public class KeyGenSHA3 implements KeyGenSym {
 
     static final long[] KeccakRoundConstants = {
         0x0000000000000001L, 0x0000000000008082L, 0x800000000000808AL, 0x8000000080008000L,
@@ -55,7 +68,7 @@ public class KeyGenPrivSHA3 implements KeyGenPriv {
         scRandom.nextBytes(randomPW);
         this.init(keySize);
         this.update(randomPW, randomPW.length*8);
-        String output = bytesToHex(this.getHash(null));
+        String output = CryptobyHelper.bytesToHexString(this.getHash(null));
         return output;
         
     }
@@ -65,7 +78,7 @@ public class KeyGenPrivSHA3 implements KeyGenPriv {
         byte[] bytePW = password.getBytes();
         this.init(keySize);
         this.update(bytePW, bytePW.length*8);
-        String output = bytesToHex(this.getHash(null));
+        String output = CryptobyHelper.bytesToHexString(this.getHash(null));
         return output;
     }
     
@@ -151,31 +164,6 @@ public class KeyGenPrivSHA3 implements KeyGenPriv {
             System.arraycopy(dataQueue, 0, hashval, 0, hashbitlen/8);
         }
         return hashval;
-    }
-
-    private byte[] duplexing(byte[] sigma, int sigmaLength, byte[] z, int zLength) {
-        // The maximum l (8*zLength) one can request is r (rate).
-        if(8*sigmaLength > rate - 2){
-            throw new IllegalArgumentException("sigma exceeds the pad10^*1 rho rate: " + sigmaLength + " vs " + (rate - 2));
-        }
-        if(8*zLength > rate){
-            throw new IllegalArgumentException("z exceeds the sponge rate.");
-        }
-        // copy sigmaLength bytes:
-        for (int i = 0; i < sigmaLength; i++) {
-            state[i] ^= sigma[i];
-        }
-        // pad with pad10^*1:
-        state[sigmaLength] ^= 0x01;
-        state[rate/8-1] ^= 0x80;
-        // permute, i.e. absorb:
-        KeccakPermutation();
-        // squeeze the first (8*zLength) bits of the state
-        if (z == null && zLength > 0) {
-            z = new byte[zLength];
-        }
-        System.arraycopy(state, 0, z, 0, zLength);
-        return z;
     }
 
     private void theta() {
@@ -307,14 +295,4 @@ public class KeyGenPrivSHA3 implements KeyGenPriv {
         return (((x)%5)+5*((y)%5));
     }
 
-    private static String bytesToHex(byte[] bytes) {
-    char[] hexArray = "0123456789ABCDEF".toCharArray();
-    char[] hexChars = new char[bytes.length * 2];
-    for ( int j = 0; j < bytes.length; j++ ) {
-        int v = bytes[j] & 0xFF;
-        hexChars[j * 2] = hexArray[v >>> 4];
-        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-    }
-    return new String(hexChars);
-}
 }

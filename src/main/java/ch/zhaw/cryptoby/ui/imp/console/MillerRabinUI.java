@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ch.zhaw.cryptoby.ui.imp;
+package ch.zhaw.cryptoby.ui.imp.console;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -70,7 +70,7 @@ public class MillerRabinUI {
         }
         
         // Back to Menu Choose PrimeTest
-        console.choosePrimeTest();
+        console.menuPrimeTest();
     }
     
 }

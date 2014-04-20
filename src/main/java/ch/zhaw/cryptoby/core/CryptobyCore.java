@@ -3,17 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ch.zhaw.cryptoby.core;
 
+import ch.zhaw.cryptoby.asym.imp.CryptRSA;
+import ch.zhaw.cryptoby.asym.itf.CryptAsym;
 import ch.zhaw.cryptoby.client.CryptobyClient;
-import ch.zhaw.cryptoby.keygen.imp.KeyGenPrivSHA3;
-import ch.zhaw.cryptoby.keygen.itf.KeyGenPriv;
+import ch.zhaw.cryptoby.keygen.imp.KeyGenRSA;
+import ch.zhaw.cryptoby.keygen.imp.KeyGenSHA3;
+import ch.zhaw.cryptoby.keygen.itf.KeyGenAsym;
+import ch.zhaw.cryptoby.keygen.itf.KeyGenSym;
 import ch.zhaw.cryptoby.prime.imp.MillerRabin;
 import ch.zhaw.cryptoby.prime.itf.PrimeTest;
 import ch.zhaw.cryptoby.sym.imp.CryptAES;
 import ch.zhaw.cryptoby.sym.itf.CryptSym;
-import ch.zhaw.cryptoby.ui.imp.CryptobyConsole;
+import ch.zhaw.cryptoby.ui.imp.console.CryptobyConsole;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 
 /**
@@ -21,49 +24,73 @@ import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
  * @author Toby
  */
 public final class CryptobyCore {
-    
+
     private CryptSym cryptSym;
-    private KeyGenPriv keyGenPriv;
+    private CryptAsym cryptAsym;
+    private KeyGenSym keyGenSym;
+    private KeyGenAsym keyGenAsym;
     private PrimeTest primetest;
     private CryptobyClient client;
     private CryptobyUI ui;
-    
-    public CryptobyCore(CryptobyClient client){
-        this.setClient(client);    
+
+    public CryptobyCore(CryptobyClient client) {
+        this.setClient(client);
+        this.initCryptSym();
+        this.initCryptAsym();
+        this.initSymKey();
+        this.initAsymKey();
+        this.initPrimeTest();
+        this.initUI();
     }
-    
+
     public void initCryptSym() {
-        if(this.client.getCryptSymArt().equals("AES")){
+        if (this.client.getCryptSymArt().equals("AES")) {
             this.setCryptSym(new CryptAES());
         } else {
             this.setCryptSym(new CryptAES());
         }
     }
-    
-    public void initKeyGen() {
-        if(this.client.getKeyGenArt().equals("SHA3")){
-            this.setKeyGenPriv(new KeyGenPrivSHA3());
+
+    public void initCryptAsym() {
+        if (this.client.getCryptAsymArt().equals("RSA")) {
+            this.setCryptAsym(new CryptRSA());
         } else {
-            this.setKeyGenPriv(new KeyGenPrivSHA3());
+            this.setCryptAsym(new CryptRSA());
+        }
+    }
+
+    public void initSymKey() {
+        if (this.client.getKeySymArt().equals("SHA3")) {
+            this.setKeyGenSym(new KeyGenSHA3());
+        } else {
+            this.setKeyGenSym(new KeyGenSHA3());
+        }
+    }
+
+    public void initAsymKey() {
+        if (this.client.getKeySymArt().equals("RSA")) {
+            this.setKeyGenAsym(new KeyGenRSA(this));
+        } else {
+            this.setKeyGenAsym(new KeyGenRSA(this));
         }
     }
 
     public void initPrimeTest() {
-        if(this.client.getPrimTestArt().equals("MillerRabin")){
+        if (this.client.getPrimTestArt().equals("MillerRabin")) {
             this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
         } else {
             this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
         }
     }
-    
+
     public void initUI() {
-        if(this.client.getUi().equals("console")){
+        if (this.client.getUi().equals("console")) {
             this.ui = new CryptobyConsole(this);
         } else {
             this.ui = new CryptobyConsole(this);
         }
     }
-    
+
     public PrimeTest getPrimetest() {
         return primetest;
     }
@@ -87,13 +114,21 @@ public final class CryptobyCore {
     public void setUi(CryptobyUI ui) {
         this.ui = ui;
     }
-    
-    public KeyGenPriv getKeyGenPriv() {
-        return keyGenPriv;
+
+    public KeyGenSym getKeyGenSym() {
+        return keyGenSym;
     }
 
-    public void setKeyGenPriv(KeyGenPriv keyGenPriv) {
-        this.keyGenPriv = keyGenPriv;
+    public void setKeyGenSym(KeyGenSym keyGenSym) {
+        this.keyGenSym = keyGenSym;
+    }
+
+    public KeyGenAsym getKeyGenAsym() {
+        return keyGenAsym;
+    }
+
+    public void setKeyGenAsym(KeyGenAsym keyGenAsym) {
+        this.keyGenAsym = keyGenAsym;
     }
 
     public CryptSym getCryptSym() {
@@ -103,5 +138,13 @@ public final class CryptobyCore {
     public void setCryptSym(CryptSym cryptSym) {
         this.cryptSym = cryptSym;
     }
-    
+
+    public CryptAsym getCryptAsym() {
+        return cryptAsym;
+    }
+
+    public void setCryptAsym(CryptAsym cryptAsym) {
+        this.cryptAsym = cryptAsym;
+    }
+
 }

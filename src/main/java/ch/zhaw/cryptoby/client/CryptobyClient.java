@@ -18,14 +18,20 @@ public final class CryptobyClient {
     private CryptobyCore core;
     private String primTestArt;
     private int primetestrounds;
-    private String keyGenArt;
+    private String keySymArt;
+    private String keyAsymArt;
     private String cryptSymArt;
+    private String cryptAsymArt;
     private String ui;
     
     public CryptobyClient() {
         this.setPrimTestArt("MillerRabin");
         this.setPrimetestrounds(5);
         this.setUi("console");
+        this.setCryptSymArt("AES");
+        this.setCryptAsymArt("RSA");
+        this.setKeySymArt("SHA3");
+        this.setKeyAsymArt("RSA");
         this.core = new CryptobyCore(this);
     }
     
@@ -34,8 +40,6 @@ public final class CryptobyClient {
      */
     public static void main(String[] args) {
         CryptobyClient client = new CryptobyClient();
-        client.getCore().initPrimeTest();
-        client.getCore().initUI();
         client.getCore().getUi().run();
     }
     
@@ -75,12 +79,20 @@ public final class CryptobyClient {
         this.ui = ui;
     }
     
-    public String getKeyGenArt() {
-        return keyGenArt;
+    public String getKeySymArt() {
+        return keySymArt;
     }
 
-    public void setKeyGenArt(String keyGenArt) {
-        this.keyGenArt = keyGenArt;
+    public void setKeySymArt(String keySymArt) {
+        this.keySymArt = keySymArt;
+    }
+
+    public String getKeyAsymArt() {
+        return keyAsymArt;
+    }
+
+    public void setKeyAsymArt(String keyAsymArt) {
+        this.keyAsymArt = keyAsymArt;
     }
 
     public String getCryptSymArt() {
@@ -89,6 +101,14 @@ public final class CryptobyClient {
 
     public void setCryptSymArt(String cryptSymArt) {
         this.cryptSymArt = cryptSymArt;
+    }
+
+    public String getCryptAsymArt() {
+        return cryptAsymArt;
+    }
+
+    public void setCryptAsymArt(String cryptAsymArt) {
+        this.cryptAsymArt = cryptAsymArt;
     }
 
 }

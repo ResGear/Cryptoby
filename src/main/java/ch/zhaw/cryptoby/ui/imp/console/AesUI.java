@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.zhaw.cryptoby.ui.imp;
+package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyHelper;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class AesUI {
                 aesDecrypter(console);
                 break;
             case 3:
-                console.run();
+                console.menuStringSym();
                 break;
             default:
                 aesCrypter(console);
@@ -67,7 +67,6 @@ public class AesUI {
             System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
             key = scanner.next().getBytes();
             keySize = key.length * 4;
-            System.out.println(keySize);
         } while (keySize != 128 && keySize != 192 && keySize != 256);
 
         // Initial AES Crypt Object
@@ -78,7 +77,7 @@ public class AesUI {
         cryptText = console.getCore().getCryptSym().encrypt(plainText, key);
 
         // Convert byte Array into a Hexcode String
-        cryptTextHex = CryptobyHelper.bytesToHexString(cryptText);
+        cryptTextHex = CryptobyHelper.bytesToHexStringUpper(cryptText);
 
         // Print encrypted Text in Hex form
         System.out.println("AES-" + keySize + " encrypted Text in Hex form:");
@@ -92,7 +91,7 @@ public class AesUI {
         }
 
         // Back to Menu Choose PrimeTest
-        console.chooseSymEnc();
+        console.menuStringSym();
     }
 
     private static void aesDecrypter(CryptobyConsole console) {
@@ -120,7 +119,6 @@ public class AesUI {
 
         // Convert Hexcode String to Byte Array
         cryptText = CryptobyHelper.hexStringToBytes(cryptTextHex);
-        System.out.println(CryptobyHelper.bytesToHexString(cryptText));
 
         // Decrypt the String Text with given Key
         try {
@@ -148,7 +146,7 @@ public class AesUI {
         }
 
         // Back to Menu Choose PrimeTest
-        console.chooseSymEnc();
+        console.menuStringSym();
     }
 
 }

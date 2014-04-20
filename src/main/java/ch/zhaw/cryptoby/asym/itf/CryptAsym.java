@@ -12,4 +12,7 @@ package ch.zhaw.cryptoby.asym.itf;
  */
 public interface CryptAsym {
     
+    public byte[] encrypt(byte[] plainInput, byte[] publicKey);
+    public byte[] decrypt(byte[] cryptInput, byte[] privateKey);
+    
 }

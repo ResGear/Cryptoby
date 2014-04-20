@@ -2,12 +2,16 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package ch.zhaw.cryptoby.sym.imp;
 
 import ch.zhaw.cryptoby.core.CryptobyHelper;
-import ch.zhaw.cryptoby.keygen.imp.KeyGenPrivSHA3;
+import ch.zhaw.cryptoby.keygen.imp.KeyGenSHA3;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -44,7 +48,7 @@ public class CryptAESTest {
     public void testEncryptDecrypt256() {
         System.out.println("encrypt and decrypt testphrase");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
+        KeyGenSHA3 keyGen = new KeyGenSHA3();
         String hexKey = keyGen.generateKey(256, "password");
         byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
         System.out.println(hexKey);
@@ -62,7 +66,7 @@ public class CryptAESTest {
         public void testEncryptDecrypt256_falseKey() {
         System.out.println("crypt false key");
         byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-        KeyGenPrivSHA3 keyGen = new KeyGenPrivSHA3();
+        KeyGenSHA3 keyGen = new KeyGenSHA3();
         String hexKey = keyGen.generateKey(256, "password");
         byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
         System.out.println(hexKey);
