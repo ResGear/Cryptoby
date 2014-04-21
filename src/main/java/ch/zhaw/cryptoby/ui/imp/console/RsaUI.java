@@ -173,7 +173,7 @@ public class RsaUI {
             System.out.println("Enter the private Key:");
             key = new BigInteger(scanner.next(), Character.MAX_RADIX).toByteArray();
             keySize = key.length;
-        } while (keySize != 128 && keySize != 256 && keySize != 512);
+        } while (keySize != 512 && keySize != 1024 && keySize != 2048);
 
         // Initial AES Crypt Object
         console.getCore().getClient().setCryptAsymArt("RSA");

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ch.zhaw.cryptoby.keygen.imp;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
@@ -48,14 +47,14 @@ public class KeyGenRSA implements KeyGenAsym {
             throw new IllegalArgumentException("Just Keys with Size of 1024,2048 or 4096 are allowed!");
         }
 
-        generateKeys(keyByteSize);
-        
+        generateKeys(keyBitSize);
+
         // Generate Public Key to alphanumeric String
         pubKeyByte = n.toByteArray();
         pubKey = new BigInteger(pubKeyByte).toString(Character.MAX_RADIX);
 
         byte[] dByte = d.toByteArray();
-        
+
         privKeyByte = new byte[dByte.length + pubKeyByte.length];
         // Copy D ByteArray into first Part and N ByteArray into second Part
         System.arraycopy(dByte, 0, privKeyByte, 0, dByte.length);
@@ -78,13 +77,13 @@ public class KeyGenRSA implements KeyGenAsym {
         try {
             return pubKey;
         } catch (NullPointerException exp) {
-             throw new IllegalArgumentException("KeyGenerator is not initialised! First use initGenerator!");
+            throw new IllegalArgumentException("KeyGenerator is not initialised! First use initGenerator!");
         }
     }
-    
+
     @Override
     public byte[] getPrivateKeyByte() {
-       try {
+        try {
             return privKeyByte;
         } catch (NullPointerException exp) {
             throw new IllegalArgumentException("KeyGenerator is not initialised! First use initGenerator!");
@@ -93,27 +92,25 @@ public class KeyGenRSA implements KeyGenAsym {
 
     @Override
     public byte[] getPublicKeyByte() {
-     try {
+        try {
             return pubKeyByte;
         } catch (NullPointerException exp) {
             throw new IllegalArgumentException("KeyGenerator is not initialised! First use initGenerator!");
         }
     }
 
-    private void generateKeys(int keyByteSize) {
+    private void generateKeys(int keyBitSize) {
+        int keyByteSize = keyBitSize / 8;
         // Generate Primes for Q and P
         do {
             do {
-                q = new BigInteger(1, scRandom.generateSeed(keyByteSize)).nextProbablePrime();
+                q = BigInteger.probablePrime(keyBitSize-1, scRandom);
             } while (!(core.getPrimetest().isPrime(q)) || q.toByteArray().length != keyByteSize);
             do {
-                do {
-                    p = new BigInteger(1, scRandom.generateSeed(keyByteSize));
-                } while (p.compareTo(q) < 1);
-                p = p.nextProbablePrime();
+                p = BigInteger.probablePrime(keyBitSize-1, scRandom);
             } while (!(core.getPrimetest().isPrime(p)) || p.toByteArray().length != keyByteSize);
 
-            log2ofPQ = CryptobyHelper.logBigInteger(p) - CryptobyHelper.logBigInteger(q);
+            log2ofPQ = Math.abs(CryptobyHelper.logBigInteger(p) - CryptobyHelper.logBigInteger(q));
             // Calculate n Module
             calcN();
             // Calculate Phi Module
