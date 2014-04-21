@@ -6,7 +6,10 @@
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyHelper;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -40,9 +43,9 @@ public class RsaUI {
             case 1:
                 rsaEncrypterGenKeys(console);
                 break;
-               case 2:
+            case 2:
                 rsaEncrypter(console);
-                break; 
+                break;
             case 3:
                 rsaDecrypter(console);
                 break;
@@ -80,7 +83,7 @@ public class RsaUI {
 
         // Encrypt the String Text with given Key
         cryptText = console.getCore().getCryptAsym().encrypt(plainText, key);
-        
+
         // Convert byte Array into a Hexcode String
         cryptTextHex = CryptobyHelper.bytesToHexStringUpper(cryptText);
 
@@ -142,9 +145,9 @@ public class RsaUI {
         System.out.println(cryptTextHex);
         System.out.println("\n\n");
         // Print Private and Public Keys
-        System.out.println("Private Key: "+privateKey+"\n");
-        System.out.println("Public Key: "+publicKey+"\n");
-        
+        System.out.println("Private Key: " + privateKey + "\n");
+        System.out.println("Public Key: " + publicKey + "\n");
+
         // Enter for Continues
         try {
             System.in.read();
@@ -157,7 +160,7 @@ public class RsaUI {
     }
 
     private static void rsaDecrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(new BufferedInputStream(System.in, 20*1024*1024), "utf-8");
         // Initial Variables
         byte[] plainText = null;
         byte[] cryptText;
@@ -167,7 +170,9 @@ public class RsaUI {
 
         // Input String Text to decrypt
         System.out.println("Your Text to decrypt:");
-        cryptTextHex = scanner.next();
+        
+        cryptTextHex = scanner.nextLine();
+
         do {
             // Input Key for decryption
             System.out.println("Enter the private Key:");
@@ -175,7 +180,7 @@ public class RsaUI {
             keySize = key.length;
         } while (keySize != 128 && keySize != 256 && keySize != 512);
 
-        // Initial AES Crypt Object
+        // Initial RSA Crypt Object
         console.getCore().getClient().setCryptAsymArt("RSA");
         console.getCore().initCryptAsym();
 
@@ -197,7 +202,7 @@ public class RsaUI {
         }
 
         // Print decrypted Text
-        System.out.println("AES-" + keySize + " decrypted Text:");
+        System.out.println("RSA-" + keySize * 8 + " decrypted Text:");
         System.out.println(new String(plainText));
 
         // Enter for Continues
