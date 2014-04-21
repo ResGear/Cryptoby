@@ -103,7 +103,7 @@ public class RsaUI {
     }
 
     private static void rsaEncrypterGenKeys(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         // Initial Variables
         byte[] plainText;
         byte[] cryptText;
@@ -118,9 +118,14 @@ public class RsaUI {
         scanner.useDelimiter("\\n");
         plainText = scanner.next().getBytes();
         do {
+            scanner = new Scanner(System.in);
             // Input your Key for encryption
             System.out.println("Enter the Size of Key. Allowed are 1024, 2048 and 4096:");
-            keySize = scanner.nextInt();
+            if (scanner.hasNextInt()) {
+                keySize = Integer.parseInt(scanner.next());
+            } else {
+                keySize = 0;
+            }
         } while (keySize != 1024 && keySize != 2048 && keySize != 4096);
 
         // Initial RSA Crypt Object
@@ -160,7 +165,7 @@ public class RsaUI {
     }
 
     private static void rsaDecrypter(CryptobyConsole console) {
-        Scanner scanner = new Scanner(new BufferedInputStream(System.in, 20*1024*1024), "utf-8");
+        Scanner scanner = new Scanner(new BufferedInputStream(System.in, 20 * 1024 * 1024), "utf-8");
         // Initial Variables
         byte[] plainText = null;
         byte[] cryptText;
@@ -170,13 +175,13 @@ public class RsaUI {
 
         // Input String Text to decrypt
         System.out.println("Your Text to decrypt:");
-        
+
         cryptTextHex = scanner.nextLine();
 
         do {
             // Input Key for decryption
             System.out.println("Enter the private Key:");
-            key = new BigInteger(scanner.next(), Character.MAX_RADIX).toByteArray();
+            key = new BigInteger(scanner.nextLine(), Character.MAX_RADIX).toByteArray();
             keySize = key.length;
         } while (keySize != 512 && keySize != 1024 && keySize != 2048);
 
