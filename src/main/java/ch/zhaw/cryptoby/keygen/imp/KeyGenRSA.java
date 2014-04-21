@@ -39,9 +39,6 @@ public class KeyGenRSA implements KeyGenAsym {
         this.core.getClient().setPrimetestrounds(5);
         this.core.getClient().setPrimTestArt("MillerRabin");
         this.core.initPrimeTest();
-
-        this.core.getClient().setKeySymArt("SHA3");
-        this.core.initSymKey();
     }
 
     @Override

@@ -140,10 +140,10 @@ public class RsaUI {
         // Print encrypted Text in Hex form
         System.out.println("RSA-" + keySize + " encrypted Text in Hex form:");
         System.out.println(cryptTextHex);
-        System.out.println("\n");
+        System.out.println("\n\n");
         // Print Private and Public Keys
-        System.out.println("Private Key: "+privateKey);
-        System.out.println("Public Key: "+publicKey);
+        System.out.println("Private Key: "+privateKey+"\n");
+        System.out.println("Public Key: "+publicKey+"\n");
         
         // Enter for Continues
         try {
