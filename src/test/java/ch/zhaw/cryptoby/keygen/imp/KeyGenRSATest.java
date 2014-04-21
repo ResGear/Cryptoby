@@ -43,40 +43,40 @@ public class KeyGenRSATest {
     /**
      * Test of genPrivateKey method, of class KeyGenRSA.
      */
-    @Test
-    public void testGenPrivatePublicKey1024() {
-        System.out.println("genPrivateKey1024bit");
-        int keySize = 1024;
-        CryptobyClient client = new CryptobyClient();
-        CryptobyCore core = new CryptobyCore(client);
-        KeyGenRSA instance = new KeyGenRSA(core);
-        instance.initGenerator(keySize);
-        String resultPriv = instance.getPrivateKey();
-        String resultPub = instance.getPublicKey();
-        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
-        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
-        assertTrue(publicKey.length==256);
-        assertTrue(privateKey.length==512);
-    }
-
-    /**
-     * Test of genPrivateKey method, of class KeyGenRSA.
-     */
-    @Test
-    public void testGenPrivatePublicKey2048() {
-        System.out.println("genPrivateKey2048bit");
-        int keySize = 2048;
-        CryptobyClient client = new CryptobyClient();
-        CryptobyCore core = new CryptobyCore(client);
-        KeyGenRSA instance = new KeyGenRSA(core);
-        instance.initGenerator(keySize);
-        String resultPriv = instance.getPrivateKey();
-        String resultPub = instance.getPublicKey();
-        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
-        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
-        System.out.println(resultPriv);
-        System.out.println(resultPub);
-        assertTrue(publicKey.length==512);
-        assertTrue(privateKey.length==1024);
-    }
+//    @Test
+//    public void testGenPrivatePublicKey1024() {
+//        System.out.println("genPrivateKey1024bit");
+//        int keySize = 1024;
+//        CryptobyClient client = new CryptobyClient();
+//        CryptobyCore core = new CryptobyCore(client);
+//        KeyGenRSA instance = new KeyGenRSA(core);
+//        instance.initGenerator(keySize);
+//        String resultPriv = instance.getPrivateKey();
+//        String resultPub = instance.getPublicKey();
+//        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
+//        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
+//        assertTrue(publicKey.length==256);
+//        assertTrue(privateKey.length==512);
+//    }
+//
+//    /**
+//     * Test of genPrivateKey method, of class KeyGenRSA.
+//     */
+//    @Test
+//    public void testGenPrivatePublicKey2048() {
+//        System.out.println("genPrivateKey2048bit");
+//        int keySize = 2048;
+//        CryptobyClient client = new CryptobyClient();
+//        CryptobyCore core = new CryptobyCore(client);
+//        KeyGenRSA instance = new KeyGenRSA(core);
+//        instance.initGenerator(keySize);
+//        String resultPriv = instance.getPrivateKey();
+//        String resultPub = instance.getPublicKey();
+//        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
+//        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
+//        System.out.println(resultPriv);
+//        System.out.println(resultPub);
+//        assertTrue(publicKey.length==512);
+//        assertTrue(privateKey.length==1024);
+//    }
 }
