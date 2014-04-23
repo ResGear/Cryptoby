@@ -5,8 +5,12 @@
  */
 package ch.zhaw.cryptoby.core;
 
+import ch.zhaw.cryptoby.ui.imp.console.CryptobyConsole;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Formatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -54,4 +58,29 @@ public class CryptobyHelper {
         return blex > 0 ? res + blex * LOG2 : res;
     }
 
+    public static void charToBlockString(char[] charTextHex) {
+        int lenLine = 128;
+        char[] temp = new char[lenLine];
+        for (int i = 0; i < charTextHex.length; i = i + lenLine) {
+            if ((charTextHex.length - i) < lenLine) {
+                temp = new char[(charTextHex.length - i)];
+                System.arraycopy(charTextHex, i, temp, 0, (charTextHex.length - i));
+                System.out.println(new String(temp));
+            } else {
+                System.arraycopy(charTextHex, i, temp, 0, lenLine);
+                System.out.println(new String(temp));
+            }
+        }
+    }
+
+    public static void pressEnter() {
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
 }

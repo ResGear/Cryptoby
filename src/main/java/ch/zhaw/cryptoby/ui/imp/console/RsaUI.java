@@ -6,14 +6,8 @@
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyHelper;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,11 +15,22 @@ import java.util.logging.Logger;
  */
 public class RsaUI {
 
+    private static final String quit = "QuitCrypt";
+    private static final String eob = "EndOfBlock";
+    private static Scanner scanner = new Scanner(System.in);
+    private static byte[] plainByte;
+    private static byte[] cryptByte;
+    private static char[] charTextHex;
+    private static byte[] privateKeyByte;
+    private static byte[] publicKeyByte;
+    private static int choice;
+    private static int keySize;
+
     public static void rsaCrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
-        int choice;
+        scanner = new Scanner(System.in);
 
         do {
+            System.out.println("\n");
             System.out.println("What do want? Encryption or Decryption?");
             System.out.println("-------------------------\n");
             System.out.println("1 - Encryption and generate Keys");
@@ -58,167 +63,242 @@ public class RsaUI {
     }
 
     private static void rsaEncrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
-        // Initial Variables
-        byte[] plainText;
-        byte[] cryptText;
-        String cryptTextHex;
-        byte[] key;
-        int keySize;
 
         // Input your String Text to encrypt
-        System.out.println("Your Text to encrypt:");
-        scanner.useDelimiter("\\n");
-        plainText = scanner.next().getBytes();
-        do {
-            // Input Key for decryption
-            System.out.println("Enter the public Key:");
-            key = new BigInteger(scanner.next(), Character.MAX_RADIX).toByteArray();
-            keySize = key.length;
-        } while (keySize != 128 && keySize != 256 && keySize != 512);
+        plainByte = RsaUI.scanPlainText(console);
+
+        // Input the Public Key to encrypt
+        publicKeyByte = RsaUI.scanPublicKey(console);
 
         // Initial RSA Crypt Object
-        console.getCore().getClient().setCryptAsymArt("RSA");
-        console.getCore().initCryptAsym();
+        RsaUI.initRSAKeyGen(console);
 
         // Encrypt the String Text with given Key
-        cryptText = console.getCore().getCryptAsym().encrypt(plainText, key);
+        cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
 
         // Convert byte Array into a Hexcode String
-        cryptTextHex = CryptobyHelper.bytesToHexStringUpper(cryptText);
+        charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
-        // Print encrypted Text in Hex form
-        System.out.println("RSA-" + keySize + " encrypted Text in Hex form:");
-        System.out.println(cryptTextHex);
+        // Print encrypted Text in Hex Block form
+        RsaUI.printHexBlock(keySize, charTextHex);
 
         // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        CryptobyHelper.pressEnter();
 
         // Back to Menu rsaCrypter
         RsaUI.rsaCrypter(console);
     }
 
     private static void rsaEncrypterGenKeys(CryptobyConsole console) {
-        Scanner scanner = new Scanner(System.in);
-        // Initial Variables
-        byte[] plainText;
-        byte[] cryptText;
-        String cryptTextHex;
+        scanner = new Scanner(System.in);
         String privateKey;
         String publicKey;
-        byte[] publicKeyByte;
-        int keySize;
+
+        // Set Default Key Size
+        keySize = 1024;
+
+        do {
+            System.out.println("\n");
+            System.out.println("Choose Key Size");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - 1024");
+            System.out.println("2 - 2048");
+            System.out.println("3 - 4096");
+            System.out.println("4 - Back");
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number! Enter 1,2,3 or 4:");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 4);
+
+        switch (choice) {
+            case 1:
+                keySize = 1024;
+                break;
+            case 2:
+                keySize = 2048;
+                break;
+            case 3:
+                keySize = 4096;
+                break;
+            case 4:
+                RsaUI.rsaCrypter(console);
+                break;
+            default:
+                RsaUI.rsaCrypter(console);
+        }
 
         // Input your String Text to encrypt
-        System.out.println("Your Text to encrypt:");
-        scanner.useDelimiter("\\n");
-        plainText = scanner.next().getBytes();
-        do {
-            scanner = new Scanner(System.in);
-            // Input your Key for encryption
-            System.out.println("Enter the Size of Key. Allowed are 1024, 2048 and 4096:");
-            if (scanner.hasNextInt()) {
-                keySize = Integer.parseInt(scanner.next());
-            } else {
-                keySize = 0;
-            }
-        } while (keySize != 1024 && keySize != 2048 && keySize != 4096);
+        plainByte = RsaUI.scanPlainText(console);
 
         // Initial RSA Crypt Object
-        console.getCore().getClient().setCryptAsymArt("RSA");
-        console.getCore().initCryptAsym();
+        RsaUI.initRSAKeyGen(console);
 
         // Get Public Key in Bytecode
         console.getCore().getKeyGenAsym().initGenerator(keySize);
         publicKeyByte = console.getCore().getKeyGenAsym().getPublicKeyByte();
-        // Get Public Key as String
+
+        // Get Public and Private Key as String
         publicKey = console.getCore().getKeyGenAsym().getPublicKey();
         privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
 
         // Encrypt the String Text with given Key
-        cryptText = console.getCore().getCryptAsym().encrypt(plainText, publicKeyByte);
+        cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
 
-        // Convert byte Array into a Hexcode String
-        cryptTextHex = CryptobyHelper.bytesToHexStringUpper(cryptText);
+        // Convert crypted byte Array into a Hexcode String
+        charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
-        // Print encrypted Text in Hex form
-        System.out.println("RSA-" + keySize + " encrypted Text in Hex form:");
-        System.out.println(cryptTextHex);
-        System.out.println("\n\n");
+        // Print encrypted Text in Hex Block form
+        RsaUI.printHexBlock(keySize, charTextHex);
+
         // Print Private and Public Keys
-        System.out.println("Private Key: " + privateKey + "\n");
-        System.out.println("Public Key: " + publicKey + "\n");
+        System.out.println("\nPrivate Key:");
+        CryptobyHelper.charToBlockString(privateKey.toCharArray());
+        System.out.println(eob);
 
-        // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        System.out.println("\nPublic Key:");
+        CryptobyHelper.charToBlockString(publicKey.toCharArray());
+        System.out.println(eob);
+
+        // Press Return for Continues
+        CryptobyHelper.pressEnter();
 
         // Back to Menu rsaCrypter
         RsaUI.rsaCrypter(console);
     }
 
     private static void rsaDecrypter(CryptobyConsole console) {
-        Scanner scanner = new Scanner(new BufferedInputStream(System.in, 20 * 1024 * 1024), "utf-8");
-        // Initial Variables
-        byte[] plainText = null;
-        byte[] cryptText;
-        String cryptTextHex;
-        byte[] key;
-        int keySize;
+        scanner = new Scanner(System.in);
 
-        // Input String Text to decrypt
-        System.out.println("Your Text to decrypt:");
+        // Input encrypted Hex String Text to decrypt
+        System.out.println("\nYour Text to decrypt (Type '" + quit + "' to Escape):");
 
-        cryptTextHex = scanner.nextLine();
+        // Convert crypted HexString Block to one String
+        try {
+            String cryptText = "";
+            while (!scanner.hasNext(eob)) {
+                if (scanner.hasNext(quit)) {
+                    RsaUI.rsaCrypter(console);
+                }
+                cryptText = cryptText + scanner.next();
+            }
+            cryptByte = CryptobyHelper.hexStringToBytes(cryptText);
 
-        do {
-            // Input Key for decryption
-            System.out.println("Enter the private Key:");
-            key = new BigInteger(scanner.nextLine(), Character.MAX_RADIX).toByteArray();
-            keySize = key.length;
-        } while (keySize != 512 && keySize != 1024 && keySize != 2048);
+        } // Catch false format of Input
+        catch (NumberFormatException exp) {
+            System.out.println("\nNot allowed Crypted Text! Must be a Upper Hex String!");
+            cryptByte = BigInteger.ZERO.toByteArray();
+        }
+
+        // Input the Private Key
+        privateKeyByte = RsaUI.scanPrivateKey(console);
 
         // Initial RSA Crypt Object
-        console.getCore().getClient().setCryptAsymArt("RSA");
-        console.getCore().initCryptAsym();
-
-        // Convert Hexcode String to Byte Array
-        cryptText = CryptobyHelper.hexStringToBytes(cryptTextHex);
+        RsaUI.initRSAKeyGen(console);
 
         // Decrypt the String Text with given Key
         try {
-            plainText = console.getCore().getCryptAsym().decrypt(cryptText, key);
+            plainByte = console.getCore().getCryptAsym().decrypt(cryptByte, privateKeyByte);
         } catch (Exception e) {
-            System.out.println("Unable to decrypt this String!!");
-            // Enter for Continues
-            try {
-                System.in.read();
-            } catch (IOException ex) {
-                Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            System.out.println("\nUnable to decrypt this String!!");
+            plainByte = null;
+            // Press Return for Continues
+            CryptobyHelper.pressEnter();
             rsaCrypter(console);
         }
 
         // Print decrypted Text
-        System.out.println("RSA-" + keySize * 8 + " decrypted Text:");
-        System.out.println(new String(plainText));
+        System.out.println("\nRSA-" + keySize + " decrypted Text:");
+        System.out.println(new String(plainByte));
 
-        // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // Press Return for Continues
+        CryptobyHelper.pressEnter();
 
         // Back to Menu rsaCrypter
         RsaUI.rsaCrypter(console);
+    }
+    
+    private static void printHexBlock(int inputKeySize,  char[] inputCharTextHex){
+        System.out.println("\nRSA-" + inputKeySize + " encrypted Text in Hex form (Copy with '" + eob + "'):");
+        CryptobyHelper.charToBlockString(inputCharTextHex);
+        System.out.println(eob);
+    }
+
+    private static byte[] scanPrivateKey(CryptobyConsole console) {
+        byte[] retKey = null;
+        do {
+            scanner = new Scanner(System.in);
+            String keyText = "";
+            // Input Private Key for decryption
+            System.out.println("\nEnter the private Key (Type '" + quit + "' to Escape):");
+            try {
+                while (!scanner.hasNext(eob)) {
+                    if (scanner.hasNext(quit)) {
+                        RsaUI.rsaCrypter(console);
+                    }
+                    keyText = keyText + scanner.next();
+                }
+                retKey = new BigInteger(keyText, Character.MAX_RADIX).toByteArray();
+                keySize = retKey.length * 2;
+            } // Catch false format of Input
+            catch (NumberFormatException exp) {
+                System.out.println("Not allowed Characters in Private Key! Just lower alphanumeric Characters!");
+                retKey = BigInteger.ZERO.toByteArray();
+                keySize = 0;
+            } catch (NullPointerException exp) {
+                System.out.println("NullPointerException catched! Try again!");
+                retKey = BigInteger.ZERO.toByteArray();
+                keySize = 0;
+            }
+        } while (keySize != 1024 && keySize != 2048 && keySize != 4096);
+        return retKey;
+    }
+
+    private static byte[] scanPublicKey(CryptobyConsole console) {
+        byte[] retKey = null;
+        do {
+            scanner = new Scanner(System.in);
+            String keyText = "";
+            // Input Key for decryption
+            System.out.println("\nEnter the public Key (Type '" + quit + "' to Escape):");
+            try {
+
+                while (!scanner.hasNext(eob)) {
+                    if (scanner.hasNext(quit)) {
+                        RsaUI.rsaCrypter(console);
+                    }
+                    keyText = keyText + scanner.next();
+                }
+                retKey = new BigInteger(keyText, Character.MAX_RADIX).toByteArray();
+                keySize = retKey.length * 4;
+            } catch (NumberFormatException exp) {
+                System.out.println("Not allowed Characters in Private Key! Just lower alphanumeric Characters!");
+                retKey = BigInteger.ZERO.toByteArray();
+                keySize = 0;
+            } catch (NullPointerException exp) {
+                System.out.println("NullPointerException catched! Try again!");
+                privateKeyByte = BigInteger.ZERO.toByteArray();
+                keySize = 0;
+            }
+        } while (keySize != 1024 && keySize != 2048 && keySize != 4096);
+        return retKey;
+
+    }
+
+    private static byte[] scanPlainText(CryptobyConsole console) {
+        scanner = new Scanner(System.in);
+        System.out.println("Your Text to encrypt (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            RsaUI.rsaCrypter(console);
+        }
+        return scanner.next().getBytes();
+    }
+
+    private static void initRSAKeyGen(CryptobyConsole console) {
+        console.getCore().getClient().setCryptAsymArt("RSA");
+        console.getCore().initCryptAsym();
     }
 
 }

@@ -6,10 +6,7 @@
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyHelper;
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,9 +14,17 @@ import java.util.logging.Logger;
  */
 public class AesUI {
 
+    private static byte[] plainText = null;
+    private static byte[] cryptText;
+    private static byte[] key;
+    private static int keySize;
+    private static int choice;
+    private static String cryptTextHex;
+    private static final String quit = "QuitCrypt";
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void aesCrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
-        int choice;
+        scanner = new Scanner(System.in);
 
         do {
             System.out.println("What do want? Encryption or Decryption?");
@@ -50,28 +55,16 @@ public class AesUI {
     }
 
     private static void aesEncrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
-        // Initial Variables
-        byte[] plainText;
-        byte[] cryptText;
-        String cryptTextHex;
-        byte[] key;
-        int keySize;
+        scanner = new Scanner(System.in);
 
         // Input your String Text to encrypt
-        System.out.println("Your Text to encrypt:");
-        scanner.useDelimiter("\\n");
-        plainText = scanner.next().getBytes();
-        do {
-            // Input your Key for encryption
-            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
-            key = scanner.next().getBytes();
-            keySize = key.length * 4;
-        } while (keySize != 128 && keySize != 192 && keySize != 256);
+        plainText = AesUI.scanPlainText(console);
+
+        // Input your Key for encryption
+        key = AesUI.scanKey(console);
 
         // Initial AES Crypt Object
-        console.getCore().getClient().setCryptSymArt("AES");
-        console.getCore().initCryptSym();
+        AesUI.initAESKeyGen(console);
 
         // Encrypt the String Text with given Key
         cryptText = console.getCore().getCryptSym().encrypt(plainText, key);
@@ -84,40 +77,29 @@ public class AesUI {
         System.out.println(cryptTextHex);
 
         // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        CryptobyHelper.pressEnter();
 
         // Back to Menu Choose PrimeTest
         console.menuStringSym();
     }
 
     private static void aesDecrypter(CryptobyConsole console) {
-        final Scanner scanner = new Scanner(System.in);
-        // Initial Variables
-        byte[] plainText = null;
-        byte[] cryptText;
-        String cryptTextHex;
-        byte[] key;
-        int keySize;
+        scanner = new Scanner(System.in);
 
         // Input String Text to decrypt
         System.out.println("Your Text to decrypt:");
+        if (scanner.hasNext(quit)) {
+            AesUI.aesCrypter(console);
+        }
         cryptTextHex = scanner.next();
-        do {
-            // Input Key for decryption
-            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
-            key = scanner.next().getBytes();
-            keySize = key.length * 4;
-        } while (keySize != 128 && keySize != 192 && keySize != 256);
+
+        // Input your Key for encryption
+        key = AesUI.scanKey(console);
 
         // Initial AES Crypt Object
-        console.getCore().getClient().setCryptSymArt("AES");
-        console.getCore().initCryptSym();
+        AesUI.initAESKeyGen(console);
 
-        // Convert Hexcode String to Byte Array
+        // Convert Hexcode String to Byte Array                
         cryptText = CryptobyHelper.hexStringToBytes(cryptTextHex);
 
         // Decrypt the String Text with given Key
@@ -126,11 +108,7 @@ public class AesUI {
         } catch (Exception e) {
             System.out.println("Unable to decrypt this String!!");
             // Enter for Continues
-            try {
-                System.in.read();
-            } catch (IOException ex) {
-                Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            CryptobyHelper.pressEnter();
             aesCrypter(console);
         }
 
@@ -139,14 +117,39 @@ public class AesUI {
         System.out.println(new String(plainText));
 
         // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        CryptobyHelper.pressEnter();
 
         // Back to Menu Choose PrimeTest
         console.menuStringSym();
+    }
+
+    private static byte[] scanPlainText(CryptobyConsole console) {
+        scanner = new Scanner(System.in);
+        System.out.println("Your Text to encrypt (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            AesUI.aesCrypter(console);
+        }
+        return scanner.next().getBytes();
+    }
+
+    private static byte[] scanKey(CryptobyConsole console) {
+        scanner = new Scanner(System.in);
+        byte[] tempKey;
+        do {
+            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
+            if (scanner.hasNext(quit)) {
+                AesUI.aesCrypter(console);
+            }
+            tempKey = scanner.next().getBytes();
+            keySize = tempKey.length * 4;
+        } while (keySize != 128 && keySize != 192 && keySize != 256);
+        return tempKey;
+    }
+
+    private static void initAESKeyGen(CryptobyConsole console) {
+        console.getCore().getClient().setCryptSymArt("AES");
+        console.getCore().initCryptSym();
     }
 
 }

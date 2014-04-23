@@ -6,10 +6,8 @@
 
 package ch.zhaw.cryptoby.ui.imp.console;
 
-import java.io.IOException;
+import ch.zhaw.cryptoby.core.CryptobyHelper;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,17 +21,43 @@ public class GenRsaKeyUI {
         int keySize;
         String pubKey;
         String privKey;
+        int choice;
         
-        // Input Size of the SHA Key: possible are 224,256,384,512
+        // Set Default Key Size
+        keySize = 1024;
+
         do {
-            System.out.println("Set Key Size");
-            System.out.println("Please enter one of these Sizes: 1024 2048 4096");
+            System.out.println("\n");
+            System.out.println("Choose Key Size");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - 1024");
+            System.out.println("2 - 2048");
+            System.out.println("3 - 4096");
+            System.out.println("4 - Back");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter a positive number:");
+                System.out.println("That's not a number! Enter 1,2,3 or 4:");
                 scanner.next();
             }
-            keySize = scanner.nextInt();
-        } while (keySize != 1024 && keySize != 2048 && keySize != 4096);
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 4);
+
+        switch (choice) {
+            case 1:
+                keySize = 1024;
+                break;
+            case 2:
+                keySize = 2048;
+                break;
+            case 3:
+                keySize = 4096;
+                break;
+            case 4:
+                console.menuGenKey();
+                break;
+            default:
+                console.menuGenKey();
+        }
+
         
         // Initial Key Generator
         console.getCore().getClient().setKeyAsymArt("RSA");
@@ -45,15 +69,13 @@ public class GenRsaKeyUI {
         privKey = console.getCore().getKeyGenAsym().getPrivateKey();
         
         // Print Keys
-        System.out.println("Public Key RSA-"+keySize+": "+pubKey);
-        System.out.println("Private Key RSA-"+keySize+": "+privKey);
+        System.out.println("\nPublic Key RSA-"+keySize+":");
+        System.out.println(pubKey);
+        System.out.println("\nPrivate Key RSA-"+keySize+":");
+        System.out.println(privKey);
         
         // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        CryptobyHelper.pressEnter();
         
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
