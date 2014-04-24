@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- *//*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- *//*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package ch.zhaw.cryptoby.keygen.imp;
 
@@ -51,7 +38,7 @@ public class KeyGenSHA3Test {
      */
     @Test
     public void testGenerateKey_int_random_length224() {
-        System.out.println("generateKey");
+        System.out.println("generate random 224bit Key");
         int keySize = 224;
         KeyGenSHA3 instance = new KeyGenSHA3();
         int expResult = 224;
@@ -65,7 +52,7 @@ public class KeyGenSHA3Test {
      */
     @Test
     public void testGenerateKey_int_random_length256() {
-        System.out.println("generateKey");
+        System.out.println("generate random 256bit Key");
         int keySize = 256;
         KeyGenSHA3 instance = new KeyGenSHA3();
         int expResult = 256;
@@ -79,7 +66,7 @@ public class KeyGenSHA3Test {
      */
     @Test
     public void testGenerateKey_int_random_length384() {
-        System.out.println("generateKey");
+        System.out.println("generate random 384bit Key");
         int keySize = 384;
         KeyGenSHA3 instance = new KeyGenSHA3();
         int expResult = 384;
@@ -93,7 +80,7 @@ public class KeyGenSHA3Test {
      */
     @Test
     public void testGenerateKey_int_random_length512() {
-        System.out.println("generateKey");
+        System.out.println("generate random 512bit Key");
         int keySize = 512;
         KeyGenSHA3 instance = new KeyGenSHA3();
         int expResult = 512;
@@ -107,7 +94,7 @@ public class KeyGenSHA3Test {
      */
     @Test
     public void testGenerateKey_int_String() {
-        System.out.println("generateKey");
+        System.out.println("generate 256bit Key and comparse with given Key");
         int keySize = 256;
         String password = "testest";
         KeyGenSHA3 instance = new KeyGenSHA3();
@@ -115,6 +102,21 @@ public class KeyGenSHA3Test {
         String result = instance.generateKey(keySize, password);
         System.out.println(result);
         assertEquals(expResult, result);
+    }
+    
+       /**
+     * Test of generateKey method, of class KeyGenSHA3.
+     */
+    @Test
+    public void testGenerateKey_int_String_false() {
+        System.out.println("generate 256bit false Key and comparse with given Key");
+        int keySize = 256;
+        String password = "falsePW";
+        KeyGenSHA3 instance = new KeyGenSHA3();
+        String expResult = "e195622d04525e14469076f4175b990a72995ea7c9f379c465670c330b4f8b60";
+        String result = instance.generateKey(keySize, password);
+        System.out.println(result);
+        assertFalse(expResult.equals(result));
     }
     
 }

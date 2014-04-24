@@ -24,11 +24,11 @@ That means, it doesn't use any cryptographic libraries from Java or elsewhere. F
 
 ## Testing
 
-_How do I run the project's automated tests?_
+_Create Test Suite for whole Application_
 
-### Unit Tests
+### JUnit Tests
 
-1. Tests with JUnit
+Test Public Functions in every Class
 
 ## Troubleshooting & Useful Tools
 

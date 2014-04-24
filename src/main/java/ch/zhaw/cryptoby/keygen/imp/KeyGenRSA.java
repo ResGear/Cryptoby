@@ -1,15 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 Toby
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package ch.zhaw.cryptoby.keygen.imp;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
-import ch.zhaw.cryptoby.core.CryptobyHelper;
+import ch.zhaw.cryptoby.helper.CryptobyHelper;
+import ch.zhaw.cryptoby.helper.GenPrimeThread;
 import ch.zhaw.cryptoby.keygen.itf.KeyGenAsym;
 import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +31,6 @@ import java.security.SecureRandom;
  */
 public class KeyGenRSA implements KeyGenAsym {
 
-    private final SecureRandom scRandom;
     private final CryptobyCore core;
     private BigInteger p;
     private BigInteger q;
@@ -30,20 +43,23 @@ public class KeyGenRSA implements KeyGenAsym {
     private String pubKey;
     private byte[] privKeyByte;
     private byte[] pubKeyByte;
+    private int keyByteSize;
+    private int cores;
 
     public KeyGenRSA(CryptobyCore core) {
-        scRandom = new SecureRandom();
+
         this.core = core;
 
         this.core.getClient().setPrimetestrounds(5);
         this.core.getClient().setPrimTestArt("MillerRabin");
         this.core.initPrimeTest();
+        this.cores = Runtime.getRuntime().availableProcessors();
     }
 
     @Override
     public void initGenerator(int keyBitSize) {
-        int keyByteSize = keyBitSize / 8;
-        if (keyByteSize != 128 && keyByteSize != 256 && keyByteSize != 512) {
+
+        if (keyBitSize != 1024 && keyBitSize != 2048 && keyBitSize != 4096) {
             throw new IllegalArgumentException("Just Keys with Size of 1024,2048 or 4096 are allowed!");
         }
 
@@ -56,9 +72,11 @@ public class KeyGenRSA implements KeyGenAsym {
         byte[] dByte = d.toByteArray();
 
         privKeyByte = new byte[dByte.length + pubKeyByte.length];
+        
         // Copy D ByteArray into first Part and N ByteArray into second Part
         System.arraycopy(dByte, 0, privKeyByte, 0, dByte.length);
         System.arraycopy(pubKeyByte, 0, privKeyByte, dByte.length, pubKeyByte.length);
+        
         // Generate Private Key to alphanumeric String
         privKey = new BigInteger(privKeyByte).toString(Character.MAX_RADIX);
     }
@@ -100,27 +118,31 @@ public class KeyGenRSA implements KeyGenAsym {
     }
 
     private void generateKeys(int keyBitSize) {
-        int keyByteSize = keyBitSize / 8;
+        keyByteSize = keyBitSize / 8;
         // Generate Primes for Q and P
         do {
-            do {
-                q = BigInteger.probablePrime(keyBitSize-1, scRandom);
-            } while (!(core.getPrimetest().isPrime(q)) || q.toByteArray().length != keyByteSize);
-            do {
-                p = BigInteger.probablePrime(keyBitSize-1, scRandom);
-            } while (!(core.getPrimetest().isPrime(p)) || p.toByteArray().length != keyByteSize);
+            // Use Cores parallel, if there are more than 1
+            if (cores > 1) {
+                do {
+                    BigInteger[] primes = getPrimesParallel(keyBitSize);
+                    p = primes[0];
+                    q = primes[1];
+                } while (p.compareTo(q) == 0);
+            } else {
+                do {
+                    p = getPrimesParallel(keyBitSize)[0];
+                    q = getPrimesParallel(keyBitSize)[0];
+                    log2ofPQ = Math.abs(CryptobyHelper.logBigInteger(p) - CryptobyHelper.logBigInteger(q));
+                } while (log2ofPQ <= 0.1 || log2ofPQ >= 30);
+            }
 
-            log2ofPQ = Math.abs(CryptobyHelper.logBigInteger(p) - CryptobyHelper.logBigInteger(q));
             // Calculate n Module
             calcN();
             // Calculate Phi Module
             calcPhi();
             // Calculate D Module
             calcD();
-        } while (p.compareTo(q) == 0
-                || 0.1 >= log2ofPQ
-                || 30 <= log2ofPQ
-                || n.toByteArray().length != (keyByteSize * 2)
+        } while (n.toByteArray().length != (keyByteSize * 2)
                 || d.toByteArray().length != (keyByteSize * 2));
     }
 
@@ -135,6 +157,52 @@ public class KeyGenRSA implements KeyGenAsym {
 
     private void calcD() {
         d = E.modInverse(phi);
+    }
+
+    private BigInteger[] getPrimesParallel(int keyBitSize) {
+
+        GenPrimeThread[] primeThreads = new GenPrimeThread[cores];
+        BigInteger[] primes = new BigInteger[cores];
+        BigInteger[] retPrime = new BigInteger[2];
+
+        for (int i = 0; i < cores; i++) {
+            primeThreads[i] = new GenPrimeThread(core, keyBitSize);
+        }
+
+        // Start Threads
+        for (int i = 0; i < cores; i++) {
+            primeThreads[i].start();
+        }
+        
+        for (int i = 0; i < cores; i++) {
+            try {
+                primeThreads[i].join();
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(KeyGenRSA.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        for (int i = 0; i < cores; i++) {
+            primes[i] = primeThreads[i].getPrime();
+        }
+
+        for (int i = 0; i < cores; i++) {
+            for (int j = cores - 1; j >= 0; j--) {
+                log2ofPQ = Math.abs(CryptobyHelper.logBigInteger(primes[i])
+                        - CryptobyHelper.logBigInteger(primes[j]));
+                if (log2ofPQ >= 0.1 || log2ofPQ <= 30) {
+                    retPrime[0] = primes[i];
+                    retPrime[1] = primes[j];
+                    return retPrime;
+                }
+            }
+        }
+
+        retPrime[0] = BigInteger.ZERO;
+        retPrime[1] = BigInteger.ZERO;
+        return retPrime;
     }
 
 }
