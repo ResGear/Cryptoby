@@ -21,7 +21,6 @@ import ch.zhaw.cryptoby.core.CryptobyCore;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-
 /**
  *
  * @author Toby
@@ -44,7 +43,7 @@ public class GenPrimeThread extends Thread {
     @Override
     public void run() {
         do {
-            prime =BigInteger.probablePrime(keyBitSize - 1, scRandom);
+            prime = new BigInteger(keyBitSize - 1, 1 , scRandom);
         } while (!(core.getPrimetest().isPrime(prime)) || prime.toByteArray().length != keyByteSize);
     }
 

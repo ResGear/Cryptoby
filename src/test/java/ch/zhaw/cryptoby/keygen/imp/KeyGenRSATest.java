@@ -32,8 +32,11 @@ import org.junit.Test;
  * @author Toby
  */
 public class KeyGenRSATest {
+    
+    int rounds;
 
     public KeyGenRSATest() {
+        rounds = 1;
     }
 
     @BeforeClass
@@ -57,6 +60,7 @@ public class KeyGenRSATest {
      */
     @Test
     public void testGenPrivatePublicKey1024() {
+        for(int i = 0; i < rounds;i++){
         System.out.println("genKey1024bit");
         int keySize = 1024;
         CryptobyClient client = new CryptobyClient();
@@ -69,6 +73,7 @@ public class KeyGenRSATest {
         byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
         assertTrue(publicKey.length==256);
         assertTrue(privateKey.length==512);
+        }
     }
 
     /**
@@ -76,6 +81,7 @@ public class KeyGenRSATest {
      */
     @Test
     public void testGenPrivatePublicKey2048() {
+        for(int i = 0; i < rounds;i++){
         System.out.println("genKey2048bit");
         int keySize = 2048;
         CryptobyClient client = new CryptobyClient();
@@ -88,6 +94,7 @@ public class KeyGenRSATest {
         byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
         assertTrue(publicKey.length==512);
         assertTrue(privateKey.length==1024);
+        }
     }
     
 }

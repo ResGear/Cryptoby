@@ -44,7 +44,7 @@ public class KeyGenRSA implements KeyGenAsym {
     private byte[] privKeyByte;
     private byte[] pubKeyByte;
     private int keyByteSize;
-    private int cores;
+    private final int cores;
 
     public KeyGenRSA(CryptobyCore core) {
 
