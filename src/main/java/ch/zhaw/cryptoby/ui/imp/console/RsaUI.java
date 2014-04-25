@@ -43,14 +43,15 @@ public class RsaUI {
 
         do {
             System.out.println("\n");
-            System.out.println("What do want? Encryption or Decryption?");
+            System.out.println("RSA Encryption and Decryption");
             System.out.println("-------------------------\n");
             System.out.println("1 - Encryption and generate Keys");
             System.out.println("2 - Encryption with own Key");
             System.out.println("3 - Decryption");
             System.out.println("4 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2,3 or 4:");
+                System.out.print("That's not a number! Enter 1,2,3 or 4: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -111,14 +112,15 @@ public class RsaUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Key Size");
+            System.out.println("Choose Key Size in Bit");
             System.out.println("-------------------------\n");
             System.out.println("1 - 1024");
             System.out.println("2 - 2048");
             System.out.println("3 - 4096");
             System.out.println("4 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2,3 or 4:");
+                System.out.print("That's not a number! Enter 1,2,3 or 4: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -164,11 +166,12 @@ public class RsaUI {
         // Print encrypted Text in Hex Block form
         RsaUI.printHexBlock(keySize, charTextHex);
 
-        // Print Private and Public Keys
+        // Print Private Keys
         System.out.println("\nPrivate Key:");
         CryptobyHelper.charToBlockString(privateKey.toCharArray());
         System.out.println(eob);
-
+        
+        // Print Public Keys
         System.out.println("\nPublic Key:");
         CryptobyHelper.charToBlockString(publicKey.toCharArray());
         System.out.println(eob);

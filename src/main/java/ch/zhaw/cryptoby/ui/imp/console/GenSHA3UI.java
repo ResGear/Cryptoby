@@ -23,61 +23,91 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GenSHA3UI {
- 
-        public static void genSHA3Key(CryptobyConsole console) {
+
+    public static void genSHA3Key(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
         // Initial Variables
         int keySize;
+        int choice;
         String pwAns;
         String key;
         String password;
-        
-        // Input Size of the SHA Key: possible are 224,256,384,512
+
+        // Set Default Key Size
+        keySize = 256;
+
         do {
-            System.out.println("Set Key Size");
-            System.out.println("Please enter one of these Sizes: 224 256 384 512");
+            System.out.println("\n");
+            System.out.println("Choose Key Size in Bit");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - 224");
+            System.out.println("2 - 256");
+            System.out.println("3 - 384");
+            System.out.println("4 - 512");
+            System.out.println("5 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter a positive number:");
+                System.out.println("That's not a number! Enter 1,2,3,4 or 5:");
                 scanner.next();
             }
-            keySize = scanner.nextInt();
-        } while (keySize != 224 && keySize != 256 && keySize != 384 && keySize != 512 );
-        
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 5);
+
+        switch (choice) {
+            case 1:
+                keySize = 224;
+                break;
+            case 2:
+                keySize = 256;
+                break;
+            case 3:
+                keySize = 384;
+                break;
+            case 4:
+                keySize = 512;
+                break;
+            case 5:
+                console.menuGenKey();
+                break;
+            default:
+                console.menuGenKey();
+        }
+
         // Input a Password or nothing, in the case it will be used a Secure Random number
         do {
-            System.out.println("Do want use password. If not, it will be used a SecureRandom password.");
-            System.out.println("Enter y or n:");
+            System.out.println("Do you want to use a password. If not, it will be used a SecureRandom password.");
+            System.out.print("Enter y or n: ");
             pwAns = scanner.next();
         } while (!pwAns.equals("y") && !pwAns.equals("n"));
-        
-        if(pwAns.equals("y")){
-            System.out.println("Enter Password for the Key:");
+
+        if (pwAns.equals("y")) {
+            System.out.print("Enter Password for the Key: ");
             password = scanner.next();
         } else {
             password = "";
         }
-        
+
         // Initial Key Generator
         console.getCore().getClient().setKeySymArt("SHA3");
         console.getCore().initSymKey();
-        
+
         // Get Result of Test
-        if(password.equals("")) {
+        if (password.equals("")) {
             key = console.getCore().getKeyGenSym().generateKey(keySize);
         } else {
             key = console.getCore().getKeyGenSym().generateKey(keySize, password);
         }
-        
+
         // Print Key
-        System.out.println("SHA3-"+keySize+": "+key);
-        
+        System.out.println("SHA3-" + keySize + ": " + key);
+
         // Enter for Continues
         try {
             System.in.read();
         } catch (IOException ex) {
             Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
     }

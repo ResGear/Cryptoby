@@ -36,9 +36,9 @@ public class MillerRabinUI {
         // Input Number for Primenumber Testing
         do {
             System.out.println("Set Primenumber to Test.");
-            System.out.println("Please enter a positive number:");
+            System.out.print("Please enter a positive number: ");
             while (!scanner.hasNextBigInteger()) {
-                System.out.println("That's not a number! Enter a positive number:");
+                System.out.print("That's not a number! Enter a positive number: ");
                 scanner.next();
             }
             number = scanner.nextBigInteger();
@@ -47,9 +47,9 @@ public class MillerRabinUI {
         // Set the rounds of the Miller Rabin Test
         do {
             System.out.println("Set rounds parameter between 1 and 15.");
-            System.out.println("Please enter the number of rounds:");
+            System.out.print("Please enter the number of rounds: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter a valid number:");
+                System.out.print("That's not a number! Enter a valid number: ");
                 scanner.next();
             }
             rounds = scanner.nextInt();

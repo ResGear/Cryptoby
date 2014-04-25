@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
@@ -39,13 +38,15 @@ public class AesUI {
         scanner = new Scanner(System.in);
 
         do {
-            System.out.println("What do want? Encryption or Decryption?");
+            System.out.println("\n");
+            System.out.println("AES Encryption and Decryption");
             System.out.println("-------------------------\n");
             System.out.println("1 - Encryption");
             System.out.println("2 - Decryption");
             System.out.println("3 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2 or 3:");
+                System.out.print("That's not a number! Enter 1,2 or 3: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -149,7 +150,8 @@ public class AesUI {
         scanner = new Scanner(System.in);
         byte[] tempKey;
         do {
-            System.out.println("Enter the Key. The Key Size has to be 128,192 or 256bit in Hex Code");
+            System.out.println("Allowed Key Sizes 128,192 and 256 Bit.");
+            System.out.println("Enter the AES Key (Type '" + quit + "' to Escape):");
             if (scanner.hasNext(quit)) {
                 AesUI.aesCrypter(console);
             }

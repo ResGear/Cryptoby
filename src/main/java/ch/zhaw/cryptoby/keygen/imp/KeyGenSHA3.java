@@ -67,7 +67,6 @@ public class KeyGenSHA3 implements KeyGenSym {
         this.update(randomPW, randomPW.length * 8);
         String output = CryptobyHelper.bytesToHexString(this.getHash(null));
         return output;
-
     }
 
     @Override
@@ -102,7 +101,6 @@ public class KeyGenSHA3 implements KeyGenSym {
         Arrays.fill(state, (byte) 0);
         Arrays.fill(dataQueue, (byte) 0);
         bitsInQueue = 0;
-//        squeezing = false;
         bitsAvailableForSqueezing = 0;
     }
 
@@ -147,9 +145,7 @@ public class KeyGenSHA3 implements KeyGenSym {
     }
 
     private byte[] getHash(byte[] hashval) {
-
         keccakPad();
-
         if (hashval == null) {
             hashval = new byte[hashLength / 8];
         }

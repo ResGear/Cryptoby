@@ -38,13 +38,15 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
-            System.out.println("Cryptoby - Select a menupoint!");
+            System.out.println("\n");
+            System.out.println("Cryptoby - Crypt your Stuff");
             System.out.println("-------------------------\n");
             System.out.println("1 - Crypt Files (not implemented yet!!)");
             System.out.println("2 - Crypt Stringtext");
             System.out.println("3 - Generate Key");
             System.out.println("4 - Primetest");
             System.out.println("5 - Quit");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
                 System.out.println("That's not a number! Enter 1,2,3 or 4:");
                 scanner.next();
@@ -74,7 +76,7 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     public void menuFileCrypt() {
-        System.out.println("Coming soon!!\n");
+        System.out.println("\nComing soon!!\n");
         // Enter for Continues
         try {
             System.in.read();
@@ -88,13 +90,15 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Select Cryptology Type");
             System.out.println("-------------------------\n");
             System.out.println("1 - Asymmetric Cryption");
             System.out.println("2 - Symmetric Cryption");
             System.out.println("3 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2 or 3:");
+                System.out.print("That's not a number! Enter 1,2 or 3: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -120,12 +124,14 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose Symmetric Cryption Methode");
             System.out.println("-------------------------\n");
             System.out.println("1 - AES");
             System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1 or 2:");
+                System.out.print("That's not a number! Enter 1 or 2: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -148,12 +154,14 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose Asymmetric Cryption Methode");
             System.out.println("-------------------------\n");
             System.out.println("1 - RSA");
             System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1 or 2:");
+                System.out.print("That's not a number! Enter 1 or 2: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -176,12 +184,14 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose Symmetric Cryption Methode");
             System.out.println("-------------------------\n");
             System.out.println("1 - AES");
             System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1 or 2:");
+                System.out.print("That's not a number! Enter 1 or 2: ");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -204,12 +214,14 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose Asymmetric Cryption Methode");
             System.out.println("-------------------------\n");
             System.out.println("1 - RSA");
             System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1 or 2:");
+                System.out.print("That's not a number! Enter 1 or 2:");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -232,13 +244,15 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose Key Generator");
             System.out.println("-------------------------\n");
             System.out.println("1 - SHA3-Keccak");
             System.out.println("2 - RSA Private/Public Keys");
             System.out.println("3 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2 or 3:");
+                System.out.print("That's not a number! Enter 1,2 or 3:");
                 scanner.next();
             }
             choice = scanner.nextInt();
@@ -264,12 +278,14 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
+            System.out.println("\n");
             System.out.println("Choose PrimeTest Methode");
             System.out.println("-------------------------\n");
             System.out.println("1 - Miller Rabin");
             System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1 or 2:");
+                System.out.print("That's not a number! Enter 1 or 2: ");
                 scanner.next();
             }
             choice = scanner.nextInt();

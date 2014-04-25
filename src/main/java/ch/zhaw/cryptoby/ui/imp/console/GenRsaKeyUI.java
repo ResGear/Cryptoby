@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
@@ -25,26 +24,29 @@ import java.util.Scanner;
  * @author Toby
  */
 public class GenRsaKeyUI {
-    
+
     public static void genRSAKeys(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
+        
         // Initial Variables
         int keySize;
-        String pubKey;
-        String privKey;
         int choice;
-        
+        String publicKey;
+        String privateKey;
+        String eob = "EndOfBlock";
+
         // Set Default Key Size
         keySize = 1024;
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Key Size");
+            System.out.println("Choose Key  in Bit");
             System.out.println("-------------------------\n");
             System.out.println("1 - 1024");
             System.out.println("2 - 2048");
             System.out.println("3 - 4096");
             System.out.println("4 - Back");
+            System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
                 System.out.println("That's not a number! Enter 1,2,3 or 4:");
                 scanner.next();
@@ -69,27 +71,30 @@ public class GenRsaKeyUI {
                 console.menuGenKey();
         }
 
-        
         // Initial Key Generator
         console.getCore().getClient().setKeyAsymArt("RSA");
         console.getCore().initAsymKey();
-        
+
         // Generate Keys
         console.getCore().getKeyGenAsym().initGenerator(keySize);
-        pubKey = console.getCore().getKeyGenAsym().getPublicKey();
-        privKey = console.getCore().getKeyGenAsym().getPrivateKey();
-        
-        // Print Keys
-        System.out.println("\nPublic Key RSA-"+keySize+":");
-        System.out.println(pubKey);
-        System.out.println("\nPrivate Key RSA-"+keySize+":");
-        System.out.println(privKey);
-        
+        publicKey = console.getCore().getKeyGenAsym().getPublicKey();
+        privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
+
+        // Print Private Keys
+        System.out.println("\nPrivate Key:");
+        CryptobyHelper.charToBlockString(privateKey.toCharArray());
+        System.out.println(eob);
+
+        // Print Public Keys
+        System.out.println("\nPublic Key:");
+        CryptobyHelper.charToBlockString(publicKey.toCharArray());
+        System.out.println(eob);
+
         // Enter for Continues
         CryptobyHelper.pressEnter();
-        
+
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
     }
-    
+
 }
