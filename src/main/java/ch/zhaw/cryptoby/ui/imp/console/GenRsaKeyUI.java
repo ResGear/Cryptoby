@@ -33,7 +33,6 @@ public class GenRsaKeyUI {
         int choice;
         String publicKey;
         String privateKey;
-        String eob = "EndOfBlock";
 
         // Set Default Key Size
         keySize = 1024;
@@ -81,14 +80,9 @@ public class GenRsaKeyUI {
         privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
 
         // Print Private Keys
-        System.out.println("\nPrivate Key:");
-        CryptobyHelper.charToBlockString(privateKey.toCharArray());
-        System.out.println(eob);
-
+        CryptobyHelper.printPrivateKeyBlock(privateKey);
         // Print Public Keys
-        System.out.println("\nPublic Key:");
-        CryptobyHelper.charToBlockString(publicKey.toCharArray());
-        System.out.println(eob);
+        CryptobyHelper.printPublicKeyBlock(publicKey);
 
         // Enter for Continues
         CryptobyHelper.pressEnter();

@@ -28,7 +28,6 @@ import java.util.Scanner;
 public class RsaUI {
 
     private static final String quit = "QuitCrypt";
-    private static final String eob = "EndOfBlock";
     private static Scanner scanner = new Scanner(System.in);
     private static byte[] plainByte;
     private static byte[] cryptByte;
@@ -93,7 +92,7 @@ public class RsaUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        RsaUI.printHexBlock(keySize, charTextHex);
+        CryptobyHelper.printHexBlock("RSA", keySize, charTextHex);
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
@@ -164,18 +163,13 @@ public class RsaUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        RsaUI.printHexBlock(keySize, charTextHex);
+        CryptobyHelper.printHexBlock("RSA", keySize, charTextHex);
 
         // Print Private Keys
-        System.out.println("\nPrivate Key:");
-        CryptobyHelper.charToBlockString(privateKey.toCharArray());
-        System.out.println(eob);
-        
+        CryptobyHelper.printPrivateKeyBlock(privateKey);
         // Print Public Keys
-        System.out.println("\nPublic Key:");
-        CryptobyHelper.charToBlockString(publicKey.toCharArray());
-        System.out.println(eob);
-
+        CryptobyHelper.printPublicKeyBlock(publicKey);
+        
         // Press Return for Continues
         CryptobyHelper.pressEnter();
 
@@ -192,7 +186,7 @@ public class RsaUI {
         // Convert crypted HexString Block to one String
         try {
             String cryptText = "";
-            while (!scanner.hasNext(eob)) {
+            while (!scanner.hasNext(CryptobyHelper.getEOBString())) {
                 if (scanner.hasNext(quit)) {
                     RsaUI.rsaCrypter(console);
                 }
@@ -233,12 +227,6 @@ public class RsaUI {
         // Back to Menu rsaCrypter
         RsaUI.rsaCrypter(console);
     }
-    
-    private static void printHexBlock(int inputKeySize,  char[] inputCharTextHex){
-        System.out.println("\nRSA-" + inputKeySize + " encrypted Text in Hex form (Copy with '" + eob + "'):");
-        CryptobyHelper.charToBlockString(inputCharTextHex);
-        System.out.println(eob);
-    }
 
     private static byte[] scanPrivateKey(CryptobyConsole console) {
         byte[] retKey = null;
@@ -248,7 +236,7 @@ public class RsaUI {
             // Input Private Key for decryption
             System.out.println("\nEnter the private Key (Type '" + quit + "' to Escape):");
             try {
-                while (!scanner.hasNext(eob)) {
+                while (!scanner.hasNext(CryptobyHelper.getEOBString())) {
                     if (scanner.hasNext(quit)) {
                         RsaUI.rsaCrypter(console);
                     }
@@ -279,7 +267,7 @@ public class RsaUI {
             System.out.println("\nEnter the public Key (Type '" + quit + "' to Escape):");
             try {
 
-                while (!scanner.hasNext(eob)) {
+                while (!scanner.hasNext(CryptobyHelper.getEOBString())) {
                     if (scanner.hasNext(quit)) {
                         RsaUI.rsaCrypter(console);
                     }

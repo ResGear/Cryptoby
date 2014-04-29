@@ -48,7 +48,7 @@ public class CryptobyConsole implements CryptobyUI {
             System.out.println("5 - Quit");
             System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.println("That's not a number! Enter 1,2,3 or 4:");
+                System.out.print("That's not a number! Enter 1,2,3,4 or 5: ");
                 scanner.next();
             }
             choice = scanner.nextInt();

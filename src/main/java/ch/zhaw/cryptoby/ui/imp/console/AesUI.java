@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 /**
@@ -26,11 +28,11 @@ import java.util.Scanner;
 public class AesUI {
 
     private static byte[] plainText = null;
-    private static byte[] cryptText;
+    private static byte[] cryptByte;
     private static byte[] key;
     private static int keySize;
     private static int choice;
-    private static String cryptTextHex;
+    private static char[] charTextHex;
     private static final String quit = "QuitCrypt";
     private static Scanner scanner = new Scanner(System.in);
 
@@ -80,14 +82,13 @@ public class AesUI {
         AesUI.initAESKeyGen(console);
 
         // Encrypt the String Text with given Key
-        cryptText = console.getCore().getCryptSym().encrypt(plainText, key);
+        cryptByte = console.getCore().getCryptSym().encrypt(plainText, key);
 
         // Convert byte Array into a Hexcode String
-        cryptTextHex = CryptobyHelper.bytesToHexStringUpper(cryptText);
+        charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
-        // Print encrypted Text in Hex form
-        System.out.println("AES-" + keySize + " encrypted Text in Hex form:");
-        System.out.println(cryptTextHex);
+        // Print encrypted Text in Hex Block form
+        CryptobyHelper.printHexBlock("AES", keySize, charTextHex);
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
@@ -99,12 +100,25 @@ public class AesUI {
     private static void aesDecrypter(CryptobyConsole console) {
         scanner = new Scanner(System.in);
 
-        // Input String Text to decrypt
-        System.out.println("Your Text to decrypt:");
-        if (scanner.hasNext(quit)) {
-            AesUI.aesCrypter(console);
+        // Input encrypted Hex String Text to decrypt
+        System.out.println("\nYour Text to decrypt (Type '" + quit + "' to Escape):");
+        
+        // Convert crypted HexString Block to one String
+        try {
+            String cryptText = "";
+            while (!scanner.hasNext(CryptobyHelper.getEOBString())) {
+                if (scanner.hasNext(quit)) {
+                    AesUI.aesCrypter(console);
+                }
+                cryptText = cryptText + scanner.next();
+            }
+            cryptByte = CryptobyHelper.hexStringToBytes(cryptText);
+
+        } // Catch false format of Input
+        catch (NumberFormatException exp) {
+            System.out.println("\nNot allowed Crypted Text! Must be a Upper Hex String!");
+            cryptByte = BigInteger.ZERO.toByteArray();
         }
-        cryptTextHex = scanner.next();
 
         // Input your Key for encryption
         key = AesUI.scanKey(console);
@@ -112,21 +126,18 @@ public class AesUI {
         // Initial AES Crypt Object
         AesUI.initAESKeyGen(console);
 
-        // Convert Hexcode String to Byte Array                
-        cryptText = CryptobyHelper.hexStringToBytes(cryptTextHex);
-
         // Decrypt the String Text with given Key
         try {
-            plainText = console.getCore().getCryptSym().decrypt(cryptText, key);
+            plainText = console.getCore().getCryptSym().decrypt(cryptByte, key);
         } catch (Exception e) {
-            System.out.println("Unable to decrypt this String!!");
+            System.out.println("\nUnable to decrypt this String!!");
             // Enter for Continues
             CryptobyHelper.pressEnter();
             aesCrypter(console);
         }
 
         // Print decrypted Text
-        System.out.println("AES-" + keySize + " decrypted Text:");
+        System.out.println("\nAES-" + keySize + " decrypted Text:");
         System.out.println(new String(plainText));
 
         // Enter for Continues
@@ -138,7 +149,7 @@ public class AesUI {
 
     private static byte[] scanPlainText(CryptobyConsole console) {
         scanner = new Scanner(System.in);
-        System.out.println("Your Text to encrypt (Type '" + quit + "' to Escape):");
+        System.out.println("\nYour Text to encrypt (Type '" + quit + "' to Escape):");
         scanner.useDelimiter("\n");
         if (scanner.hasNext(quit)) {
             AesUI.aesCrypter(console);
@@ -150,7 +161,7 @@ public class AesUI {
         scanner = new Scanner(System.in);
         byte[] tempKey;
         do {
-            System.out.println("Allowed Key Sizes 128,192 and 256 Bit.");
+            System.out.println("\nAllowed Key Sizes 128,192 and 256 Bit.");
             System.out.println("Enter the AES Key (Type '" + quit + "' to Escape):");
             if (scanner.hasNext(quit)) {
                 AesUI.aesCrypter(console);

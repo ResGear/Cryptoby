@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.helper;
 
 import ch.zhaw.cryptoby.ui.imp.console.CryptobyConsole;
@@ -29,6 +28,8 @@ import java.util.logging.Logger;
  * @author Toby
  */
 public class CryptobyHelper {
+
+    private static final String EOB = "EndOfBlock";
 
     public static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
@@ -92,7 +93,27 @@ public class CryptobyHelper {
             Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
+
+    public static void printHexBlock(String cryptType, int inputKeySize, char[] inputCharTextHex) {
+        System.out.println("\n"+cryptType +"" + inputKeySize + " encrypted Text in Hex form (Copy with '" + EOB + "'):");
+        CryptobyHelper.charToBlockString(inputCharTextHex);
+        System.out.println(EOB);
+    }
+
+    public static void printPrivateKeyBlock(String privateKey) {
+        System.out.println("\nPrivate Key:");
+        CryptobyHelper.charToBlockString(privateKey.toCharArray());
+        System.out.println(EOB);
+    }
+
+    public static void printPublicKeyBlock(String publicKey) {
+        System.out.println("\nPublic Key:");
+        CryptobyHelper.charToBlockString(publicKey.toCharArray());
+        System.out.println(EOB);
+    }
+
+    public static String getEOBString() {
+        return EOB;
+    }
+
 }
