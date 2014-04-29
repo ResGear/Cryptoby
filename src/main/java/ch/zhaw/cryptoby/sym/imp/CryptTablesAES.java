@@ -151,7 +151,6 @@ public class CryptTablesAES {
 // subBytes: the subBytes function
 
     public int subBytes(byte b) {
-        byte inB = b;
         int res = 0;
         if (b != 0) { // if b == 0, leave it alone
             b = (byte) (FFInv(b) & 0xff);

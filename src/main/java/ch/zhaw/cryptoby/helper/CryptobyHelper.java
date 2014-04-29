@@ -95,7 +95,7 @@ public class CryptobyHelper {
     }
 
     public static void printHexBlock(String cryptType, int inputKeySize, char[] inputCharTextHex) {
-        System.out.println("\n"+cryptType +"" + inputKeySize + " encrypted Text in Hex form (Copy with '" + EOB + "'):");
+        System.out.println("\n"+cryptType +"-" + inputKeySize + " encrypted Text in Hex form (Copy with '" + EOB + "'):");
         CryptobyHelper.charToBlockString(inputCharTextHex);
         System.out.println(EOB);
     }
