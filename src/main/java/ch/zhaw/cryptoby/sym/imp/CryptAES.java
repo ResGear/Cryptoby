@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.sym.imp;
 
 import ch.zhaw.cryptoby.sym.itf.CryptSym;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.security.SecureRandom;
 
 /**
  *
@@ -25,7 +28,8 @@ import ch.zhaw.cryptoby.sym.itf.CryptSym;
  */
 public class CryptAES implements CryptSym {
 
-    private final int nBlocks = 4; // words in a block, always 4 for now
+    private final int nBlocks = 4; // words in a block, always 4 in AES Standard
+    private final int nBytes = nBlocks * 4; // Bytes in a block, four time of nBlocks
     private int keyLength; // key length in words
     private int nRounds; // number of rounds, = keyLength + 6
     private int keyCount; // position in tempKey for RoundKey (= 0 each encrypt)
@@ -40,29 +44,58 @@ public class CryptAES implements CryptSym {
 
     @Override
     public byte[] encrypt(byte[] plainInput, byte[] key) {
-        byte[] exKey = initKeyExpand(key);
         int inputLength = plainInput.length;
-        int restInput = plainInput.length % 16;
-        byte[] cryptOutput = new byte[(inputLength - restInput) + 16];
+        byte[] inputLengthByte = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(inputLength).array();
+        int restInput = plainInput.length % nBytes;
+        byte[] exKey = initKeyExpand(key);
+        byte[] cipher = new byte[nBytes];
+        byte[] cryptOutput = new byte[(inputLength - restInput) + nBytes * 2];
         int outputLength = cryptOutput.length;
-        byte[] cipher = new byte[16];
+        byte[] initVector = new byte[nBytes];
+        byte[] nextBlock = new byte[nBytes];
+        SecureRandom scRandom = new SecureRandom();
 
         // Copy plaintext Array into crypt Array
         System.arraycopy(plainInput, 0, cryptOutput, 0, inputLength);
-        // Add in the last Arrayindex the origin length of plaintext Array
-        cryptOutput[outputLength - 1] = (byte) inputLength;
 
-        for (int i = 0; i < outputLength; i += 16) {
-            // Create 16 Block Cipher Arrays
-            for (int j = i; j < i + 16; j++) {
-                cipher[j - i] = cryptOutput[j];
-            }
+        // Fill Initialization Vector with Random Bytes
+        scRandom.nextBytes(initVector);
+
+        // Copy first Input Block to nextBlock
+        System.arraycopy(cryptOutput, 0, nextBlock, 0, nBytes);
+        
+        // XOR Random initVektor with first Input Block
+        nextBlock = cbcXOR(nextBlock, initVector);
+        
+        // Copy xored prevBlock into first Input Block
+        System.arraycopy(nextBlock, 0, cryptOutput, 0, nBytes);
+
+        // Encrypt last BlockArray
+        initVector = this.encryptCipher(initVector, exKey);
+        
+        // Add the initVector Array in to last BlockArray and encrypt it
+        System.arraycopy(initVector, 0, cryptOutput, outputLength - nBytes, nBytes);
+
+        // Add in the first Byte after CryptText the origin length of plaintext Array
+        System.arraycopy(inputLengthByte, 0, cryptOutput, outputLength - nBytes * 2, 4);
+
+        // Encrypt every Block in CBC Mode
+        for (int i = 0; i < outputLength - nBytes * 1; i += nBytes) {
+
+            // Copy current block in to Cipher Array
+            System.arraycopy(nextBlock, 0, cipher, 0, nBytes);
+
             // Encrypt Cipher
             cipher = this.encryptCipher(cipher, exKey);
-            // Copy Cipher back in decryptOutput Array
-            for (int j = i; j < i + 16; j++) {
-                cryptOutput[j] = cipher[j - i];
+
+            // CBC Mode: XOR next PlainBlock with encrypted Cipher
+            if (i + nBytes < outputLength) {
+                System.arraycopy(cryptOutput, i + nBytes, nextBlock, 0, nBytes);
+                nextBlock = cbcXOR(nextBlock, cipher);
             }
+
+            // Copy Cipher back in decryptOutput Array
+            System.arraycopy(cipher, 0, cryptOutput, i, nBytes);
         }
         return cryptOutput;
     }
@@ -72,29 +105,48 @@ public class CryptAES implements CryptSym {
         byte[] exKey = initKeyExpand(key);
         byte[] decryptOutput = cryptInput;
         int outputLength = decryptOutput.length;
-        byte[] cipher = new byte[16];
+        byte[] cipher = new byte[nBytes];
+        byte[] inputLengthByte = new byte[nBytes];
         byte[] plainOutput;
+        byte[] initVector = new byte[nBytes];
+        byte[] prevBlock = new byte[nBytes];
 
-        for (int i = 0; i < outputLength; i += 16) {
-            // Create 16 Block Cipher Arrays
-            for (int j = i; j < i + 16; j++) {
-                cipher[j - i] = decryptOutput[j];
-            }
-            // Encrypt Cipher
+        // Add the initVector Array in to last BlockArray and encrypt it
+        System.arraycopy(decryptOutput, outputLength - nBytes, initVector, 0, nBytes);
+
+        // Decrypt last BlockArray
+        initVector = this.decryptCipher(initVector, exKey);
+
+        // Copy initVector to prevBlock Array
+        System.arraycopy(initVector, 0, prevBlock, 0, nBytes);
+
+        for (int i = 0; i < outputLength - nBytes; i += nBytes) {
+            
+            // Copy current block in to Cipher Array
+            System.arraycopy(decryptOutput, i, cipher, 0, nBytes);
+
+            // Decrypt Cipher
             cipher = this.decryptCipher(cipher, exKey);
-            // Copy Cipher back in decryptOutput Array
-            for (int j = i; j < i + 16; j++) {
-                decryptOutput[j] = cipher[j - i];
+
+            // CBC Mode: XOR next PlainBlock with encrypted Cipher
+            if (i + nBytes < outputLength) {
+                cipher = cbcXOR(prevBlock, cipher);
+                System.arraycopy(decryptOutput, i, prevBlock, 0, nBytes);
             }
+
+            // Copy Cipher back in current decryptOutput Array
+            System.arraycopy(cipher, 0, decryptOutput, i, nBytes);
         }
+
         // Read last Index of encryptet Output  
         // and use the Integer Content for lenght of plainOutput
-        int lengthOriginArray = decryptOutput[decryptOutput.length - 1];
-        if(lengthOriginArray < 1){
-            plainOutput = cryptInput;
-        } else {
+        System.arraycopy(cryptInput, outputLength - nBytes * 2, inputLengthByte, 0, 4);
+        int lengthOriginArray = ByteBuffer.wrap(inputLengthByte).order(ByteOrder.BIG_ENDIAN).getInt();
+        try {
             plainOutput = new byte[lengthOriginArray];
             System.arraycopy(decryptOutput, 0, plainOutput, 0, lengthOriginArray);
+        } catch (RuntimeException exp) {
+            plainOutput = cryptInput;
         }
 
         return plainOutput;
@@ -305,8 +357,8 @@ public class CryptAES implements CryptSym {
     }
 
     // Help Functions
-// Converts the given byte array to a 4 by 4 matrix by column
-    public byte[][] arrayToMatrix(byte[] array) {
+    // Converts the given byte array to a 4 by 4 matrix by column
+    private byte[][] arrayToMatrix(byte[] array) {
         byte[][] matrix = new byte[4][keyLength];
         int inLoc = 0;
         for (int c = 0; c < nBlocks; c++) {
@@ -317,8 +369,8 @@ public class CryptAES implements CryptSym {
         return matrix;
     }
 
-// Converts the given matrix to the corresponding array (by columns)
-    public byte[] matrixToArray(byte[][] matrix) {
+    // Converts the given matrix to the corresponding array (by columns)
+    private byte[] matrixToArray(byte[][] matrix) {
         byte[] array = new byte[16];
         int outLoc = 0;
         for (int c = 0; c < nBlocks; c++) {
@@ -327,6 +379,15 @@ public class CryptAES implements CryptSym {
             }
         }
         return array;
+    }
+
+    private byte[] cbcXOR(byte[] plainArray, byte[] cryptArray) {
+        byte[] xorArray = new byte[plainArray.length];
+        int i = 0;
+        for (byte b : cryptArray) {
+            xorArray[i] = (byte) (b ^ plainArray[i++]);
+        }
+        return xorArray;
     }
 
 }
