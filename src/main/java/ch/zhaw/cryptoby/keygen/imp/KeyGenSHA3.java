@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.keygen.imp;
 
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
@@ -28,7 +27,7 @@ import java.util.Arrays;
  */
 public class KeyGenSHA3 implements KeyGenSym {
 
-    static final long[] KeccakRoundConstants = {
+    private static final long[] KeccakRoundConstants = {
         0x0000000000000001L, 0x0000000000008082L, 0x800000000000808AL, 0x8000000080008000L,
         0x000000000000808BL, 0x0000000080000001L, 0x8000000080008081L, 0x8000000000008009L,
         0x000000000000008AL, 0x0000000000000088L, 0x0000000080008009L, 0x000000008000000AL,
@@ -36,49 +35,48 @@ public class KeyGenSHA3 implements KeyGenSym {
         0x8000000000008002L, 0x8000000000000080L, 0x000000000000800AL, 0x800000008000000AL,
         0x8000000080008081L, 0x8000000000008080L, 0x0000000080000001L, 0x8000000080008008L,};
 
-    static final int[] KeccakRhoOffsets = {0, 1, 62, 28, 27, 36, 44, 6, 55, 20, 
-                        3, 10, 43, 25, 39, 41, 45, 15, 21, 8, 18, 2, 61, 56, 14};
+    private static final int[] KeccakRhoOffsets = {0, 1, 62, 28, 27, 36, 44, 6, 55, 20,
+        3, 10, 43, 25, 39, 41, 45, 15, 21, 8, 18, 2, 61, 56, 14};
 
-    static final int nrRounds = 24;
-    static final int KeccakPermutationSize = 1600;
-    static final int KeccakPermutationSizeInBytes = (KeccakPermutationSize / 8);
-    static final int KeccakMaximumRate = 1152;
-    static final int KeccakMaximumRateInBytes = (KeccakMaximumRate / 8);
+    private static final int nrRounds = 24;
+    private static final int KeccakPermutationSize = 1600;
+    private static final int KeccakPermutationSizeInBytes = (KeccakPermutationSize / 8);
+    private static final int KeccakMaximumRate = 1152;
+    private static final int KeccakMaximumRateInBytes = (KeccakMaximumRate / 8);
 
-    byte[] state = new byte[KeccakPermutationSizeInBytes];
-    long[] stateAsWords = new long[KeccakPermutationSize / 64];
-    byte[] dataQueue = new byte[KeccakMaximumRateInBytes];
-    long[] B = new long[25];
-    long[] C = new long[5];
-    long[] D = new long[5];
-    int rate;
-    int capacity;
-    byte diversifier;
-    int hashLength;
-    int bitsInQueue;
-    int bitsAvailableForSqueezing;
+    private static final byte[] state = new byte[KeccakPermutationSizeInBytes];
+    private static final long[] stateAsWords = new long[KeccakPermutationSize / 64];
+    private static final byte[] dataQueue = new byte[KeccakMaximumRateInBytes];
+    private static final long[] B = new long[25];
+    private static final long[] C = new long[5];
+    private static final long[] D = new long[5];
+    private static int rate;
+    private static int capacity;
+    private static byte diversifier;
+    private static int hashLength;
+    private static int bitsInQueue;
 
     @Override
     public String generateKey(int keySize) {
         SecureRandom scRandom = new SecureRandom();
-        byte[] randomPW = new byte[136];
+        byte[] randomPW = new byte[40];
         scRandom.nextBytes(randomPW);
-        this.init(keySize);
-        this.update(randomPW, randomPW.length * 8);
-        String output = CryptobyHelper.bytesToHexString(this.getHash(null));
+        KeyGenSHA3.init(keySize);
+        KeyGenSHA3.update(randomPW, randomPW.length * 8);
+        String output = CryptobyHelper.bytesToHexString(KeyGenSHA3.getHash());
         return output;
     }
 
     @Override
     public String generateKey(int keySize, String password) {
         byte[] bytePW = password.getBytes();
-        this.init(keySize);
-        this.update(bytePW, bytePW.length * 8);
-        String output = CryptobyHelper.bytesToHexString(this.getHash(null));
+        KeyGenSHA3.init(keySize);
+        KeyGenSHA3.update(bytePW, bytePW.length * 8);
+        String output = CryptobyHelper.bytesToHexString(KeyGenSHA3.getHash());
         return output;
     }
 
-    private void init(int hashLength) {
+    private static void init(int hashLength) {
         switch (hashLength) {
             case 224:
                 capacity = 448;
@@ -97,14 +95,13 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
         rate = KeccakPermutationSize - capacity;
         diversifier = (byte) (hashLength / 8);
-        this.hashLength = hashLength;
+        KeyGenSHA3.hashLength = hashLength;
         Arrays.fill(state, (byte) 0);
         Arrays.fill(dataQueue, (byte) 0);
         bitsInQueue = 0;
-        bitsAvailableForSqueezing = 0;
     }
 
-    private void update(byte[] data, int databitlen) {
+    private static void update(byte[] data, int databitlen) {
         if ((bitsInQueue % 8) != 0) {
             throw new RuntimeException("Only the last call may contain a partial byte");
         }
@@ -144,18 +141,28 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private byte[] getHash(byte[] hashval) {
+    private static byte[] getHash() {
         keccakPad();
-        if (hashval == null) {
-            hashval = new byte[hashLength / 8];
-        }
+        byte[] hashval = new byte[hashLength / 8];
         if (hashLength > 0) {
             System.arraycopy(dataQueue, 0, hashval, 0, hashLength / 8);
         }
         return hashval;
     }
 
-    private void theta() {
+    private static void keccakPermutation() {
+        fromBytesToWords();
+        for (int i = 0; i < nrRounds; i++) {
+            theta();
+            rho();
+            pi();
+            chi();
+            iota(i);
+        }
+        fromWordsToBytes();
+    }
+
+    private static void theta() {
         for (int x = 0; x < 5; x++) {
             C[x] = 0;
             for (int y = 0; y < 5; y++) {
@@ -170,7 +177,7 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private void rho() {
+    private static void rho() {
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 5; y++) {
                 stateAsWords[index(x, y)] = rot(stateAsWords[index(x, y)], KeccakRhoOffsets[index(x, y)]);
@@ -178,7 +185,7 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private void pi() {
+    private static void pi() {
         for (int x = 0; x < 5; x++) {
             for (int y = 0; y < 5; y++) {
                 B[index(x, y)] = stateAsWords[index(x, y)];
@@ -191,7 +198,7 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private void chi() {
+    private static void chi() {
         for (int y = 0; y < 5; y++) {
             for (int x = 0; x < 5; x++) {
                 C[x] = stateAsWords[index(x, y)] ^ ((~stateAsWords[index(x + 1, y)]) & stateAsWords[index(x + 2, y)]);
@@ -202,33 +209,11 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private void iota(int indexRound) {
+    private static void iota(int indexRound) {
         stateAsWords[index(0, 0)] ^= KeccakRoundConstants[indexRound];
     }
 
-    private void keccakPermutation() {
-        fromBytesToWords();
-        for (int i = 0; i < nrRounds; i++) {
-            theta();
-            rho();
-            pi();
-            chi();
-            iota(i);
-        }
-        fromWordsToBytes();
-    }
-
-    private void absorbQueue() {
-        // bitsInQueue is assumed to be a multiple of 8
-        Arrays.fill(dataQueue, bitsInQueue / 8, rate / 8, (byte) 0);
-        for (int i = 0; i < rate / 8; i++) {
-            state[i] ^= dataQueue[i];
-        }
-        keccakPermutation();
-        bitsInQueue = 0;
-    }
-
-    private void keccakPad() {
+    private static void keccakPad() {
         if ((bitsInQueue % 8) != 0) {
             // The bits are numbered from 0=LSB to 7=MSB
             byte padByte = (byte) (1 << (bitsInQueue % 8));
@@ -257,15 +242,24 @@ public class KeyGenSHA3 implements KeyGenSym {
             absorbQueue();
         }
         System.arraycopy(state, 0, dataQueue, 0, rate / 8);
-        bitsAvailableForSqueezing = rate;
+    }
+
+    private static void absorbQueue() {
+        // bitsInQueue is assumed to be a multiple of 8
+        Arrays.fill(dataQueue, bitsInQueue / 8, rate / 8, (byte) 0);
+        for (int i = 0; i < rate / 8; i++) {
+            state[i] ^= dataQueue[i];
+        }
+        keccakPermutation();
+        bitsInQueue = 0;
     }
 
     // Helper Functions
-    private long rot(long a, int offset) {
+    private static long rot(long a, int offset) {
         return (a << offset) | (a >>> -offset);
     }
 
-    private void fromBytesToWords() {
+    private static void fromBytesToWords() {
         for (int i = 0, j = 0; i < (KeccakPermutationSize / 64); i++, j += 8) {
             stateAsWords[i] = ((long) state[j] & 0xFFL)
                     | ((long) state[j + 1] & 0xFFL) << 8
@@ -278,7 +272,7 @@ public class KeyGenSHA3 implements KeyGenSym {
         }
     }
 
-    private void fromWordsToBytes() {
+    private static void fromWordsToBytes() {
         for (int i = 0, j = 0; i < (KeccakPermutationSize / 64); i++, j += 8) {
             state[j] = (byte) (stateAsWords[i]);
             state[j + 1] = (byte) (stateAsWords[i] >> 8);
