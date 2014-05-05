@@ -54,7 +54,7 @@ public class CryptRSA implements CryptAsym {
     }
     
     private byte[] getNfromKey(byte[] privateKey) {
-        // Get D from the first Part of the PrivateKey
+        // Get N from the second Part of the PrivateKey
         int midOfKey = privateKey.length/2;
         byte[] nByteArray = new byte[midOfKey];
         System.arraycopy(privateKey, midOfKey, nByteArray,0 , midOfKey);

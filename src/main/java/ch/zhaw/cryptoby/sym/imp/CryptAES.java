@@ -17,7 +17,6 @@
 package ch.zhaw.cryptoby.sym.imp;
 
 import ch.zhaw.cryptoby.sym.itf.CryptSym;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.SecureRandom;
@@ -63,16 +62,16 @@ public class CryptAES implements CryptSym {
 
         // Copy first Input Block to nextBlock
         System.arraycopy(cryptOutput, 0, nextBlock, 0, nBytes);
-        
+
         // XOR Random initVektor with first Input Block
         nextBlock = cbcXOR(nextBlock, initVector);
-        
+
         // Copy xored prevBlock into first Input Block
         System.arraycopy(nextBlock, 0, cryptOutput, 0, nBytes);
 
         // Encrypt last BlockArray
         initVector = this.encryptCipher(initVector, exKey);
-        
+
         // Add the initVector Array in to last BlockArray and encrypt it
         System.arraycopy(initVector, 0, cryptOutput, outputLength - nBytes, nBytes);
 
@@ -121,7 +120,7 @@ public class CryptAES implements CryptSym {
         System.arraycopy(initVector, 0, prevBlock, 0, nBytes);
 
         for (int i = 0; i < outputLength - nBytes; i += nBytes) {
-            
+
             // Copy current block in to Cipher Array
             System.arraycopy(decryptOutput, i, cipher, 0, nBytes);
 
@@ -253,9 +252,6 @@ public class CryptAES implements CryptSym {
                 t[c] = state[r][(c + r) % nBlocks];
             }
             System.arraycopy(t, 0, state[r], 0, nBlocks);
-//            for (int c = 0; c < nBlocks; c++) {
-//                state[r][c] = t[c];
-//            }
         }
         return state;
     }
@@ -301,16 +297,6 @@ public class CryptAES implements CryptSym {
     }
 
     // Decryption Functions
-    // InvSubBytes: apply inverse Sbox substitution to each byte of state
-    private byte[][] invSubBytes(byte[][] state) {
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < nBlocks; col++) {
-                state[row][col] = tab.invSBox(state[row][col]);
-            }
-        }
-        return state;
-    }
-
     // InvShiftRows: right circular shift of rows 1, 2, 3 by 1, 2, 3
     private byte[][] invShiftRows(byte[][] state) {
         byte[] t = new byte[4];
@@ -341,6 +327,16 @@ public class CryptAES implements CryptSym {
                     ^ tab.FFMul(b09, state[2][c]) ^ tab.FFMul(b0e, state[3][c]);
             for (int i = 0; i < 4; i++) {
                 state[i][c] = (byte) (sp[i]);
+            }
+        }
+        return state;
+    }
+
+    // InvSubBytes: apply inverse Sbox substitution to each byte of state
+    private byte[][] invSubBytes(byte[][] state) {
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < nBlocks; col++) {
+                state[row][col] = tab.invSBox(state[row][col]);
             }
         }
         return state;

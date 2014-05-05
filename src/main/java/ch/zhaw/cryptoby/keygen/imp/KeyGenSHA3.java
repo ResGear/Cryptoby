@@ -76,6 +76,26 @@ public class KeyGenSHA3 implements KeyGenSym {
         return output;
     }
 
+    @Override
+    public byte[] generateKeyByte(int keySize) {
+        SecureRandom scRandom = new SecureRandom();
+        byte[] randomPW = new byte[40];
+        scRandom.nextBytes(randomPW);
+        KeyGenSHA3.init(keySize);
+        KeyGenSHA3.update(randomPW, randomPW.length * 8);
+        byte[] output = KeyGenSHA3.getHash();
+        return output;
+    }
+
+    @Override
+    public byte[] generateKeyByte(int keySize, String password) {
+        byte[] bytePW = password.getBytes();
+        KeyGenSHA3.init(keySize);
+        KeyGenSHA3.update(bytePW, bytePW.length * 8);
+        byte[] output = KeyGenSHA3.getHash();
+        return output;
+    }
+
     private static void init(int hashLength) {
         switch (hashLength) {
             case 224:

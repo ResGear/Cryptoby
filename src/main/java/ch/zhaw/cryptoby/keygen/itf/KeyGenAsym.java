@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.keygen.itf;
 
 /**
@@ -22,12 +21,14 @@ package ch.zhaw.cryptoby.keygen.itf;
  * @author Toby
  */
 public interface KeyGenAsym {
-    
+
     public void initGenerator(int keyBitSize);
-    
+
     public String getPrivateKey();
+
     public String getPublicKey();
-    
+
     public byte[] getPrivateKeyByte();
+
     public byte[] getPublicKeyByte();
 }

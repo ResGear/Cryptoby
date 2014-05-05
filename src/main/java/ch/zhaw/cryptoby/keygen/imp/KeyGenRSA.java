@@ -47,18 +47,12 @@ public class KeyGenRSA implements KeyGenAsym {
     private final int cores;
 
     public KeyGenRSA(CryptobyCore core) {
-
         this.core = core;
-
-        this.core.getClient().setPrimetestrounds(5);
-        this.core.getClient().setPrimTestArt("MillerRabin");
-        this.core.initPrimeTest();
         this.cores = Runtime.getRuntime().availableProcessors();
     }
 
     @Override
     public void initGenerator(int keyBitSize) {
-
         if (keyBitSize != 1024 && keyBitSize != 2048 && keyBitSize != 4096) {
             throw new IllegalArgumentException("Just Keys with Size of 1024,2048 or 4096 are allowed!");
         }
