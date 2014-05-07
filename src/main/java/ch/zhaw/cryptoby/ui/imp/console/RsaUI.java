@@ -27,15 +27,15 @@ import java.util.Scanner;
  */
 public class RsaUI {
 
-    private static final String quit = "QuitCrypt";
     private static Scanner scanner = new Scanner(System.in);
+    private static final String quit = "QuitCrypt";
     private static byte[] plainByte;
     private static byte[] cryptByte;
-    private static char[] charTextHex;
     private static byte[] privateKeyByte;
     private static byte[] publicKeyByte;
     private static int choice;
     private static int keySize;
+    private static char[] charTextHex;
 
     public static void rsaCrypter(CryptobyConsole console) {
         scanner = new Scanner(System.in);
@@ -67,7 +67,7 @@ public class RsaUI {
                 rsaDecrypter(console);
                 break;
             case 4:
-                console.menuStringAsym();
+                console.menuTextAsym();
                 break;
             default:
                 rsaCrypter(console);
