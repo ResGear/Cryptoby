@@ -5,7 +5,7 @@
     <url>http://maven.apache.org</url>
     <artifactId>cryptoby</artifactId>
     <name>Cryptoby</name>
-    <version>0.3</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -18,8 +18,8 @@
                     <target>1.7</target>
                     <archive>
                         <manifest>
-                          <addClasspath>true</addClasspath>
-                          <mainClass>ch.zhaw.cryptoby.client.CryptobyClient</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>ch.zhaw.cryptoby.client.CryptobyClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
