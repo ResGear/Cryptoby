@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
@@ -59,7 +58,7 @@ public class CryptobyConsole implements CryptobyUI {
                 this.menuFileCrypt();
                 break;
             case 2:
-                this.menuStringCrypt();
+                this.menuTextCrypt();
                 break;
             case 3:
                 this.menuGenKey();
@@ -75,18 +74,7 @@ public class CryptobyConsole implements CryptobyUI {
         }
     }
 
-    public void menuFileCrypt() {
-        System.out.println("\nComing soon!!\n");
-        // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.run();
-    }
-
-    public void menuStringCrypt() {
+    public void menuTextCrypt() {
         int choice;
 
         do {
@@ -106,17 +94,88 @@ public class CryptobyConsole implements CryptobyUI {
 
         switch (choice) {
             case 1:
-                this.menuStringAsym();
+                this.menuTextAsym();
                 break;
             case 2:
-                this.menuStringSym();
+                this.menuTextSym();
                 break;
             case 3:
                 this.run();
                 break;
             default:
-                this.menuStringCrypt();
+                this.menuTextCrypt();
         }
+    }
+
+    // Symmetric String Cryption Menu
+    public void menuTextSym() {
+        int choice;
+
+        do {
+            System.out.println("\n");
+            System.out.println("Choose Symmetric Cryption Methode");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - AES");
+            System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("That's not a number! Enter 1 or 2: ");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 2);
+
+        switch (choice) {
+            case 1:
+                AesUI.aesCrypterText(this);
+                break;
+            case 2:
+                this.menuTextCrypt();
+                break;
+            default:
+                this.menuTextSym();
+        }
+    }
+
+    // Asymmetric String Cryption Menu
+    public void menuTextAsym() {
+        int choice;
+
+        do {
+            System.out.println("\n");
+            System.out.println("Choose Asymmetric Cryption Methode");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - RSA");
+            System.out.println("2 - Back");
+            System.out.print("Enter Number: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("That's not a number! Enter 1 or 2:");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 2);
+
+        switch (choice) {
+            case 1:
+                RsaUI.rsaCrypter(this);
+                break;
+            case 2:
+                this.menuTextCrypt();
+                break;
+            default:
+                this.menuTextSym();
+        }
+    }
+
+    public void menuFileCrypt() {
+        System.out.println("\nComing soon!!\n");
+        // Enter for Continues
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.run();
     }
 
     // Symmetric File Cryption Menu
@@ -139,13 +198,13 @@ public class CryptobyConsole implements CryptobyUI {
 
         switch (choice) {
             case 1:
-                AesUI.aesCrypter(this);
+                AesUI.aesCrypterText(this);
                 break;
             case 2:
-                this.menuStringCrypt();
+                this.menuTextCrypt();
                 break;
             default:
-                this.menuStringSym();
+                this.menuTextSym();
         }
     }
 
@@ -175,67 +234,7 @@ public class CryptobyConsole implements CryptobyUI {
                 this.run();
                 break;
             default:
-                this.menuStringSym();
-        }
-    }
-
-    // Symmetric String Cryption Menu
-    public void menuStringSym() {
-        int choice;
-
-        do {
-            System.out.println("\n");
-            System.out.println("Choose Symmetric Cryption Methode");
-            System.out.println("-------------------------\n");
-            System.out.println("1 - AES");
-            System.out.println("2 - Back");
-            System.out.print("Enter Number: ");
-            while (!scanner.hasNextInt()) {
-                System.out.print("That's not a number! Enter 1 or 2: ");
-                scanner.next();
-            }
-            choice = scanner.nextInt();
-        } while (choice < 1 || choice > 2);
-
-        switch (choice) {
-            case 1:
-                AesUI.aesCrypter(this);
-                break;
-            case 2:
-                this.menuStringCrypt();
-                break;
-            default:
-                this.menuStringSym();
-        }
-    }
-
-    // Asymmetric String Cryption Menu
-    public void menuStringAsym() {
-        int choice;
-
-        do {
-            System.out.println("\n");
-            System.out.println("Choose Asymmetric Cryption Methode");
-            System.out.println("-------------------------\n");
-            System.out.println("1 - RSA");
-            System.out.println("2 - Back");
-            System.out.print("Enter Number: ");
-            while (!scanner.hasNextInt()) {
-                System.out.print("That's not a number! Enter 1 or 2:");
-                scanner.next();
-            }
-            choice = scanner.nextInt();
-        } while (choice < 1 || choice > 2);
-
-        switch (choice) {
-            case 1:
-                RsaUI.rsaCrypter(this);
-                break;
-            case 2:
-                this.menuStringCrypt();
-                break;
-            default:
-                this.menuStringSym();
+                this.menuTextSym();
         }
     }
 
