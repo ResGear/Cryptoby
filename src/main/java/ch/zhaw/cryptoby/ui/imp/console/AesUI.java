@@ -75,7 +75,7 @@ public class AesUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        CryptobyHelper.printHexBlock("AES", keySize, charTextHex);
+        System.out.print(CryptobyHelper.printHexBlock("AES", keySize, charTextHex));
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
@@ -128,7 +128,7 @@ public class AesUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        CryptobyHelper.printHexBlock("AES", keySize, charTextHex);
+        System.out.println(CryptobyHelper.printHexBlock("AES", keySize, charTextHex));
 
         // Enter for Continues
         CryptobyHelper.pressEnter();

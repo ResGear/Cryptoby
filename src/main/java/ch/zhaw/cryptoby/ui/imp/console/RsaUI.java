@@ -92,7 +92,7 @@ public class RsaUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        CryptobyHelper.printHexBlock("RSA", keySize, charTextHex);
+        System.out.println(CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
@@ -163,12 +163,12 @@ public class RsaUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        CryptobyHelper.printHexBlock("RSA", keySize, charTextHex);
+        System.out.println(CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
 
         // Print Private Keys
-        CryptobyHelper.printPrivateKeyBlock(privateKey);
+        System.out.println(CryptobyHelper.printPrivateKeyBlock(privateKey));
         // Print Public Keys
-        CryptobyHelper.printPublicKeyBlock(publicKey);
+        System.out.println(CryptobyHelper.printPublicKeyBlock(publicKey));
         
         // Press Return for Continues
         CryptobyHelper.pressEnter();
@@ -242,7 +242,7 @@ public class RsaUI {
                     }
                     keyText = keyText + scanner.next();
                 }
-                retKey = new BigInteger(keyText, Character.MAX_RADIX).toByteArray();
+                retKey = CryptobyHelper.hexStringToBytes(keyText);
                 keySize = retKey.length * 2;
             } // Catch false format of Input
             catch (NumberFormatException exp) {
@@ -273,7 +273,7 @@ public class RsaUI {
                     }
                     keyText = keyText + scanner.next();
                 }
-                retKey = new BigInteger(keyText, Character.MAX_RADIX).toByteArray();
+                retKey = CryptobyHelper.hexStringToBytes(keyText);
                 keySize = retKey.length * 4;
             } catch (NumberFormatException exp) {
                 System.out.println("Not allowed Characters in Private Key! Just lower alphanumeric Characters!");

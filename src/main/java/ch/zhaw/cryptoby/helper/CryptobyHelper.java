@@ -71,19 +71,23 @@ public class CryptobyHelper {
         return blex > 0 ? res + blex * LOG2 : res;
     }
 
-    public static void charToBlockString(char[] charTextHex) {
-        int lenLine = 128;
+    public static String charToBlockString(char[] charTextHex) {
+        int lenLine = 64;
+        StringBuilder sb = new StringBuilder();
         char[] temp = new char[lenLine];
         for (int i = 0; i < charTextHex.length; i = i + lenLine) {
             if ((charTextHex.length - i) < lenLine) {
                 temp = new char[(charTextHex.length - i)];
                 System.arraycopy(charTextHex, i, temp, 0, (charTextHex.length - i));
-                System.out.println(new String(temp));
+                sb.append(new String(temp));
+                sb.append("\n");
             } else {
                 System.arraycopy(charTextHex, i, temp, 0, lenLine);
-                System.out.println(new String(temp));
+                sb.append(new String(temp));
+                sb.append("\n");
             }
         }
+        return sb.toString();
     }
 
     public static void pressEnter() {
@@ -94,22 +98,28 @@ public class CryptobyHelper {
         }
     }
 
-    public static void printHexBlock(String cryptType, int inputKeySize, char[] inputCharTextHex) {
-        System.out.println("\n"+cryptType +"-" + inputKeySize + " encrypted Text in Hex form (Copy with '" + EOB + "'):");
-        CryptobyHelper.charToBlockString(inputCharTextHex);
-        System.out.println(EOB);
+    public static String printHexBlock(String cryptType, int inputKeySize, char[] inputCharTextHex) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append(cryptType).append("-").append(inputKeySize).append(" encrypted Text in Hex form (Copy with '" + EOB + "'):\n");
+        sb.append(CryptobyHelper.charToBlockString(inputCharTextHex));
+        sb.append(EOB);
+        return sb.toString();
     }
 
-    public static void printPrivateKeyBlock(String privateKey) {
-        System.out.println("\nPrivate Key:");
-        CryptobyHelper.charToBlockString(privateKey.toCharArray());
-        System.out.println(EOB);
+    public static String printPrivateKeyBlock(String privateKey) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nPrivate Key:\n");
+        sb.append(CryptobyHelper.charToBlockString(privateKey.toCharArray()));
+        sb.append(EOB);
+        return sb.toString();
     }
 
-    public static void printPublicKeyBlock(String publicKey) {
-        System.out.println("\nPublic Key:");
-        CryptobyHelper.charToBlockString(publicKey.toCharArray());
-        System.out.println(EOB);
+    public static String printPublicKeyBlock(String publicKey) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nPublic Key:\n");
+        sb.append(CryptobyHelper.charToBlockString(publicKey.toCharArray()));
+        sb.append(EOB);
+        return sb.toString();
     }
 
     public static String getEOBString() {

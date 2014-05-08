@@ -80,9 +80,9 @@ public class GenRsaKeyUI {
         privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
 
         // Print Private Keys
-        CryptobyHelper.printPrivateKeyBlock(privateKey);
+        System.out.println(CryptobyHelper.printPrivateKeyBlock(privateKey));
         // Print Public Keys
-        CryptobyHelper.printPublicKeyBlock(publicKey);
+        System.out.println(CryptobyHelper.printPublicKeyBlock(publicKey));
 
         // Enter for Continues
         CryptobyHelper.pressEnter();

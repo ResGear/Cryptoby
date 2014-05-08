@@ -59,9 +59,9 @@ public class KeyGenRSA implements KeyGenAsym {
 
         generateKeys(keyBitSize);
 
-        // Generate Public Key to alphanumeric String
+        // Generate Public Key to Hex String
         pubKeyByte = n.toByteArray();
-        pubKey = new BigInteger(pubKeyByte).toString(Character.MAX_RADIX);
+        pubKey = CryptobyHelper.bytesToHexString(pubKeyByte);
 
         byte[] dByte = d.toByteArray();
 
@@ -71,8 +71,8 @@ public class KeyGenRSA implements KeyGenAsym {
         System.arraycopy(dByte, 0, privKeyByte, 0, dByte.length);
         System.arraycopy(pubKeyByte, 0, privKeyByte, dByte.length, pubKeyByte.length);
         
-        // Generate Private Key to alphanumeric String
-        privKey = new BigInteger(privKeyByte).toString(Character.MAX_RADIX);
+        // Generate Private Key to Hex String
+        privKey = CryptobyHelper.bytesToHexString(privKeyByte);
     }
 
     @Override

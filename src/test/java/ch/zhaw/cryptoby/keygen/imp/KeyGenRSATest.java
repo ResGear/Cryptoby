@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.keygen.imp;
 
 import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.core.CryptobyCore;
+import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import java.math.BigInteger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,7 +32,7 @@ import org.junit.Test;
  * @author Toby
  */
 public class KeyGenRSATest {
-    
+
     int rounds;
 
     public KeyGenRSATest() {
@@ -60,19 +60,19 @@ public class KeyGenRSATest {
      */
     @Test
     public void testGenPrivatePublicKey1024() {
-        for(int i = 0; i < rounds;i++){
-        System.out.println("genKey1024bit");
-        int keySize = 1024;
-        CryptobyClient client = new CryptobyClient();
-        CryptobyCore core = new CryptobyCore(client);
-        KeyGenRSA instance = new KeyGenRSA(core);
-        instance.initGenerator(keySize);
-        String resultPriv = instance.getPrivateKey();
-        String resultPub = instance.getPublicKey();
-        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
-        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
-        assertTrue(publicKey.length==256);
-        assertTrue(privateKey.length==512);
+        for (int i = 0; i < rounds; i++) {
+            System.out.println("genKey1024bit");
+            int keySize = 1024;
+            CryptobyClient client = new CryptobyClient();
+            CryptobyCore core = new CryptobyCore(client);
+            KeyGenRSA instance = new KeyGenRSA(core);
+            instance.initGenerator(keySize);
+            String resultPriv = instance.getPrivateKey();
+            String resultPub = instance.getPublicKey();
+            byte[] publicKey = CryptobyHelper.hexStringToBytes(resultPub);
+            byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
+            assertTrue(publicKey.length == 256);
+            assertTrue(privateKey.length == 512);
         }
     }
 
@@ -81,20 +81,20 @@ public class KeyGenRSATest {
      */
     @Test
     public void testGenPrivatePublicKey2048() {
-        for(int i = 0; i < rounds;i++){
-        System.out.println("genKey2048bit");
-        int keySize = 2048;
-        CryptobyClient client = new CryptobyClient();
-        CryptobyCore core = new CryptobyCore(client);
-        KeyGenRSA instance = new KeyGenRSA(core);
-        instance.initGenerator(keySize);
-        String resultPriv = instance.getPrivateKey();
-        String resultPub = instance.getPublicKey();
-        byte[] publicKey = new BigInteger(resultPub, Character.MAX_RADIX).toByteArray();
-        byte[] privateKey = new BigInteger(resultPriv, Character.MAX_RADIX).toByteArray();
-        assertTrue(publicKey.length==512);
-        assertTrue(privateKey.length==1024);
+        for (int i = 0; i < rounds; i++) {
+            System.out.println("genKey2048bit");
+            int keySize = 2048;
+            CryptobyClient client = new CryptobyClient();
+            CryptobyCore core = new CryptobyCore(client);
+            KeyGenRSA instance = new KeyGenRSA(core);
+            instance.initGenerator(keySize);
+            String resultPriv = instance.getPrivateKey();
+            String resultPub = instance.getPublicKey();
+            byte[] publicKey = CryptobyHelper.hexStringToBytes(resultPub);
+            byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
+            assertTrue(publicKey.length == 512);  
+            assertTrue(privateKey.length == 1024);
         }
     }
-    
+
 }
