@@ -16,6 +16,8 @@
  */
 package ch.zhaw.cryptoby.filemgr;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +26,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
@@ -34,27 +38,42 @@ public class FileManager {
     public static byte[] getBytesFromFile(String filePath) {
         File file = new File(filePath);
 
-        byte[] input = new byte[(int) file.length()];
+        byte[] output = new byte[(int) file.length()];
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            fileInputStream.read(input);
-            for (int i = 0; i < input.length; i++) {
-                System.out.print((char) input[i]);
+            InputStream input = null;
+            try {
+                int totalBytesRead = 0;
+                input = new BufferedInputStream(new FileInputStream(file));
+                while (totalBytesRead < output.length) {
+                    int bytesRemaining = output.length - totalBytesRead;
+                    int bytesRead = input.read(output, totalBytesRead, bytesRemaining);
+                    if (bytesRead > 0) {
+                        totalBytesRead = totalBytesRead + bytesRead;
+                    }
+                }
+            } finally {
+                input.close();
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File Not Found.");
+            System.out.println("File not found.");
         } catch (IOException ioe) {
-            System.out.println("Error Reading The File.");
+            System.out.println("IOException : " + ioe);
         }
-        return input;
+        return output;
     }
 
-    public static void putBytesToFile(String filePath, byte[] output) {
+    public static void putBytesToFile(String filePath, byte[] exportByte) {
+        File outputFile = new File(filePath);
+        if (!outputFile.exists()) {
+            try {
+                outputFile.createNewFile();
+            } catch (IOException ioe) {
+                System.out.println("IOException : " + ioe);
+            }
+        }
         try {
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                String strContent = "Write File using Java ";
-
-                fos.write(strContent.getBytes());
+            try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(filePath))) {
+                outStream.write(exportByte);
             }
         } catch (FileNotFoundException ex) {
             System.out.println("FileNotFoundException : " + ex);
