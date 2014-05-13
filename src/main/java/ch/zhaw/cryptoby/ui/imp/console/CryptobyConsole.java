@@ -157,7 +157,7 @@ public class CryptobyConsole implements CryptobyUI {
 
         switch (choice) {
             case 1:
-                RsaUI.rsaCrypter(this);
+                RsaUI.rsaCrypterText(this);
                 break;
             case 2:
                 this.menuTextCrypt();
@@ -168,14 +168,36 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     public void menuFileCrypt() {
-        System.out.println("\nComing soon!!\n");
-        // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+        int choice;
+
+        do {
+            System.out.println("\n");
+            System.out.println("Select Cryptology Type");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - Asymmetric Cryption");
+            System.out.println("2 - Symmetric Cryption");
+            System.out.println("3 - Back");
+            System.out.print("Enter Number: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("That's not a number! Enter 1,2 or 3: ");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 3);
+
+        switch (choice) {
+            case 1:
+                this.menuFileAsym();
+                break;
+            case 2:
+                this.menuFileSym();
+                break;
+            case 3:
+                this.run();
+                break;
+            default:
+                this.menuFileCrypt();
         }
-        this.run();
     }
 
     // Symmetric File Cryption Menu
@@ -198,13 +220,13 @@ public class CryptobyConsole implements CryptobyUI {
 
         switch (choice) {
             case 1:
-                AesUI.aesCrypterText(this);
+                AesUI.aesCrypterFile(this);
                 break;
             case 2:
-                this.menuTextCrypt();
+                this.menuFileCrypt();
                 break;
             default:
-                this.menuTextSym();
+                this.menuFileSym();
         }
     }
 
@@ -228,13 +250,13 @@ public class CryptobyConsole implements CryptobyUI {
 
         switch (choice) {
             case 1:
-                RsaUI.rsaCrypter(this);
+                RsaUI.rsaCrypterFile(this);
                 break;
             case 2:
-                this.run();
+                this.menuFileCrypt();
                 break;
             default:
-                this.menuTextSym();
+                this.menuFileAsym();
         }
     }
 
