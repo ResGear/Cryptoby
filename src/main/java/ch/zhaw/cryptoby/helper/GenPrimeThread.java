@@ -35,8 +35,8 @@ public class GenPrimeThread extends Thread {
 
     public GenPrimeThread(CryptobyCore core, int keyBitSize) {
         scRandom = new SecureRandom();
-        this.keyBitSize = keyBitSize;
-        keyByteSize = keyBitSize / 8;
+        this.keyBitSize = keyBitSize/2;
+        this.keyByteSize = this.keyBitSize / 8;
         this.core = core;
     }
 
