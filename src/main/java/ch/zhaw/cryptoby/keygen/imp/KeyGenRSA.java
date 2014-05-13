@@ -136,8 +136,8 @@ public class KeyGenRSA implements KeyGenAsym {
             calcPhi();
             // Calculate D Module
             calcD();
-        } while (n.toByteArray().length != (keyByteSize * 2)
-                || d.toByteArray().length != (keyByteSize * 2));
+        } while (n.toByteArray().length != (keyByteSize)
+                || d.toByteArray().length != (keyByteSize));
     }
 
     private void calcN() {
