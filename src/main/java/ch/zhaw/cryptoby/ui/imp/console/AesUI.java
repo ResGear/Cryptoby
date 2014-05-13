@@ -16,7 +16,7 @@
  */
 package ch.zhaw.cryptoby.ui.imp.console;
 
-import ch.zhaw.cryptoby.filemgr.FileManager;
+import ch.zhaw.cryptoby.filemgr.CryptobyFileManager;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import java.math.BigInteger;
 import java.util.Scanner;
@@ -214,7 +214,7 @@ public class AesUI {
                 AesUI.aesCrypterFile(console);
             }
             pathToKey = scanner.next();
-            tempKey = FileManager.getBytesFromFile(pathToKey);
+            tempKey = CryptobyFileManager.getBytesFromFile(pathToKey);
             keySize = tempKey.length * 4;
         } while (keySize != 128 && keySize != 192 && keySize != 256);
         return tempKey;
