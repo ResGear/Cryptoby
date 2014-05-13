@@ -71,8 +71,8 @@ public class KeyGenRSATest {
             String resultPub = instance.getPublicKey();
             byte[] publicKey = CryptobyHelper.hexStringToBytes(resultPub);
             byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
-            assertTrue(publicKey.length == 256);
-            assertTrue(privateKey.length == 512);
+            assertTrue(publicKey.length == 128);
+            assertTrue(privateKey.length == 256);
         }
     }
 
@@ -92,8 +92,8 @@ public class KeyGenRSATest {
             String resultPub = instance.getPublicKey();
             byte[] publicKey = CryptobyHelper.hexStringToBytes(resultPub);
             byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
-            assertTrue(publicKey.length == 512);  
-            assertTrue(privateKey.length == 1024);
+            assertTrue(publicKey.length == 256);  
+            assertTrue(privateKey.length == 512);
         }
     }
 
