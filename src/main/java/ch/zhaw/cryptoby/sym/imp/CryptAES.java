@@ -16,6 +16,7 @@
  */
 package ch.zhaw.cryptoby.sym.imp;
 
+import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import ch.zhaw.cryptoby.sym.itf.CryptSym;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -64,7 +65,7 @@ public class CryptAES implements CryptSym {
         System.arraycopy(cryptOutput, 0, nextBlock, 0, nBytes);
 
         // XOR Random initVektor with first Input Block
-        nextBlock = cbcXOR(nextBlock, initVector);
+        nextBlock = CryptobyHelper.xorByteArrays(nextBlock, initVector);
 
         // Copy xored prevBlock into first Input Block
         System.arraycopy(nextBlock, 0, cryptOutput, 0, nBytes);
@@ -90,7 +91,7 @@ public class CryptAES implements CryptSym {
             // CBC Mode: XOR next PlainBlock with encrypted Cipher
             if (i + nBytes < outputLength) {
                 System.arraycopy(cryptOutput, i + nBytes, nextBlock, 0, nBytes);
-                nextBlock = cbcXOR(nextBlock, cipher);
+                nextBlock = CryptobyHelper.xorByteArrays(nextBlock, cipher);
             }
 
             // Copy Cipher back in decryptOutput Array
@@ -129,7 +130,7 @@ public class CryptAES implements CryptSym {
 
             // CBC Mode: XOR next PlainBlock with encrypted Cipher
             if (i + nBytes < outputLength) {
-                cipher = cbcXOR(prevBlock, cipher);
+                cipher = CryptobyHelper.xorByteArrays(prevBlock, cipher);
                 System.arraycopy(decryptOutput, i, prevBlock, 0, nBytes);
             }
 
@@ -375,15 +376,6 @@ public class CryptAES implements CryptSym {
             }
         }
         return array;
-    }
-
-    private byte[] cbcXOR(byte[] plainArray, byte[] cryptArray) {
-        byte[] xorArray = new byte[plainArray.length];
-        int i = 0;
-        for (byte b : cryptArray) {
-            xorArray[i] = (byte) (b ^ plainArray[i++]);
-        }
-        return xorArray;
     }
 
 }

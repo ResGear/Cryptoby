@@ -126,4 +126,13 @@ public class CryptobyHelper {
         return EOB;
     }
 
+    public static byte[] xorByteArrays(byte[] firstArray, byte[] secArray) {
+        byte[] xorArray = new byte[firstArray.length];
+        int i = 0;
+        for (byte b : secArray) {
+            xorArray[i] = (byte) (b ^ firstArray[i++]);
+        }
+        return xorArray;
+    }
+
 }
