@@ -60,10 +60,21 @@ public class CryptAESTest {
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        String resString = CryptobyHelper.bytesToHexStringUpper(result);
-        System.out.println(resString);
         result = instance.decrypt(result, bKey);
-        System.out.println(new String(result));
+        assertArrayEquals(expResult, result);
+    }
+
+    @Test
+    public void testEncryptDecrypt256_HugeData() {
+        System.out.println("encrypt and decrypt huge Data");
+        byte[] plainInput = new byte[1000000];
+        KeyGenSHA3 keyGen = new KeyGenSHA3();
+        String hexKey = keyGen.generateKey(256, "password");
+        byte[] bKey = CryptobyHelper.hexStringToBytes(hexKey);
+        CryptAES instance = new CryptAES();
+        byte[] expResult = plainInput;
+        byte[] result = instance.encrypt(plainInput, bKey);
+        result = instance.decrypt(result, bKey);
         assertArrayEquals(expResult, result);
     }
 
@@ -77,12 +88,9 @@ public class CryptAESTest {
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        String resString = CryptobyHelper.bytesToHexStringUpper(result);
-        System.out.println(resString);
         hexKey = keyGen.generateKey(256, "passwordFalse");
         bKey = CryptobyHelper.hexStringToBytes(hexKey);
         result = instance.decrypt(result, bKey);
-        System.out.println(new String(result));
         assertFalse(new String(expResult).equals(new String(result)));
     }
 
@@ -95,12 +103,9 @@ public class CryptAESTest {
         CryptAES instance = new CryptAES();
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
-        String resString = CryptobyHelper.bytesToHexStringUpper(result);
-        System.out.println(resString);
         hexKey = "13A9489AF957FF7B5E8E712737D0B4A0C92AE8EBAE9DD11E9C11B8CB79707011";
         bKey = CryptobyHelper.hexStringToBytes(hexKey);
         result = instance.decrypt(result, bKey);
-        System.out.println(new String(result));
         assertFalse(new String(expResult).equals(new String(result)));
     }
 
@@ -115,12 +120,10 @@ public class CryptAESTest {
         byte[] expResult = plainInput;
         byte[] result = instance.encrypt(plainInput, bKey);
         String resString = CryptobyHelper.bytesToHexStringUpper(result);
-        for(int i = 0; i < resString.length() - 32 ;i += 32){
-            assertFalse(resString.substring(i, i+32).equals(resString.substring(i+32, i+64)));
+        for (int i = 0; i < resString.length() - 32; i += 32) {
+            assertFalse(resString.substring(i, i + 32).equals(resString.substring(i + 32, i + 64)));
         }
-        System.out.println(resString);
         result = instance.decrypt(result, bKey);
-        System.out.println(new String(result));
         assertArrayEquals(expResult, result);
     }
 }

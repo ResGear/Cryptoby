@@ -20,9 +20,7 @@ import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import ch.zhaw.cryptoby.keygen.imp.KeyGenRSA;
-import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -60,7 +58,7 @@ public class CryptRSATest {
      */
     @Test
     public void testRSACrypt1024_oneBlock() {
-        System.out.println("RSACrypt1024");
+        System.out.println("RSACrypt1024oneBlock");
         int keySize = 1024;
         CryptobyClient client = new CryptobyClient();
         CryptobyCore core = new CryptobyCore(client);
@@ -75,14 +73,12 @@ public class CryptRSATest {
         byte[] expResult = plainInput;
         byte[] result = rsa.encrypt(plainInput, publicKey);
         result = rsa.decrypt(result, privateKey);
-        String reString = new String(result);
-        System.out.println(reString);
         assertArrayEquals(expResult, result);
     }
 
     @Test
-    public void testRSACrypt1024_manyBlock() {
-        System.out.println("RSACrypt1024");
+    public void testRSACrypt1024_longString() {
+        System.out.println("RSACrypt1024longString");
         int keySize = 1024;
         CryptobyClient client = new CryptobyClient();
         CryptobyCore core = new CryptobyCore(client);
@@ -114,8 +110,27 @@ public class CryptRSATest {
         byte[] expResult = plainInput;
         byte[] enc = rsa.encrypt(plainInput, publicKey);
         byte[] result = rsa.decrypt(enc, privateKey);
-        String reString = new String(result);
-        System.out.println(reString);
+        assertArrayEquals(expResult, result);
+    }
+
+    /**
+     * Test of encrypt method, of class CryptRSA.
+     */
+    @Test
+    public void testRSACrypt1024_BiggerBlock() {
+        System.out.println("RSACrypt1024Bigger");
+        int keySize = 1024;
+        CryptobyClient client = new CryptobyClient();
+        CryptobyCore core = new CryptobyCore(client);
+        KeyGenRSA generator = new KeyGenRSA(core);
+        generator.initGenerator(keySize);
+        byte[] plainInput = new byte[10000];
+        byte[] publicKey = generator.getPublicKeyByte();
+        byte[] privateKey = generator.getPrivateKeyByte();
+        CryptRSA rsa = new CryptRSA();
+        byte[] expResult = plainInput;
+        byte[] result = rsa.encrypt(plainInput, publicKey);
+        result = rsa.decrypt(result, privateKey);
         assertArrayEquals(expResult, result);
     }
 
@@ -141,23 +156,43 @@ public class CryptRSATest {
         assertFalse(Arrays.equals(expResult, result));
     }
 
-//    @Test
-//    public void testRSACrypt2048() {
-//        System.out.println("RSACrypt2048");
-//        int keySize = 2048;
-//        CryptobyClient client = new CryptobyClient();
-//        CryptobyCore core = new CryptobyCore(client);
-//        KeyGenRSA generator = new KeyGenRSA(core);
-//        generator.initGenerator(keySize);
-//        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
-//        String publicKeyString = generator.getPublicKey();
-//        byte[] publicKey = CryptobyHelper.hexStringToBytes(publicKeyString);
-//        String privateKeyString = generator.getPrivateKey();
-//        byte[] privateKey = CryptobyHelper.hexStringToBytes(privateKeyString);
-//        CryptRSA rsa = new CryptRSA();
-//        byte[] expResult = plainInput;
-//        byte[] result = rsa.encrypt(plainInput, publicKey);
-//        result = rsa.decrypt(result, privateKey);
-//        assertArrayEquals(expResult, result);
-//    }
+    @Test
+    public void testRSACrypt2048() {
+        System.out.println("RSACrypt2048");
+        int keySize = 2048;
+        CryptobyClient client = new CryptobyClient();
+        CryptobyCore core = new CryptobyCore(client);
+        KeyGenRSA generator = new KeyGenRSA(core);
+        generator.initGenerator(keySize);
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String publicKeyString = generator.getPublicKey();
+        byte[] publicKey = CryptobyHelper.hexStringToBytes(publicKeyString);
+        String privateKeyString = generator.getPrivateKey();
+        byte[] privateKey = CryptobyHelper.hexStringToBytes(privateKeyString);
+        CryptRSA rsa = new CryptRSA();
+        byte[] expResult = plainInput;
+        byte[] result = rsa.encrypt(plainInput, publicKey);
+        result = rsa.decrypt(result, privateKey);
+        assertArrayEquals(expResult, result);
+    }
+
+    @Test
+    public void testRSACrypt4096() {
+        System.out.println("RSACrypt4096");
+        int keySize = 4096;
+        CryptobyClient client = new CryptobyClient();
+        CryptobyCore core = new CryptobyCore(client);
+        KeyGenRSA generator = new KeyGenRSA(core);
+        generator.initGenerator(keySize);
+        byte[] plainInput = "Text to Test for Testing from Tester by Testcase".getBytes();
+        String publicKeyString = generator.getPublicKey();
+        byte[] publicKey = CryptobyHelper.hexStringToBytes(publicKeyString);
+        String privateKeyString = generator.getPrivateKey();
+        byte[] privateKey = CryptobyHelper.hexStringToBytes(privateKeyString);
+        CryptRSA rsa = new CryptRSA();
+        byte[] expResult = plainInput;
+        byte[] result = rsa.encrypt(plainInput, publicKey);
+        result = rsa.decrypt(result, privateKey);
+        assertArrayEquals(expResult, result);
+    }
 }

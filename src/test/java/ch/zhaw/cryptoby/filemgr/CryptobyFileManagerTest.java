@@ -13,21 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *//*
- * Copyright (C) 2014 Toby
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package ch.zhaw.cryptoby.filemgr;
 
@@ -36,8 +21,10 @@ import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import ch.zhaw.cryptoby.keygen.imp.KeyGenRSA;
-import java.math.BigInteger;
+import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -76,41 +63,55 @@ public class CryptobyFileManagerTest {
     @Test
     public void testGetAndPutByteFiles() {
         System.out.println("Put Plaintext, get Plainfile, encrypt and decrypt Byte Files");
-        for(int i = 1;i < 11;i++){
-        String filePathPlain = "target/test.txt";
-        String filePathEnc = "target/test.cty";
-        String filePathDec = "target/test2.txt";
-        int keySize = 1024;
-        byte[] testString = new byte[i*1000];
-        new Random().nextBytes(testString);
+        for (int i = 1; i < 100; i += 3) {
+            String filePathPlain = "target/test.txt";
+            String filePathEnc = "target/test.cty";
+            String filePathDec = "target/test2.txt";
+            int keySize = 1024;
+            byte[] testString = new byte[i*100+i];
+            new Random().nextBytes(testString);
 
-        CryptobyClient client = new CryptobyClient();
-        CryptobyCore core = new CryptobyCore(client);
-        CryptRSA rsa = new CryptRSA();
-        KeyGenRSA generator = new KeyGenRSA(core);
+            CryptobyClient client = new CryptobyClient();
+            CryptobyCore core = new CryptobyCore(client);
+            CryptRSA rsa = new CryptRSA();
+            KeyGenRSA generator = new KeyGenRSA(core);
 
-        CryptobyFileManager.putBytesToFile(filePathPlain, testString);
+            try {
+                CryptobyFileManager.putBytesToFile(filePathPlain, testString);
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        generator.initGenerator(keySize);
-        byte[] publicKey = generator.getPublicKeyByte();
-        byte[] privateKey = generator.getPrivateKeyByte();
-        byte[] plainInput = CryptobyFileManager.getBytesFromFile(filePathPlain);
+            generator.initGenerator(keySize);
+            byte[] publicKey = generator.getPublicKeyByte();
+            byte[] privateKey = generator.getPrivateKeyByte();
+            byte[] plainInput = null;
+            try {
+                plainInput = CryptobyFileManager.getBytesFromFile(filePathPlain);
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        System.out.println("Plaininput: " + plainInput.length);
-        System.out.println("publickey: " + publicKey.length);
-        byte[] encrypt = rsa.encrypt(plainInput, publicKey);
-        System.out.println("encrypt: " + encrypt.length);
-        CryptobyFileManager.putBytesToFile(filePathEnc, encrypt);
-        assertArrayEquals(encrypt, CryptobyFileManager.getBytesFromFile(filePathEnc));
-        encrypt = CryptobyFileManager.getBytesFromFile(filePathEnc);
-        
+            byte[] encrypt = rsa.encrypt(plainInput, publicKey);
+            try {
+                CryptobyFileManager.putBytesToFile(filePathEnc, encrypt);
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                encrypt = CryptobyFileManager.getBytesFromFile(filePathEnc);
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        byte[] decrypt = rsa.decrypt(encrypt, privateKey);
-        CryptobyFileManager.putBytesToFile(filePathDec, decrypt);
-        System.out.println("encrypt: " + encrypt.length);
-        System.out.println("decrypt: " + decrypt.length);
+            byte[] decrypt = rsa.decrypt(encrypt, privateKey);
+            try {
+                CryptobyFileManager.putBytesToFile(filePathDec, decrypt);
+            } catch (IOException ex) {
+                Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        assertArrayEquals(testString, decrypt);
+            assertArrayEquals(testString, decrypt);
         }
     }
 
@@ -129,17 +130,39 @@ public class CryptobyFileManagerTest {
         KeyGenRSA generator = new KeyGenRSA(core);
 
         generator.initGenerator(keySize);
-        String publicKey = CryptobyHelper.charToBlockString(generator.getPublicKey().toCharArray());
-        String privateKey = CryptobyHelper.charToBlockString(generator.getPrivateKey().toCharArray());
+        byte[] publicKeyByte = generator.getPublicKeyByte();
+        byte[] privateKeyByte = generator.getPrivateKeyByte();
+        String publicKey = generator.getPublicKey();
+        String privateKey = generator.getPrivateKey();
 
-        CryptobyFileManager.putKeyToFile(publicKeyFilePath, publicKey);
-        CryptobyFileManager.putKeyToFile(privateKeyFilePath, privateKey);
+        try {
+            CryptobyFileManager.putKeyToFile(publicKeyFilePath, publicKey);
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            CryptobyFileManager.putKeyToFile(privateKeyFilePath, privateKey);
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        byte[] resultPublic = CryptobyFileManager.getKeyFromFile(publicKeyFilePath);
-        byte[] resultPrivate = CryptobyFileManager.getKeyFromFile(privateKeyFilePath);
+        byte[] resultPublic = null;
+        try {
+            resultPublic = CryptobyFileManager.getKeyFromFile(publicKeyFilePath);
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte[] resultPrivate = null;
+        try {
+            resultPrivate = CryptobyFileManager.getKeyFromFile(privateKeyFilePath);
+        } catch (IOException ex) {
+            Logger.getLogger(CryptobyFileManagerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        assertEquals(publicKey, new String(resultPublic));
-        assertEquals(privateKey, new String(resultPrivate));
+        assertArrayEquals(publicKeyByte, resultPublic);
+        assertArrayEquals(privateKeyByte, resultPrivate);
+        assertEquals(publicKey, CryptobyHelper.bytesToHexString(resultPublic));
+        assertEquals(privateKey, CryptobyHelper.bytesToHexString(resultPrivate));
 
     }
 //
