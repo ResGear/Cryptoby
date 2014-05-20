@@ -16,7 +16,9 @@
  */
 package ch.zhaw.cryptoby.ui.imp.console;
 
+import ch.zhaw.cryptoby.filemgr.CryptobyFileManager;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -25,9 +27,11 @@ import java.util.Scanner;
  */
 public class GenRsaKeyUI {
 
-    public static void genRSAKeys(CryptobyConsole console) {
+    private static final String quit = "QuitCrypt";
+
+    public static void genRSAKeysText(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
-        
+
         // Initial Variables
         int keySize;
         int choice;
@@ -83,6 +87,103 @@ public class GenRsaKeyUI {
         System.out.println(CryptobyHelper.printPrivateKeyBlock(privateKey));
         // Print Public Keys
         System.out.println(CryptobyHelper.printPublicKeyBlock(publicKey));
+
+        // Enter for Continues
+        CryptobyHelper.pressEnter();
+
+        // Back to Menu Choose PrimeTest
+        console.menuGenKey();
+    }
+
+    public static void genRSAKeysFile(CryptobyConsole console) {
+        final Scanner scanner = new Scanner(System.in);
+        String privateKeyPath;
+        String publicKeyPath;
+
+        // Initial Variables
+        int keySize;
+        int choice;
+        String publicKey;
+        String privateKey;
+
+        // Set Default Key Size
+        keySize = 1024;
+
+        do {
+            System.out.println("\n");
+            System.out.println("Choose Key  in Bit");
+            System.out.println("-------------------------\n");
+            System.out.println("1 - 1024");
+            System.out.println("2 - 2048");
+            System.out.println("3 - 4096");
+            System.out.println("4 - Back");
+            System.out.print("Enter Number: ");
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number! Enter 1,2,3 or 4:");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+        } while (choice < 1 || choice > 4);
+
+        switch (choice) {
+            case 1:
+                keySize = 1024;
+                break;
+            case 2:
+                keySize = 2048;
+                break;
+            case 3:
+                keySize = 4096;
+                break;
+            case 4:
+                console.menuGenKey();
+                break;
+            default:
+                console.menuGenKey();
+        }
+
+        // Input Path for saving Private Key
+        System.out.println("Enter Path to saving Private Key (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            RsaUI.rsaCrypterFile(console);
+        }
+        privateKeyPath = scanner.next();
+
+        // Input Path for saving Public Key
+        System.out.println("Enter Path to saving Public Key (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+
+        publicKeyPath = scanner.next();
+
+        // Initial Key Generator
+        console.getCore().getClient().setKeyAsymArt("RSA");
+        console.getCore().initAsymKey();
+
+        // Generate Keys
+        console.getCore().getKeyGenAsym().initGenerator(keySize);
+        publicKey = console.getCore().getKeyGenAsym().getPublicKey();
+        privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
+
+        //Put private Key to File
+        try {
+            CryptobyFileManager.putKeyToFile(privateKeyPath, privateKey);
+        } catch (IOException ex) {
+            CryptobyHelper.printIOExp();
+            RsaUI.rsaCrypterFile(console);
+        }
+        System.out.println("\nPrivate Key File saved to this Path:");
+        System.out.println(privateKeyPath);
+
+        //Put public Key to File
+        try {
+            CryptobyFileManager.putKeyToFile(publicKeyPath, publicKey);
+        } catch (IOException ex) {
+            CryptobyHelper.printIOExp();
+            RsaUI.rsaCrypterFile(console);
+        }
+        System.out.println("\nPublic Key File saved to this Path:");
+        System.out.println(publicKeyPath);
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
