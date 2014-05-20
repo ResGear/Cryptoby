@@ -33,38 +33,39 @@ public class CryptRSA implements CryptAsym {
     public byte[] encrypt(byte[] plainInput, byte[] publicKey) {
 
         BigInteger n = new BigInteger(publicKey);
-
         int keySize = publicKey.length;
         int dataBlockSize = keySize + 2 * (keySize / 128);
         int plainBlockSize = keySize - 2;
-        int plainPlusOneBlockSize = plainBlockSize + 1;
         int wholeLen = plainInput.length;
         int cryptBlocksLen = (wholeLen / plainBlockSize) * dataBlockSize;
         int dataBlocksLen = cryptBlocksLen + 3 * dataBlockSize;
         int plainBlocksLen = (wholeLen / plainBlockSize) * plainBlockSize;
-        int rest = wholeLen - plainBlocksLen;
-
         byte[] cryptOutput = new byte[dataBlocksLen];
-        byte[] cryptBlock;
-        byte[] plainBlock = new byte[plainBlockSize];
-        byte[] plusOnePlainBlock = new byte[plainPlusOneBlockSize];
-        byte[] dataBlock = new byte[dataBlockSize];
-        byte[] initVektorBlock;
-        byte[] firstVektorBlock;
-        byte[] secVektorBlock;
-        byte[] cryptBlockSize;
-        byte[] one = BigInteger.ONE.toByteArray();
-        int halfOfVektor;
 
-        if (plainBlocksLen > keySize) {
+        if (wholeLen > keySize) {
+            int percentProgress;
+            int prevPercent = -1;
+            int plainPlusOneBlockSize = plainBlockSize + 1;
+            int rest = wholeLen - plainBlocksLen;
+            int halfOfVektor;
+            byte[] dataBlock = new byte[dataBlockSize];
+            byte[] cryptBlock;
+            byte[] plainBlock = new byte[plainBlockSize];
+            byte[] plusOnePlainBlock = new byte[plainPlusOneBlockSize];
+            byte[] initVektorBlock;
+            byte[] firstVektorBlock;
+            byte[] secVektorBlock;
+            byte[] cryptBlockSize;
+            byte[] one = BigInteger.ONE.toByteArray();
 
             do {
                 SecureRandom rnd = new SecureRandom();
                 halfOfVektor = dataBlockSize / 2;
 
-                firstVektorBlock = new BigInteger(halfOfVektor * 8 - 1, rnd).toByteArray();
-                secVektorBlock = new BigInteger(halfOfVektor * 8 - 1, rnd).toByteArray();
-
+                do {
+                    firstVektorBlock = new BigInteger(halfOfVektor * 8 - 1, rnd).toByteArray();
+                    secVektorBlock = new BigInteger(halfOfVektor * 8 - 1, rnd).toByteArray();
+                } while (firstVektorBlock.length != halfOfVektor || secVektorBlock.length != halfOfVektor);
                 initVektorBlock = new byte[dataBlockSize];
                 System.arraycopy(firstVektorBlock, 0, initVektorBlock, 0, halfOfVektor);
                 System.arraycopy(secVektorBlock, 0, initVektorBlock, halfOfVektor, halfOfVektor);
@@ -78,6 +79,15 @@ public class CryptRSA implements CryptAsym {
             byte[] nextBlock = new byte[dataBlockSize];
             int j = 0;
             for (int i = 0; i < plainBlocksLen; i += plainBlockSize) {
+
+                // Convert i to percent for ProgressBar
+                percentProgress = (int) (((float) i / (float) plainBlocksLen) * 100);
+
+                // Print ProgressBar
+                if (percentProgress > prevPercent) {
+                    CryptobyHelper.printProgressBar(percentProgress);
+                }
+                prevPercent = percentProgress;
                 // Copy Part of PlainInput in to Block
                 System.arraycopy(plainInput, i, plainBlock, 0, plainBlockSize);
 
@@ -87,7 +97,7 @@ public class CryptRSA implements CryptAsym {
 
                 // Encrypt Block
                 cryptBlock = encryptBlock(plusOnePlainBlock, n);
-                
+
                 // Copy Crypt Block in to extended DataBlock
                 System.arraycopy(cryptBlock, 0, dataBlock, 0, cryptBlock.length);
 
@@ -99,29 +109,37 @@ public class CryptRSA implements CryptAsym {
                 // XOR dataBlock with prevBlock
                 dataBlock = CryptobyHelper.xorByteArrays(dataBlock, prevBlock);
                 System.arraycopy(nextBlock, 0, prevBlock, 0, dataBlockSize);
+
+                // Copy xored dataBlock to Output Array
                 System.arraycopy(dataBlock, 0, cryptOutput, j, dataBlockSize);
                 j += dataBlockSize;
             }
-            // crypt rest of PlainInput
-            plainBlock = new byte[rest];
-            plusOnePlainBlock = new byte[rest + 1];
-            dataBlock = new byte[dataBlockSize];
-            System.arraycopy(plainInput, plainBlocksLen, plainBlock, 0, plainBlock.length);
+            if (rest != 0) {
+                // crypt rest of PlainInput
+                plainBlock = new byte[rest];
+                plusOnePlainBlock = new byte[rest + 1];
+                dataBlock = new byte[dataBlockSize];
+                System.arraycopy(plainInput, plainBlocksLen, plainBlock, 0, plainBlock.length);
 
-            // Add a One Byte in to first Byte of Plain Array
-            System.arraycopy(one, 0, plusOnePlainBlock, 0, one.length);
-            System.arraycopy(plainBlock, 0, plusOnePlainBlock, 1, plainBlock.length);
+                // Add a One Byte in to first Byte of Plain Array
+                System.arraycopy(one, 0, plusOnePlainBlock, 0, one.length);
+                System.arraycopy(plainBlock, 0, plusOnePlainBlock, 1, plainBlock.length);
 
-            // Encrypt rest of PlainInput
-            cryptBlock = encryptBlock(plusOnePlainBlock, n);
-            System.arraycopy(cryptBlock, 0, dataBlock, 0, cryptBlock.length);
+                // Encrypt rest of PlainInput
+                cryptBlock = encryptBlock(plusOnePlainBlock, n);
+                System.arraycopy(cryptBlock, 0, dataBlock, 0, cryptBlock.length);
 
-            // Copy in last Byte of dataBlock the Size of cryptBlock
-            cryptBlockSize = BigInteger.valueOf(cryptBlock.length - keySize).toByteArray();
-            System.arraycopy(cryptBlockSize, 0, dataBlock, dataBlock.length - 1, 1);
-            dataBlock = CryptobyHelper.xorByteArrays(dataBlock, prevBlock);
-            System.arraycopy(dataBlock, 0, cryptOutput, dataBlocksLen - 3 * dataBlockSize, dataBlockSize);
+                // Copy in last Byte of dataBlock the Size of cryptBlock
+                cryptBlockSize = BigInteger.valueOf(cryptBlock.length - keySize).toByteArray();
+                System.arraycopy(cryptBlockSize, 0, dataBlock, dataBlock.length - 1, 1);
 
+                // XOR dataBlock with prevBlock
+                dataBlock = CryptobyHelper.xorByteArrays(dataBlock, prevBlock);
+                System.arraycopy(dataBlock, 0, cryptOutput, dataBlocksLen - 3 * dataBlockSize, dataBlockSize);
+            } else {
+                dataBlock = new byte[dataBlockSize];
+                System.arraycopy(dataBlock, 0, cryptOutput, dataBlocksLen - 3 * dataBlockSize, dataBlockSize);
+            }
             // Put crypted initVektor into last 2 Bytes of cryptOutput Array
             System.arraycopy(firstVektorBlock, 0, cryptOutput, dataBlocksLen - 2 * dataBlockSize, firstVektorBlock.length);
             System.arraycopy(secVektorBlock, 0, cryptOutput, dataBlocksLen - 1 * dataBlockSize, secVektorBlock.length);
@@ -129,6 +147,7 @@ public class CryptRSA implements CryptAsym {
         } else {
             cryptOutput = encryptBlock(plainInput, n);
         }
+        CryptobyHelper.printProgressBar(100);
         return cryptOutput;
     }
 
@@ -147,6 +166,7 @@ public class CryptRSA implements CryptAsym {
         int dataBlocksLen = wholeLen - 3 * dataBlockSize;
         int plainBlocksLen;
         int halfOfVektor = dataBlockSize / 2;
+        int percentProgress;
 
         byte[] plainOutput;
         byte[] allPlainBlocks;
@@ -162,9 +182,9 @@ public class CryptRSA implements CryptAsym {
 
         if (wholeLen > keySize) {
             plainBlocksLen = (dataBlocksLen / dataBlockSize) * plainBlockSize;
-            while (plainBlocksLen > dataBlocksLen) {
-                plainBlocksLen = plainBlocksLen + plainBlockSize;
-            }
+//            while (plainBlocksLen < dataBlocksLen - dataBlockSize) {
+//                plainBlocksLen += plainBlockSize;
+//            }
             allPlainBlocks = new byte[plainBlocksLen];
             // Get initVektor from last 2 Bytes of CryptInput
             System.arraycopy(cryptInput, wholeLen - 2 * dataBlockSize, firstVektorBlock, 0, keySize);
@@ -179,6 +199,12 @@ public class CryptRSA implements CryptAsym {
             System.arraycopy(initVektorBlock, 0, prevBlock, 0, dataBlockSize);
             int j = 0;
             for (int i = 0; i < dataBlocksLen; i += dataBlockSize) {
+
+                // Convert i to percent for ProgressBar
+                percentProgress = (int) (((float) i / (float) dataBlocksLen) * 100);
+                // Print ProgressBar
+                CryptobyHelper.printProgressBar(percentProgress);
+
                 System.arraycopy(cryptInput, i, dataBlock, 0, dataBlockSize);
                 // XOR with prevBlock
                 dataBlock = CryptobyHelper.xorByteArrays(prevBlock, dataBlock);
@@ -201,27 +227,32 @@ public class CryptRSA implements CryptAsym {
             }
             dataBlock = new byte[dataBlockSize];
             System.arraycopy(cryptInput, dataBlocksLen, dataBlock, 0, dataBlockSize);
+            if (new BigInteger(dataBlock).compareTo(BigInteger.ZERO) != 0) {
 
-            dataBlock = CryptobyHelper.xorByteArrays(prevBlock, dataBlock);
+                dataBlock = CryptobyHelper.xorByteArrays(prevBlock, dataBlock);
+                cryptBlockSize = new byte[1];
+                System.arraycopy(dataBlock, dataBlock.length - 1, cryptBlockSize, 0, 1);
+                cryptBlock = new byte[keySize + new BigInteger(cryptBlockSize).intValue()];
+                System.arraycopy(dataBlock, 0, cryptBlock, 0, cryptBlock.length);
 
-            cryptBlockSize = new byte[1];
-            System.arraycopy(dataBlock, dataBlock.length - 1, cryptBlockSize, 0, 1);
-            cryptBlock = new byte[keySize - new BigInteger(cryptBlockSize).intValue()];
-            System.arraycopy(dataBlock, 0, cryptBlock, 0, cryptBlock.length);
+                plusOnePlainBlock = decryptBlock(cryptBlock, n, d);
+                plainBlock = new byte[plusOnePlainBlock.length - 1];
+                // Remove one from first Byte of Array
+                System.arraycopy(plusOnePlainBlock, 1, plainBlock, 0, plainBlock.length);
+                plainOutput = new byte[plainBlocksLen + plainBlock.length];
 
-            plusOnePlainBlock = decryptBlock(cryptBlock, n, d);
-            plainBlock = new byte[plusOnePlainBlock.length - 1];
-            // Remove one from first Byte of Array
-            System.arraycopy(plusOnePlainBlock, 1, plainBlock, 0, plainBlock.length);
-            plainOutput = new byte[plainBlocksLen + plainBlock.length];
-
-            System.arraycopy(allPlainBlocks, 0, plainOutput, 0, plainBlocksLen);
-            System.arraycopy(plainBlock, 0, plainOutput, plainBlocksLen, plainBlock.length);
+                System.arraycopy(allPlainBlocks, 0, plainOutput, 0, plainBlocksLen);
+                System.arraycopy(plainBlock, 0, plainOutput, plainBlocksLen, plainBlock.length);
+            } else {
+                plainOutput = new byte[plainBlocksLen];
+                System.arraycopy(allPlainBlocks, 0, plainOutput, 0, plainBlocksLen);
+            }
 
         } else {
             plainOutput = decryptBlock(cryptInput, n, d);
         }
-
+        // Print ProgressBar
+        CryptobyHelper.printProgressBar(100);
         return plainOutput;
     }
 
