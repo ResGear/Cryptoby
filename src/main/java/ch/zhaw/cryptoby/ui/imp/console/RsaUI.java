@@ -44,12 +44,11 @@ public class RsaUI {
     private static char[] charTextHex;
 
     // UI for File Cryption Menu
-
     /**
      *
      * @param console
      */
-        public static void rsaCrypterFile(CryptobyConsole console) {
+    public static void rsaCrypterFile(CryptobyConsole console) {
         scanner = new Scanner(System.in);
 
         do {
@@ -105,6 +104,15 @@ public class RsaUI {
             rsaCrypterFile(console);
         }
 
+        // Input Path to save encrypted File
+        scanner = new Scanner(System.in);
+        scanner.useDelimiter("\n");
+        System.out.println("Enter Path to save encrypted File (Type '" + quit + "' to Escape):");
+        if (scanner.hasNext(quit)) {
+            rsaCrypterFile(console);
+        }
+        cryptFilePath = scanner.next();
+
         // Input Path to Public Key File for encryption
         scanner = new Scanner(System.in);
         scanner.useDelimiter("\n");
@@ -120,22 +128,16 @@ public class RsaUI {
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
             rsaCrypterFile(console);
-        }
-
-        // Input Path to save encrypted File
-        scanner = new Scanner(System.in);
-        scanner.useDelimiter("\n");
-        System.out.println("Enter Path to save encrypted File (Type '" + quit + "' to Escape):");
-        if (scanner.hasNext(quit)) {
+        } catch (NumberFormatException nfex) {
+            System.out.println("Key File format is not correct!");
             rsaCrypterFile(console);
         }
-        cryptFilePath = scanner.next();
 
         // Initial RSA Crypt Object
         initRSAKeyGen(console);
 
         // Encrypt the File with given Public Key
-        System.out.println("\nEncrypting in progress...");
+        System.out.println("\nEncryption in progress...");
         cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
 
         System.out.println("\nEncryption successfull. Saving File now...");
@@ -248,6 +250,7 @@ public class RsaUI {
         initRSAKeyGen(console);
 
         // Get Public Key in Bytecode
+        System.out.println("\nGenerate Private and Public RSA Keys...");
         console.getCore().getKeyGenAsym().initGenerator(keySize);
         publicKeyByte = console.getCore().getKeyGenAsym().getPublicKeyByte();
 
@@ -256,7 +259,7 @@ public class RsaUI {
         String privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
 
         // Encrypt the File with given Key
-        System.out.println("\nEncrypting in progress...");
+        System.out.println("\nEncryption in progress...");
         cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
 
         System.out.println("\nEncryption successfull. Saving File now...");
@@ -322,6 +325,15 @@ public class RsaUI {
             rsaCrypterFile(console);
         }
 
+        // Input Path saving Path
+        scanner = new Scanner(System.in);
+        System.out.println("Enter saving Path for decrypted File (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            rsaCrypterFile(console);
+        }
+        plainFilePath = scanner.next();
+
         // Input Path to Key File for decryption
         scanner = new Scanner(System.in);
         System.out.println("Enter Path to Private Key File (Type '" + quit + "' to Escape):");
@@ -337,22 +349,16 @@ public class RsaUI {
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
             rsaCrypterFile(console);
-        }
-
-        // Input Path saving Path
-        scanner = new Scanner(System.in);
-        System.out.println("Enter saving Path for decrypted File (Type '" + quit + "' to Escape):");
-        scanner.useDelimiter("\n");
-        if (scanner.hasNext(quit)) {
+        } catch (NumberFormatException nfex) {
+            System.out.println("Key File format is not correct!");
             rsaCrypterFile(console);
         }
-        plainFilePath = scanner.next();
 
         // Initial RSA Crypt Object
         initRSAKeyGen(console);
 
         // Encrypt the File with given Key
-        System.out.println("\nDecrypting in progress...");
+        System.out.println("\nDecryption in progress...");
         try {
             plainByte = console.getCore().getCryptAsym().decrypt(cryptByte, privateKeyByte);
         } catch (Exception e) {
@@ -388,12 +394,11 @@ public class RsaUI {
     }
 
     // UIs for Text Cryption Menu
-
     /**
      *
      * @param console
      */
-        public static void rsaCrypterText(CryptobyConsole console) {
+    public static void rsaCrypterText(CryptobyConsole console) {
         scanner = new Scanner(System.in);
 
         do {
@@ -442,14 +447,15 @@ public class RsaUI {
         initRSAKeyGen(console);
 
         // Encrypt the String Text with given Key
-        System.out.println("\nEncrypting in progress...");
+        System.out.println("\nEncryption in progress...");
         cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
+        System.out.println("\nEncryption successfull...");
 
         // Convert byte Array into a Hexcode String
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        System.out.println("\n" + CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
+        System.out.println(CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
 
         // Back to Menu rsaCrypter with Enter (Return) Key
         System.out.println("\nGo back to RSA Text Crypter Menu: Press Enter");
@@ -505,6 +511,7 @@ public class RsaUI {
         initRSAKeyGen(console);
 
         // Get Public Key in Bytecode
+        System.out.println("\nGenerate Private and Public RSA Keys...");
         console.getCore().getKeyGenAsym().initGenerator(keySize);
         publicKeyByte = console.getCore().getKeyGenAsym().getPublicKeyByte();
 
@@ -513,14 +520,15 @@ public class RsaUI {
         privateKey = console.getCore().getKeyGenAsym().getPrivateKey();
 
         // Encrypt the String Text with given Key
-        System.out.println("\nEncrypting in progress...");
+        System.out.println("\nEncryption in progress...");
         cryptByte = console.getCore().getCryptAsym().encrypt(plainByte, publicKeyByte);
+        System.out.println("\nEncryption successfull...");
 
         // Convert crypted byte Array into a Hexcode String
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        System.out.println("\n" + CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
+        System.out.println(CryptobyHelper.printHexBlock("RSA", keySize, charTextHex));
 
         // Print Private Keys
         System.out.println(CryptobyHelper.printPrivateKeyBlock(privateKey));
@@ -563,7 +571,7 @@ public class RsaUI {
         initRSAKeyGen(console);
 
         // Decrypt the String Text with given Key
-        System.out.println("\nDecrypting in progress...");
+        System.out.println("\nDecryption in progress...");
         try {
             plainByte = console.getCore().getCryptAsym().decrypt(cryptByte, privateKeyByte);
         } catch (Exception e) {
@@ -573,9 +581,10 @@ public class RsaUI {
             CryptobyHelper.pressEnter();
             rsaCrypterText(console);
         }
+        System.out.println("\nDecryption finished...");
 
         // Print decrypted Text
-        System.out.println("\nRSA-" + keySize * 4 + " decrypted Text:");
+        System.out.println("\nRSA-" + keySize + " decrypted Text:");
         System.out.println(new String(plainByte));
 
         // Reset RSA Crypt Object to release Memory

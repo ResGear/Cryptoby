@@ -101,7 +101,6 @@ public class AesUI {
         // Encrypt the String Text with given Key
         System.out.println("\nEncrypting in progress...");
         cryptByte = console.getCore().getCryptSym().encrypt(plainByte, key);
-
         System.out.println("\nEncryption successfull. Saving File now...");
 
         //Put encrypted Bytes to File
@@ -241,7 +240,7 @@ public class AesUI {
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
-        System.out.println("\n\nEncryption successfull...");
+        System.out.println("\nEncryption successfull...");
         System.out.println(CryptobyHelper.printHexBlock("AES", keySize, charTextHex));
 
         // Back to Text Crypter Menu
@@ -331,6 +330,9 @@ public class AesUI {
                 tempKey = CryptobyFileManager.getKeyFromFile(keyPath);
             } catch (IOException ex) {
                 CryptobyHelper.printIOExp();
+                aesCrypterFile(console);
+            } catch (NumberFormatException nfex) {
+                System.out.println("Key File format is not correct!");
                 aesCrypterFile(console);
             }
             keySize = tempKey.length * 4;
