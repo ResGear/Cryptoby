@@ -18,8 +18,11 @@ package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.filemgr.CryptobyFileManager;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +32,9 @@ public class AesUI {
 
     private static Scanner scanner = new Scanner(System.in);
     private static final String quit = "QuitCrypt";
-    private static String pathToFile;
+    private static String plainFilePath;
+    private static String cryptFilePath;
+    private static String keyPath;
     private static byte[] plainByte;
     private static byte[] cryptByte;
     private static byte[] key;
@@ -37,7 +42,10 @@ public class AesUI {
     private static char[] charTextHex;
 
     public static void aesCrypterFile(CryptobyConsole console) {
-        switch (AesUI.choiceText()) {
+        System.out.println("\n");
+        System.out.println("AES File Crypter");
+        System.out.println("----------------\n");
+        switch (choiceText()) {
             case 1:
                 aesEncrypterFile(console);
                 break;
@@ -53,43 +61,138 @@ public class AesUI {
     }
 
     private static void aesEncrypterFile(CryptobyConsole console) {
+        // Input Path to File for encryption
         scanner = new Scanner(System.in);
-
-        // Input File to encrypt
-        System.out.println("\nEnter Path to File for Encryption (Type '" + quit + "' to Escape):");
+        System.out.println("Enter Path to File for encryption (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
         if (scanner.hasNext(quit)) {
-            AesUI.aesCrypterText(console);
+            aesCrypterFile(console);
         }
-        pathToFile = scanner.next();
+        plainFilePath = scanner.next();
+
+        // Get Bytes from PlainFile
+        try {
+            plainByte = CryptobyFileManager.getBytesFromFile(plainFilePath);
+        } catch (IOException ex) {
+            CryptobyHelper.printIOExp();
+            aesCrypterFile(console);
+        }
+
+        // Input Path saving Path
+        scanner = new Scanner(System.in);
+        System.out.println("Enter Path to save encrypted File (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            aesCrypterFile(console);
+        }
+        cryptFilePath = scanner.next();
 
         // Input Key File for encryption
-        key = AesUI.scanKeyFile(console);
+        key = scanKeyFile(console);
 
         // Initial AES Crypt Object
-        AesUI.initAESKeyGen(console);
+        initAESKeyGen(console);
 
         // Encrypt the String Text with given Key
+        System.out.println("\nEncrypting in progress...");
         cryptByte = console.getCore().getCryptSym().encrypt(plainByte, key);
 
-        // Convert byte Array into a Hexcode String
-        charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
+        System.out.println("\nEncryption successfull. Saving File now...");
 
-        // Print encrypted Text in Hex Block form
-        System.out.print(CryptobyHelper.printHexBlock("AES", keySize, charTextHex));
+        //Put encrypted Bytes to File
+        try {
+            CryptobyFileManager.putBytesToFile(cryptFilePath, cryptByte);
+        } catch (IOException ex) {
+            Logger.getLogger(RsaUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("\nEncrypted File saved to this Path:");
+        System.out.println(cryptFilePath);
 
-        // Enter for Continues
+        // Reset Variables
+        initAESKeyGen(console);
+        cryptByte = null;
+        plainByte = null;
+        key = null;
+
+        // Back to File Crypter Menu
+        System.out.println("\nGo back to AES File Crypter Menu: Press Enter");
         CryptobyHelper.pressEnter();
-
-        // Back to Menu Choose PrimeTest
-        console.menuTextSym();
+        aesCrypterFile(console);
     }
 
     private static void aesDecrypterFile(CryptobyConsole console) {
+        // Input Path to File for decryption
+        scanner = new Scanner(System.in);
+        System.out.println("Enter Path to decrypt a File (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            aesCrypterFile(console);
+        }
+        cryptFilePath = scanner.next();
+        try {
+            // Get Bytes from PlainFile
+            cryptByte = CryptobyFileManager.getBytesFromFile(cryptFilePath);
+        } catch (IOException ex) {
+            CryptobyHelper.printIOExp();
+            aesCrypterFile(console);
+        }
+
+        // Input Path saving Path
+        scanner = new Scanner(System.in);
+        System.out.println("Enter Path to save decrypted File (Type '" + quit + "' to Escape):");
+        scanner.useDelimiter("\n");
+        if (scanner.hasNext(quit)) {
+            aesCrypterFile(console);
+        }
+        plainFilePath = scanner.next();
+
+        // Input your Key for encryption
+        key = scanKeyFile(console);
+
+        // Initial AES Crypt Object
+        initAESKeyGen(console);
+
+        // Decrypt the String Text with given Key
+        System.out.println("\nDecrypting in progress...");
+        try {
+            plainByte = console.getCore().getCryptSym().decrypt(cryptByte, key);
+        } catch (Exception e) {
+            System.out.println("\nUnable to decrypt this String!!");
+            // Enter for Continues
+            CryptobyHelper.pressEnter();
+            aesCrypterFile(console);
+        }
+
+        System.out.println("\nDecryption finished. Saving File now...");
+
+        try {
+            //Put encrypted Bytes to File
+            CryptobyFileManager.putBytesToFile(plainFilePath, plainByte);
+        } catch (IOException ex) {
+            CryptobyHelper.printIOExp();
+            aesCrypterFile(console);
+        }
+        System.out.println("\nDecrypted File saved to this Path:");
+        System.out.println(plainFilePath);
+
+        // Reset Variables
+        initAESKeyGen(console);
+        cryptByte = null;
+        plainByte = null;
+        key = null;
+
+        // Back to File Crypter Menu
+        System.out.println("\nGo back to AES File Crypter Menu: Press Enter");
+        CryptobyHelper.pressEnter();
+        aesCrypterFile(console);
 
     }
 
     public static void aesCrypterText(CryptobyConsole console) {
-        switch (AesUI.choiceText()) {
+        System.out.println("\n");
+        System.out.println("AES Text Crypter");
+        System.out.println("----------------\n");
+        switch (choiceText()) {
             case 1:
                 aesEncrypterText(console);
                 break;
@@ -111,30 +214,31 @@ public class AesUI {
         // Input your String Text to encrypt
         System.out.println("\nYour Text to encrypt (Type '" + quit + "' to Escape):");
         if (scanner.hasNext(quit)) {
-            AesUI.aesCrypterText(console);
+            aesCrypterText(console);
         }
         plainByte = scanner.next().getBytes();
 
         // Input your Key for encryption
-        key = AesUI.scanKeyText(console);
+        key = scanKeyText(console);
 
         // Initial AES Crypt Object
-        AesUI.initAESKeyGen(console);
+        initAESKeyGen(console);
 
         // Encrypt the String Text with given Key
+        System.out.println("\nEncrypting in progress...");
         cryptByte = console.getCore().getCryptSym().encrypt(plainByte, key);
 
         // Convert byte Array into a Hexcode String
         charTextHex = CryptobyHelper.bytesToHexStringUpper(cryptByte).toCharArray();
 
         // Print encrypted Text in Hex Block form
+        System.out.println("\n\nEncryption successfull...");
         System.out.println(CryptobyHelper.printHexBlock("AES", keySize, charTextHex));
 
-        // Enter for Continues
+        // Back to Text Crypter Menu
+        System.out.println("\nGo back to AES Text Crypter Menu: Press Enter");
         CryptobyHelper.pressEnter();
-
-        // Back to Menu Choose PrimeTest
-        console.menuTextSym();
+        aesCrypterText(console);
     }
 
     private static void aesDecrypterText(CryptobyConsole console) {
@@ -148,7 +252,7 @@ public class AesUI {
             String cryptText = "";
             while (!scanner.hasNext(CryptobyHelper.getEOBString())) {
                 if (scanner.hasNext(quit)) {
-                    AesUI.aesCrypterText(console);
+                    aesCrypterText(console);
                 }
                 cryptText = cryptText + scanner.next();
             }
@@ -161,12 +265,13 @@ public class AesUI {
         }
 
         // Input your Key for encryption
-        key = AesUI.scanKeyText(console);
+        key = scanKeyText(console);
 
         // Initial AES Crypt Object
-        AesUI.initAESKeyGen(console);
+        initAESKeyGen(console);
 
         // Decrypt the String Text with given Key
+        System.out.println("\nDecrypting in progress...");
         try {
             plainByte = console.getCore().getCryptSym().decrypt(cryptByte, key);
         } catch (Exception e) {
@@ -177,14 +282,14 @@ public class AesUI {
         }
 
         // Print decrypted Text
+        System.out.println("\nDecryption finished...");
         System.out.println("\nAES-" + keySize + " decrypted Text:");
         System.out.println(new String(plainByte));
 
-        // Enter for Continues
+        // Back to Text Crypter Menu
+        System.out.println("\nGo back to AES Text Crypter Menu: Press Enter");
         CryptobyHelper.pressEnter();
-
-        // Back to Menu Choose PrimeTest
-        console.menuTextSym();
+        aesCrypterText(console);
     }
 
     // Helper Functions    
@@ -195,26 +300,30 @@ public class AesUI {
             System.out.println("\nAllowed Key Sizes 128,192 and 256 Bit.");
             System.out.println("Enter the AES Key (Type '" + quit + "' to Escape):");
             if (scanner.hasNext(quit)) {
-                AesUI.aesCrypterText(console);
+                aesCrypterText(console);
             }
             tempKey = scanner.next().getBytes();
             keySize = tempKey.length * 4;
         } while (keySize != 128 && keySize != 192 && keySize != 256);
         return tempKey;
     }
-    
-        private static byte[] scanKeyFile(CryptobyConsole console) {
+
+    private static byte[] scanKeyFile(CryptobyConsole console) {
         scanner = new Scanner(System.in);
-        byte[] tempKey;
-        String pathToKey;
+        byte[] tempKey = null;
         do {
             System.out.println("\nAllowed Key Sizes 128,192 and 256 Bit.");
             System.out.println("Enter Path to Key File (Type '" + quit + "' to Escape):");
             if (scanner.hasNext(quit)) {
-                AesUI.aesCrypterFile(console);
+                aesCrypterFile(console);
             }
-            pathToKey = scanner.next();
-            tempKey = CryptobyFileManager.getBytesFromFile(pathToKey);
+            keyPath = scanner.next();
+            try {
+                tempKey = CryptobyFileManager.getKeyFromFile(keyPath);
+            } catch (IOException ex) {
+                CryptobyHelper.printIOExp();
+                aesCrypterFile(console);
+            }
             keySize = tempKey.length * 4;
         } while (keySize != 128 && keySize != 192 && keySize != 256);
         return tempKey;
@@ -228,11 +337,7 @@ public class AesUI {
     private static int choiceText() {
         scanner = new Scanner(System.in);
         int choice;
-
         do {
-            System.out.println("\n");
-            System.out.println("AES Encryption and Decryption");
-            System.out.println("-------------------------\n");
             System.out.println("1 - Encryption");
             System.out.println("2 - Decryption");
             System.out.println("3 - Back");
@@ -243,6 +348,6 @@ public class AesUI {
             }
             choice = scanner.nextInt();
         } while (choice < 1 || choice > 3);
-        return 0;
+        return choice;
     }
 }
