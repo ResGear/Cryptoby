@@ -18,7 +18,7 @@ That means, it doesn't use any cryptographic libraries from Java or elsewhere. F
 1. Project Methode: Scrum (http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1)
 2. Documentations on Google Drive: https://drive.google.com/#folders/0B1I433N3y2uSOHZfTGlsUG83c00
 2. IDE: Netbeans 8
-3. Language: Java (JDK 1.8)
+3. Language: Java (JDK 1.7)
 4. Build-Management-Tool: Maven
 5. Design Pattern: Stragety http://de.wikipedia.org/wiki/Strategie_(Entwurfsmuster)
 
