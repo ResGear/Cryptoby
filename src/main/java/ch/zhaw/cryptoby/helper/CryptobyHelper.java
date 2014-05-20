@@ -135,4 +135,24 @@ public class CryptobyHelper {
         return xorArray;
     }
 
+    public static void printProgressBar(int percentProgress) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < percentProgress; i++) {
+            sb.append("=");
+        }
+        for (int i = 100; i > percentProgress; i--) {
+            sb.append(".");
+        }
+        sb.append("] ");
+        sb.append(percentProgress);
+        sb.append("%");
+        sb.append("\r");
+        System.out.print(sb.toString());
+    }
+
+    public static void printIOExp() {
+        System.out.println("File not found or other IO Error! Go back to Menu.");
+    }
+
 }
