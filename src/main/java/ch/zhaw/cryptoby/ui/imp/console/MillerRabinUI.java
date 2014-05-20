@@ -17,11 +17,9 @@
 
 package ch.zhaw.cryptoby.ui.imp.console;
 
-import java.io.IOException;
+import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import java.math.BigInteger;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MillerRabinUI {
     
@@ -29,7 +27,6 @@ public class MillerRabinUI {
         final Scanner scanner = new Scanner(System.in);
         // Initial Variables
         int rounds;
-        String result;
         String percent;
         BigInteger number;
         
@@ -62,25 +59,15 @@ public class MillerRabinUI {
         
         // Get Result of Test
         if(console.getCore().getPrimetest().isPrime(number)) {
-            result = "is probably a Primenumber";
+            percent = String.valueOf(console.getCore().getPrimetest().getProbability());
+            System.out.println("\nResult: Number is probably a Primenumber, probability: "+percent+"%");
         } else {
-            result = "is not a Primenumber";
-        }
-        
-        // Get Probably
-        percent = String.valueOf(console.getCore().getPrimetest().getProbability());
-        
-        // Print Results
-        System.out.println("Result: "+result+", Probably: "+percent);
-        
-        // Enter for Continues
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("\nResult: Number is NOT a Primenumber");
         }
         
         // Back to Menu Choose PrimeTest
+        System.out.println("\nGo back to Primetest Menu: Press Enter");
+        CryptobyHelper.pressEnter();
         console.menuPrimeTest();
     }
     
