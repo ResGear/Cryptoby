@@ -22,13 +22,24 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 /**
+ * This class provides RSA encryption and decryption methods.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class CryptRSA implements CryptAsym {
 
     private static final BigInteger E = BigInteger.valueOf(65537);
 
+    /**
+     * Encrypt plainInput with publicKey in blocks. The first encrypted block will
+     * be xored with a Initial Vektor and every next encrypted block will be xored
+     * with the previous block and written to output array. Encrypted Initial
+     * Vector stored in last two bytes of output byte array.
+     *
+     * @param plainInput Byte Array to encrypt in RSA Mode
+     * @param publicKey RSA Public Key as Byte Array
+     * @return RSA Encrypted plainInput as Byte Array
+     */
     @Override
     public byte[] encrypt(byte[] plainInput, byte[] publicKey) {
 
@@ -151,6 +162,16 @@ public class CryptRSA implements CryptAsym {
         return cryptOutput;
     }
 
+    /**
+     * Decrypt cryptInput with privateKey in blocks. Initial Vector in last two
+     * bytes will be decrypt and used to xor the first decrypted block. Every next
+     * block will be xored with the previous block. After every XOR the block
+     * will be decrypted and written to output byte array.
+     *
+     * @param cryptInput RSA Encrypted Input as Byte Array
+     * @param privateKey RSA Private Key as Byte Array
+     * @return RSA decrypted cryptInput as Byte Array
+     */
     @Override
     public byte[] decrypt(byte[] cryptInput, byte[] privateKey) {
         byte[] dByteArray = getDfromKey(privateKey);
@@ -182,9 +203,7 @@ public class CryptRSA implements CryptAsym {
 
         if (wholeLen > keySize) {
             plainBlocksLen = (dataBlocksLen / dataBlockSize) * plainBlockSize;
-//            while (plainBlocksLen < dataBlocksLen - dataBlockSize) {
-//                plainBlocksLen += plainBlockSize;
-//            }
+
             allPlainBlocks = new byte[plainBlocksLen];
             // Get initVektor from last 2 Bytes of CryptInput
             System.arraycopy(cryptInput, wholeLen - 2 * dataBlockSize, firstVektorBlock, 0, keySize);
@@ -267,7 +286,7 @@ public class CryptRSA implements CryptAsym {
         }
     }
 
-    public byte[] decryptBlock(byte[] block, BigInteger n, BigInteger d) {
+    private byte[] decryptBlock(byte[] block, BigInteger n, BigInteger d) {
         BigInteger blockInt = new BigInteger(block);
         if (blockInt.compareTo(BigInteger.ZERO) < 0) {
             blockInt = blockInt.modPow(d, n);

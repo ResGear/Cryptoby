@@ -19,38 +19,15 @@ package ch.zhaw.cryptoby.prime.imp;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author Toby
+ * @author Tobias Rees
  */
-public class MillerRabinTest { 
+public class MillerRabinTest {
     
-    public MillerRabinTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of getProbability method, of class MillerRabin.
      */

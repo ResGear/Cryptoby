@@ -18,11 +18,15 @@
 package ch.zhaw.cryptoby.ui.itf;
 
 /**
+ * Interface for User Interface implementation
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public interface CryptobyUI {
     
+    /**
+     * Start User Interface
+     */
     public void run();
     
 }

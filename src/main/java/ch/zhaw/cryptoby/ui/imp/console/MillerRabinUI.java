@@ -21,9 +21,18 @@ import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import java.math.BigInteger;
 import java.util.Scanner;
 
+/**
+ * This class provides menus in console UI for Miller Rabin implementation.
+ *
+ * @author Tobias Rees
+ */
 public class MillerRabinUI {
-    
-        public static void testMillerRabin(CryptobyConsole console){
+
+    /**
+     *
+     * @param console
+     */
+    public static void testMillerRabin(CryptobyConsole console){
         final Scanner scanner = new Scanner(System.in);
         // Initial Variables
         int rounds;

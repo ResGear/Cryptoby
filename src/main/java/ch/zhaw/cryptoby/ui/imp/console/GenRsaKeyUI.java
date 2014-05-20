@@ -22,13 +22,18 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
+ * This class provides menus in console UI for RSA generator implementation.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class GenRsaKeyUI {
 
     private static final String quit = "QuitCrypt";
 
+    /**
+     *
+     * @param console
+     */
     public static void genRSAKeysText(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
 
@@ -95,6 +100,10 @@ public class GenRsaKeyUI {
         console.menuGenKey();
     }
 
+    /**
+     *
+     * @param console
+     */
     public static void genRSAKeysFile(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
         String privateKeyPath;

@@ -17,17 +17,40 @@
 package ch.zhaw.cryptoby.keygen.itf;
 
 /**
+ * Interface for symmetric key generator implementations
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public interface KeyGenSym {
 
+    /**
+     *
+     * @param keySize Size of key which will be generated
+     * @return Return key as String
+     */
     public String generateKey(int keySize);
 
+    /**
+     *
+     * @param keySize Size of key which will be generated
+     * @param password Password for key
+     * @return Return key as String
+     */
     public String generateKey(int keySize, String password);
 
+    /**
+     *
+     * @param keySize Size of key which will be generated
+     * @return Return key as byte array
+     */
     public byte[] generateKeyByte(int keySize);
 
+    /**
+     *
+     * @param keySize Size of key which will be generated
+     * @param password Password for key
+     * @return Return key as byte array
+     */
     public byte[] generateKeyByte(int keySize, String password);
 
 }

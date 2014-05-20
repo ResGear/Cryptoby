@@ -18,12 +18,16 @@
 package ch.zhaw.cryptoby.sym.imp;
 
 /**
+ * This class provides different helper methods and table for CryptAES class.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 // AEStables: construct various 256-byte tables needed for AES
 public class CryptTablesAES {
 
+    /**
+     * Constructor load different tables
+     */
     public CryptTablesAES() {
         loadE();
         loadL();
@@ -41,20 +45,43 @@ public class CryptTablesAES {
     private final byte[] powX = new byte[15]; // powers of x = 0x02
 
     // Routines to access table entries
-    public byte SBox(byte b) {
+
+    /**
+     *
+     * @param b
+     * @return
+     */
+        public byte SBox(byte b) {
         return S[b & 0xff];
     }
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     public byte invSBox(byte b) {
         return invS[b & 0xff];
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     */
     public byte Rcon(int i) {
         return powX[i - 1];
     }
 
     // FFMulFast: fast multiply using table lookup
-    public byte FFMulFast(byte a, byte b) {
+
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+        public byte FFMulFast(byte a, byte b) {
         if (a == 0 || b == 0) {
             return 0;
         }
@@ -66,7 +93,14 @@ public class CryptTablesAES {
     }
 
     // FFMul: slow multiply, using shifting
-    public byte FFMul(byte a, byte b) {
+
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+        public byte FFMul(byte a, byte b) {
         byte aa = a;
         byte bb = b;
         byte r = 0;
@@ -138,18 +172,34 @@ public class CryptTablesAES {
     }
 // FFInv: the multiplicative inverse of a byte value
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     public byte FFInv(byte b) {
         byte e = L[b & 0xff];
         return E[0xff - (e & 0xff)];
     }
 // ithBIt: return the ith bit of a byte
 
+    /**
+     *
+     * @param b
+     * @param i
+     * @return
+     */
     public int ithBit(byte b, int i) {
         int m[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
         return (b & m[i]) >> i;
     }
 // subBytes: the subBytes function
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     public int subBytes(byte b) {
         int res = 0;
         if (b != 0) { // if b == 0, leave it alone

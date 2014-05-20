@@ -18,12 +18,28 @@
 package ch.zhaw.cryptoby.sym.itf;
 
 /**
- *
- * @author Toby
+ * Interface for symmetric cryptology implementations
+ * 
+ * @author Tobias Rees
  */
 public interface CryptSym {
     
+    /**
+     * Implementation of symmetric encrypt method
+     *
+     * @param plainInput Plain byte array to encrypt
+     * @param key Key to encrypt plainInput as byte array
+     * @return
+     */
     public byte[] encrypt(byte[] plainInput, byte[] key);
+
+    /**
+     * Implementation of symmetric decrypt method
+     * 
+     * @param cryptInput Plain byte array to encrypt
+     * @param key Key to decrypt plainInput as byte array
+     * @return
+     */
     public byte[] decrypt(byte[] cryptInput, byte[] key);
     
 }

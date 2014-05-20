@@ -23,8 +23,9 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 /**
+ * This class provides menus in console UI for RSA implementation.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class RsaUI {
 
@@ -43,7 +44,12 @@ public class RsaUI {
     private static char[] charTextHex;
 
     // UI for File Cryption Menu
-    public static void rsaCrypterFile(CryptobyConsole console) {
+
+    /**
+     *
+     * @param console
+     */
+        public static void rsaCrypterFile(CryptobyConsole console) {
         scanner = new Scanner(System.in);
 
         do {
@@ -382,7 +388,12 @@ public class RsaUI {
     }
 
     // UIs for Text Cryption Menu
-    public static void rsaCrypterText(CryptobyConsole console) {
+
+    /**
+     *
+     * @param console
+     */
+        public static void rsaCrypterText(CryptobyConsole console) {
         scanner = new Scanner(System.in);
 
         do {

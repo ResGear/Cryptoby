@@ -20,15 +20,27 @@ import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 import java.util.Scanner;
 
+/**
+ * This class provides main menus for console UI.
+ *
+ * @author Tobias Rees
+ */
 public class CryptobyConsole implements CryptobyUI {
 
     private final CryptobyCore core;
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     *
+     * @param core
+     */
     public CryptobyConsole(CryptobyCore core) {
         this.core = core;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         int choice;
@@ -71,6 +83,9 @@ public class CryptobyConsole implements CryptobyUI {
         }
     }
 
+    /**
+     *
+     */
     public void menuTextCrypt() {
         int choice;
 
@@ -106,7 +121,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Symmetric String Cryption Menu
-    public void menuTextSym() {
+
+    /**
+     *
+     */
+        public void menuTextSym() {
         int choice;
 
         do {
@@ -137,7 +156,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Asymmetric String Cryption Menu
-    public void menuTextAsym() {
+
+    /**
+     *
+     */
+        public void menuTextAsym() {
         int choice;
 
         do {
@@ -167,6 +190,9 @@ public class CryptobyConsole implements CryptobyUI {
         }
     }
 
+    /**
+     *
+     */
     public void menuFileCrypt() {
         int choice;
 
@@ -202,7 +228,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Symmetric File Cryption Menu
-    public void menuFileSym() {
+
+    /**
+     *
+     */
+        public void menuFileSym() {
         int choice;
 
         do {
@@ -233,7 +263,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Asymmetric File Cryption Menu
-    public void menuFileAsym() {
+
+    /**
+     *
+     */
+        public void menuFileAsym() {
         int choice;
 
         do {
@@ -264,7 +298,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Key Generator Menu
-    public void menuGenKey() {
+
+    /**
+     *
+     */
+        public void menuGenKey() {
         int choice;
 
         do {
@@ -306,7 +344,11 @@ public class CryptobyConsole implements CryptobyUI {
     }
 
     // Prime Test Menu
-    public void menuPrimeTest() {
+
+    /**
+     *
+     */
+        public void menuPrimeTest() {
         int choice;
 
         do {
@@ -335,6 +377,10 @@ public class CryptobyConsole implements CryptobyUI {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public CryptobyCore getCore() {
         return core;
     }

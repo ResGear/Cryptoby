@@ -21,40 +21,17 @@ import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import ch.zhaw.cryptoby.keygen.imp.KeyGenRSA;
 import java.util.Arrays;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
- * @author Toby
+ * 
+ * @author Tobias Rees
  */
 public class CryptRSATest {
 
-    public CryptRSATest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
-     * Test of encrypt method, of class CryptRSA.
+     * Test one Block with 1024Bit Key
      */
     @Test
     public void testRSACrypt1024_oneBlock() {
@@ -76,6 +53,9 @@ public class CryptRSATest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     * Test longer String with 1024Bit Key
+     */
     @Test
     public void testRSACrypt1024_longString() {
         System.out.println("RSACrypt1024longString");
@@ -114,7 +94,7 @@ public class CryptRSATest {
     }
 
     /**
-     * Test of encrypt method, of class CryptRSA.
+     * Test big Block (10000 Bytes) with 1024Bit Key
      */
     @Test
     public void testRSACrypt1024_BiggerBlock() {
@@ -134,6 +114,9 @@ public class CryptRSATest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     * Test small String with false 1024Bit Key
+     */
     @Test
     public void testRSACrypt1024false() {
         System.out.println("RSACrypt1024false");
@@ -156,6 +139,9 @@ public class CryptRSATest {
         assertFalse(Arrays.equals(expResult, result));
     }
 
+    /**
+     * Test small String with 2048Bit Key
+     */
     @Test
     public void testRSACrypt2048() {
         System.out.println("RSACrypt2048");
@@ -176,6 +162,9 @@ public class CryptRSATest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     * Test small String with 4096Bit Key
+     */
     @Test
     public void testRSACrypt4096() {
         System.out.println("RSACrypt4096");

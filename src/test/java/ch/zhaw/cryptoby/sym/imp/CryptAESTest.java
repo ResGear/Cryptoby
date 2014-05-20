@@ -18,38 +18,18 @@ package ch.zhaw.cryptoby.sym.imp;
 
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
 import ch.zhaw.cryptoby.keygen.imp.KeyGenSHA3;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class CryptAESTest {
 
-    public CryptAESTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    /**
+     *
+     */
     @Test
     public void testEncryptDecrypt256() {
         System.out.println("encrypt and decrypt testphrase");
@@ -64,6 +44,9 @@ public class CryptAESTest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testEncryptDecrypt256_HugeData() {
         System.out.println("encrypt and decrypt huge Data");
@@ -78,6 +61,9 @@ public class CryptAESTest {
         assertArrayEquals(expResult, result);
     }
 
+    /**
+     *
+     */
     @Test
     public void testEncryptDecrypt256_falseKey() {
         System.out.println("crypt false key");
@@ -94,6 +80,9 @@ public class CryptAESTest {
         assertFalse(new String(expResult).equals(new String(result)));
     }
 
+    /**
+     *
+     */
     @Test
     public void testEncryptDecrypt256_false() {
         System.out.println("crypt almost false key");
@@ -109,6 +98,9 @@ public class CryptAESTest {
         assertFalse(new String(expResult).equals(new String(result)));
     }
 
+    /**
+     *
+     */
     @Test
     public void testEncryptDecrypt256_CBC() {
         System.out.println("encrypt and decrypt recurring words");

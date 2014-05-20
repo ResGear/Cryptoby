@@ -25,8 +25,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This class provides menus in console UI for AES implementation.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class AesUI {
 
@@ -41,6 +42,10 @@ public class AesUI {
     private static int keySize;
     private static char[] charTextHex;
 
+    /**
+     *
+     * @param console
+     */
     public static void aesCrypterFile(CryptobyConsole console) {
         System.out.println("\n");
         System.out.println("AES File Crypter");
@@ -188,6 +193,10 @@ public class AesUI {
 
     }
 
+    /**
+     *
+     * @param console
+     */
     public static void aesCrypterText(CryptobyConsole console) {
         System.out.println("\n");
         System.out.println("AES Text Crypter");

@@ -19,40 +19,22 @@ package ch.zhaw.cryptoby.keygen.imp;
 import ch.zhaw.cryptoby.client.CryptobyClient;
 import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.helper.CryptobyHelper;
-import java.math.BigInteger;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class KeyGenRSATest {
 
     int rounds;
 
+    /**
+     *
+     */
     public KeyGenRSATest() {
         rounds = 1;
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**

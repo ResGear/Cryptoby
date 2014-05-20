@@ -24,10 +24,19 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class provides menus in console UI for SHA3 implementation.
+ *
+ * @author Tobias Rees
+ */
 public class GenSHA3UI {
     
     private static final String quit = "QuitCrypt";
 
+    /**
+     *
+     * @param console
+     */
     public static void genSHA3KeyText(CryptobyConsole console) {
         final Scanner scanner = new Scanner(System.in);
         // Initial Variables
@@ -116,6 +125,10 @@ public class GenSHA3UI {
         console.menuGenKey();
     }
 
+    /**
+     *
+     * @param console
+     */
     public static void genSHA3KeyFile(CryptobyConsole console) {
         Scanner scanner = new Scanner(System.in);
         String keyPath;

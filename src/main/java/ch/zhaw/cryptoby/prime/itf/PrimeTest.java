@@ -20,12 +20,25 @@ package ch.zhaw.cryptoby.prime.itf;
 import java.math.BigInteger;
 
 /**
+ * Interface for prime test implementations.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public interface PrimeTest {
     
+    /**
+     * In this method the input number will be tested.
+     *
+     * @param number Input number to test
+     * @return True or false if the number is a prime
+     */
     public boolean isPrime(BigInteger number);
+
+    /**
+     * Get probability that input number in isPrime method is a prime.
+     *
+     * @return Return probability in percent as double
+     */
     public double  getProbability();
     
 }

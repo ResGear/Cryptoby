@@ -23,8 +23,10 @@ import java.nio.ByteOrder;
 import java.security.SecureRandom;
 
 /**
+ * This class is an implementation of Rijndael AES cryptology algorithm which
+ * uses CBC mode.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class CryptAES implements CryptSym {
 
@@ -42,6 +44,13 @@ public class CryptAES implements CryptSym {
         return expandKey(key);
     }
 
+    /**
+     * Encrypt a byte array in blocks with AES algorithm in CBC mode.
+     *
+     * @param plainInput Plain byte array to encrypt
+     * @param key 256 Bit key to encrypt plainInput
+     * @return Return encrypted byte array
+     */
     @Override
     public byte[] encrypt(byte[] plainInput, byte[] key) {
         int inputLength = plainInput.length;
@@ -112,6 +121,13 @@ public class CryptAES implements CryptSym {
         return cryptOutput;
     }
 
+    /**
+     * Decrypt a byte array in blocks with AES algorithm in CBC mode.
+     *
+     * @param cryptInput Encrypted byte array to decrypt
+     * @param key 256 Bit key to decrypt cryptInput
+     * @return Return decrypted byte array
+     */
     @Override
     public byte[] decrypt(byte[] cryptInput, byte[] key) {
         int percentProgress;

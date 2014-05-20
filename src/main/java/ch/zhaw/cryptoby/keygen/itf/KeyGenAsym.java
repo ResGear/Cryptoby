@@ -17,18 +17,41 @@
 package ch.zhaw.cryptoby.keygen.itf;
 
 /**
+ * Interface for asymmetric key generator implementations. With the
+ * initGenerator the keys will be generated and the getter methods provides the
+ * generated keys
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public interface KeyGenAsym {
 
+    /**
+     *
+     * @param keyBitSize Size of key which will be generated
+     */
     public void initGenerator(int keyBitSize);
 
+    /**
+     *
+     * @return Return private key as String
+     */
     public String getPrivateKey();
 
+    /**
+     *
+     * @return Return public key as String
+     */
     public String getPublicKey();
 
+    /**
+     *
+     * @return Return private key as byte array
+     */
     public byte[] getPrivateKeyByte();
 
+    /**
+     *
+     * @return Return public key as byte array
+     */
     public byte[] getPublicKeyByte();
 }
