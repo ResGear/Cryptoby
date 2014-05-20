@@ -18,10 +18,7 @@ package ch.zhaw.cryptoby.ui.imp.console;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CryptobyConsole implements CryptobyUI {
 
@@ -39,9 +36,9 @@ public class CryptobyConsole implements CryptobyUI {
         do {
             System.out.println("\n");
             System.out.println("Cryptoby - Crypt your Stuff");
-            System.out.println("-------------------------\n");
-            System.out.println("1 - Crypt Files (not implemented yet!!)");
-            System.out.println("2 - Crypt Stringtext");
+            System.out.println("---------------------------\n");
+            System.out.println("1 - Crypt Files");
+            System.out.println("2 - Crypt Text");
             System.out.println("3 - Generate Key");
             System.out.println("4 - Primetest");
             System.out.println("5 - Quit");
@@ -79,8 +76,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
+            System.out.println("Text Cryption Menu");
             System.out.println("Select Cryptology Type");
-            System.out.println("-------------------------\n");
+            System.out.println("----------------------\n");
             System.out.println("1 - Asymmetric Cryption");
             System.out.println("2 - Symmetric Cryption");
             System.out.println("3 - Back");
@@ -113,8 +111,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Symmetric Cryption Methode");
-            System.out.println("-------------------------\n");
+            System.out.println("Text Cryption Menu");
+            System.out.println("Select Symmetric Cryption Methode");
+            System.out.println("---------------------------------\n");
             System.out.println("1 - AES");
             System.out.println("2 - Back");
             System.out.print("Enter Number: ");
@@ -143,8 +142,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Asymmetric Cryption Methode");
-            System.out.println("-------------------------\n");
+            System.out.println("Text Cryption Menu");
+            System.out.println("Select Asymmetric Cryption Methode");
+            System.out.println("----------------------------------\n");
             System.out.println("1 - RSA");
             System.out.println("2 - Back");
             System.out.print("Enter Number: ");
@@ -172,8 +172,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
+            System.out.println("File Cryption Menu");
             System.out.println("Select Cryptology Type");
-            System.out.println("-------------------------\n");
+            System.out.println("----------------------\n");
             System.out.println("1 - Asymmetric Cryption");
             System.out.println("2 - Symmetric Cryption");
             System.out.println("3 - Back");
@@ -206,8 +207,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Symmetric Cryption Methode");
-            System.out.println("-------------------------\n");
+            System.out.println("File Cryption Menu");
+            System.out.println("Select Symmetric Cryption Methode");
+            System.out.println("---------------------------------\n");
             System.out.println("1 - AES");
             System.out.println("2 - Back");
             System.out.print("Enter Number: ");
@@ -236,8 +238,9 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Asymmetric Cryption Methode");
-            System.out.println("-------------------------\n");
+            System.out.println("File Cryption Menu");
+            System.out.println("Select Asymmetric Cryption Methode");
+            System.out.println("----------------------------------\n");
             System.out.println("1 - RSA");
             System.out.println("2 - Back");
             System.out.print("Enter Number: ");
@@ -266,27 +269,35 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose Key Generator");
-            System.out.println("-------------------------\n");
-            System.out.println("1 - SHA3-Keccak");
-            System.out.println("2 - RSA Private/Public Keys");
-            System.out.println("3 - Back");
+            System.out.println("Select Key Generator");
+            System.out.println("--------------------\n");
+            System.out.println("1 - SHA3-Keccak Key as Text");
+            System.out.println("2 - SHA3-Keccak Key as File");
+            System.out.println("3 - RSA Keys as Text");
+            System.out.println("4 - RSA Keys as Files");
+            System.out.println("5 - Back");
             System.out.print("Enter Number: ");
             while (!scanner.hasNextInt()) {
-                System.out.print("That's not a number! Enter 1,2 or 3:");
+                System.out.print("That's not a number! Enter 1,2,3,4 or 5:");
                 scanner.next();
             }
             choice = scanner.nextInt();
-        } while (choice < 1 || choice > 3);
+        } while (choice < 1 || choice > 5);
 
         switch (choice) {
             case 1:
-                GenSHA3UI.genSHA3Key(this);
+                GenSHA3UI.genSHA3KeyText(this);
                 break;
             case 2:
-                GenRsaKeyUI.genRSAKeys(this);
+                GenSHA3UI.genSHA3KeyFile(this);
                 break;
             case 3:
+                GenRsaKeyUI.genRSAKeysText(this);
+                break;
+            case 4:
+                GenRsaKeyUI.genRSAKeysFile(this);
+                break;
+            case 5:
                 this.run();
                 break;
             default:
@@ -300,8 +311,8 @@ public class CryptobyConsole implements CryptobyUI {
 
         do {
             System.out.println("\n");
-            System.out.println("Choose PrimeTest Methode");
-            System.out.println("-------------------------\n");
+            System.out.println("Select PrimeTest Methode");
+            System.out.println("------------------------\n");
             System.out.println("1 - Miller Rabin");
             System.out.println("2 - Back");
             System.out.print("Enter Number: ");
