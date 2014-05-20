@@ -37,8 +37,6 @@ UI Classes and Methodes are tested manual.
 1. Performance issues with creating big RSA keys and RSA decryption
 2. Sometimes problem with large memory usage
 
-Nothing at the moment
-
 ### Importent Links:
 * http://www.codeplanet.eu/tutorials/cpp/51-advanced-encryption-standard.html AES implementation explained
 * http://www.codeplanet.eu/files/flash/Rijndael_Animation_v4_eng.swf Flash AES eexplained
