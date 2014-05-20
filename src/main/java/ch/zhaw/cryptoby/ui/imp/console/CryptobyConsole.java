@@ -46,7 +46,7 @@ public class CryptobyConsole implements CryptobyUI {
         int choice;
 
         do {
-            System.out.println("\n");
+            System.out.println("Fork me on Github: https://github.com/Reesli/Cryptoby/fork\n");
             System.out.println("Cryptoby - Crypt your Stuff");
             System.out.println("---------------------------\n");
             System.out.println("1 - Crypt Files");
