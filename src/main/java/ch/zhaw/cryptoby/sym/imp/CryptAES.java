@@ -45,6 +45,8 @@ public class CryptAES implements CryptSym {
     @Override
     public byte[] encrypt(byte[] plainInput, byte[] key) {
         int inputLength = plainInput.length;
+        int percentProgress;
+        int prevPercent = -1;
         byte[] inputLengthByte = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(inputLength).array();
         int restInput = plainInput.length % nBytes;
         byte[] exKey = initKeyExpand(key);
@@ -80,7 +82,16 @@ public class CryptAES implements CryptSym {
         System.arraycopy(inputLengthByte, 0, cryptOutput, outputLength - nBytes * 2, 4);
 
         // Encrypt every Block in CBC Mode
-        for (int i = 0; i < outputLength - nBytes * 1; i += nBytes) {
+        for (int i = 0; i < outputLength - nBytes; i += nBytes) {
+
+            // Convert i to percent for ProgressBar
+            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
+
+            // Print ProgressBar
+            if (percentProgress > prevPercent) {
+                CryptobyHelper.printProgressBar(percentProgress);
+            }
+            prevPercent = percentProgress;
 
             // Copy current block in to Cipher Array
             System.arraycopy(nextBlock, 0, cipher, 0, nBytes);
@@ -97,11 +108,14 @@ public class CryptAES implements CryptSym {
             // Copy Cipher back in decryptOutput Array
             System.arraycopy(cipher, 0, cryptOutput, i, nBytes);
         }
+        CryptobyHelper.printProgressBar(100);
         return cryptOutput;
     }
 
     @Override
     public byte[] decrypt(byte[] cryptInput, byte[] key) {
+        int percentProgress;
+        int prevPercent = -1;
         byte[] exKey = initKeyExpand(key);
         byte[] decryptOutput = cryptInput;
         int outputLength = decryptOutput.length;
@@ -121,6 +135,15 @@ public class CryptAES implements CryptSym {
         System.arraycopy(initVector, 0, prevBlock, 0, nBytes);
 
         for (int i = 0; i < outputLength - nBytes; i += nBytes) {
+
+            // Convert i to percent for ProgressBar
+            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
+
+            // Print ProgressBar
+            if (percentProgress > prevPercent) {
+                CryptobyHelper.printProgressBar(percentProgress);
+            }
+            prevPercent = percentProgress;
 
             // Copy current block in to Cipher Array
             System.arraycopy(decryptOutput, i, cipher, 0, nBytes);
@@ -148,7 +171,7 @@ public class CryptAES implements CryptSym {
         } catch (RuntimeException exp) {
             plainOutput = cryptInput;
         }
-
+        CryptobyHelper.printProgressBar(100);
         return plainOutput;
     }
 
