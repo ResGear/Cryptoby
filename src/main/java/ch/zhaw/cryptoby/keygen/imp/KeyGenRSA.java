@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.keygen.imp;
 
 import ch.zhaw.cryptoby.core.CryptobyCore;
@@ -26,8 +25,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This class provides RSA key generation.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public class KeyGenRSA implements KeyGenAsym {
 
@@ -46,11 +46,22 @@ public class KeyGenRSA implements KeyGenAsym {
     private int keyByteSize;
     private final int cores;
 
-    public KeyGenRSA(CryptobyCore core) {
-        this.core = core;
-        this.cores = Runtime.getRuntime().availableProcessors();
+    /**
+     * Initial CryptobyCore object and available processor cores.
+     * 
+     * @param appCore Input CryptobyCore object which provides other objects of application.
+     */
+    public KeyGenRSA(CryptobyCore appCore) {
+        core = appCore;
+        cores = Runtime.getRuntime().availableProcessors();
     }
 
+    /**
+     * Generate RSA Private and Public Key with Size of keyBitSize.
+     *
+     * @param keyBitSize Size of RSA key which will be generated. Allowed are
+     * 1024, 2048 and 4096
+     */
     @Override
     public void initGenerator(int keyBitSize) {
         if (keyBitSize != 1024 && keyBitSize != 2048 && keyBitSize != 4096) {
@@ -66,15 +77,19 @@ public class KeyGenRSA implements KeyGenAsym {
         byte[] dByte = d.toByteArray();
 
         privKeyByte = new byte[dByte.length + pubKeyByte.length];
-        
+
         // Copy D ByteArray into first Part and N ByteArray into second Part
         System.arraycopy(dByte, 0, privKeyByte, 0, dByte.length);
         System.arraycopy(pubKeyByte, 0, privKeyByte, dByte.length, pubKeyByte.length);
-        
+
         // Generate Private Key to Hex String
         privKey = CryptobyHelper.bytesToHexString(privKeyByte);
     }
 
+    /**
+     *
+     * @return Return private key as Hex String
+     */
     @Override
     public String getPrivateKey() {
         try {
@@ -84,6 +99,10 @@ public class KeyGenRSA implements KeyGenAsym {
         }
     }
 
+    /**
+     *
+     * @return Return public key as Hex String
+     */
     @Override
     public String getPublicKey() {
         try {
@@ -93,6 +112,10 @@ public class KeyGenRSA implements KeyGenAsym {
         }
     }
 
+    /**
+     *
+     * @return Return private key as byte array
+     */
     @Override
     public byte[] getPrivateKeyByte() {
         try {
@@ -102,6 +125,10 @@ public class KeyGenRSA implements KeyGenAsym {
         }
     }
 
+    /**
+     *
+     * @return Return public key as byte array
+     */
     @Override
     public byte[] getPublicKeyByte() {
         try {
@@ -167,7 +194,7 @@ public class KeyGenRSA implements KeyGenAsym {
         for (int i = 0; i < cores; i++) {
             primeThreads[i].start();
         }
-        
+
         for (int i = 0; i < cores; i++) {
             try {
                 primeThreads[i].join();

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ch.zhaw.cryptoby.core;
 
 import ch.zhaw.cryptoby.asym.imp.CryptRSA;
@@ -32,8 +31,11 @@ import ch.zhaw.cryptoby.ui.imp.console.CryptobyConsole;
 import ch.zhaw.cryptoby.ui.itf.CryptobyUI;
 
 /**
+ * This class create objects of all interfaces in this application with in the
+ * client object defined implementation of these interfaces. User Interfaces get
+ * and set all methods of other interfaces over this core object.
  *
- * @author Toby
+ * @author Tobias Rees
  */
 public final class CryptobyCore {
 
@@ -45,6 +47,13 @@ public final class CryptobyCore {
     private CryptobyClient client;
     private CryptobyUI ui;
 
+    /**
+     * Constructor set given CryptobyClient object to client variable and
+     * initialize every interface with from client given implementation
+     *
+     * @param client Need CryptobyClient object with defined implementation of
+     * used interfaces
+     */
     public CryptobyCore(CryptobyClient client) {
         this.setClient(client);
         this.initCryptSym();
@@ -55,6 +64,9 @@ public final class CryptobyCore {
         this.initUI();
     }
 
+    /**
+     * Initialize symmetric cryptologic mode which is defined in client object
+     */
     public void initCryptSym() {
         if (this.client.getCryptSymArt().equals("AES")) {
             this.setCryptSym(new CryptAES());
@@ -63,6 +75,9 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     * Initialize asymmetric cryptologic mode which is defined in client object
+     */
     public void initCryptAsym() {
         if (this.client.getCryptAsymArt().equals("RSA")) {
             this.setCryptAsym(new CryptRSA());
@@ -71,6 +86,9 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     * Initialize symmetric key generator which is defined in client object
+     */
     public void initSymKey() {
         if (this.client.getKeySymArt().equals("SHA3")) {
             this.setKeyGenSym(new KeyGenSHA3());
@@ -79,6 +97,9 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     * Initialize asymmetric key generator which is defined in client object
+     */
     public void initAsymKey() {
         if (this.client.getKeySymArt().equals("RSA")) {
             this.setKeyGenAsym(new KeyGenRSA(this));
@@ -87,6 +108,9 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     * Initialize Primetest mode which is defined in client object
+     */
     public void initPrimeTest() {
         if (this.client.getPrimTestArt().equals("MillerRabin")) {
             this.setPrimetest(new MillerRabin(this.client.getPrimetestrounds()));
@@ -95,6 +119,9 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     * Initialize User Interface which is defined in client object
+     */
     public void initUI() {
         if (this.client.getUi().equals("console")) {
             this.ui = new CryptobyConsole(this);
@@ -103,14 +130,26 @@ public final class CryptobyCore {
         }
     }
 
+    /**
+     *
+     * @return Get Primetest object
+     */
     public PrimeTest getPrimetest() {
         return primetest;
     }
 
+    /**
+     *
+     * @param primetest Set implementation Primetest object
+     */
     public void setPrimetest(PrimeTest primetest) {
         this.primetest = primetest;
     }
 
+    /**
+     *
+     * @return Get CryptobyClient object
+     */
     public CryptobyClient getClient() {
         return client;
     }
@@ -119,42 +158,82 @@ public final class CryptobyCore {
         this.client = client;
     }
 
+    /**
+     *
+     * @return Get User Interface object
+     */
     public CryptobyUI getUi() {
         return ui;
     }
 
+    /**
+     *
+     * @param ui Set implementation User Interface object
+     */
     public void setUi(CryptobyUI ui) {
         this.ui = ui;
     }
 
+    /**
+     *
+     * @return Get object of symmetric key generator implementation
+     */
     public KeyGenSym getKeyGenSym() {
         return keyGenSym;
     }
 
+    /**
+     *
+     * @param keyGenSym Set object of symmetric key generator implementation
+     */
     public void setKeyGenSym(KeyGenSym keyGenSym) {
         this.keyGenSym = keyGenSym;
     }
 
+    /**
+     *
+     * @return Get object of asymmetric key generator implementation
+     */
     public KeyGenAsym getKeyGenAsym() {
         return keyGenAsym;
     }
 
+    /**
+     *
+     * @param keyGenAsym Set object of asymmetric key generator implementation
+     */
     public void setKeyGenAsym(KeyGenAsym keyGenAsym) {
         this.keyGenAsym = keyGenAsym;
     }
 
+    /**
+     *
+     * @return Get object of symmetric cryptology mode implementation
+     */
     public CryptSym getCryptSym() {
         return cryptSym;
     }
 
+    /**
+     *
+     * @param cryptSym Set object of symmetric cryptology mode implementation
+     */
     public void setCryptSym(CryptSym cryptSym) {
         this.cryptSym = cryptSym;
     }
 
+    /**
+     *
+     * @return Get object of asymmetric cryptology mode implementation
+     */
     public CryptAsym getCryptAsym() {
         return cryptAsym;
     }
 
+    /**
+     *
+     * @param cryptAsym Set object of asymmetric cryptology mode implementation
+     */
     public void setCryptAsym(CryptAsym cryptAsym) {
         this.cryptAsym = cryptAsym;
     }

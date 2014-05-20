@@ -22,8 +22,9 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
- *
- * @author Toby
+ * This class provides SHA3-Keccak hash permutation.
+ * 
+ * @author Tobias Rees
  */
 public class KeyGenSHA3 implements KeyGenSym {
 
@@ -56,6 +57,12 @@ public class KeyGenSHA3 implements KeyGenSym {
     private static int hashLength;
     private static int bitsInQueue;
 
+    /**
+     * Generate a random SHA3 Hash/Key as String.
+     * 
+     * @param keySize Size of hash. Allowed are 224, 256, 384 and 512.
+     * @return SHA3 hash as Hex String
+     */
     @Override
     public String generateKey(int keySize) {
         SecureRandom scRandom = new SecureRandom();
@@ -67,6 +74,13 @@ public class KeyGenSHA3 implements KeyGenSym {
         return output;
     }
 
+    /**
+     * Generate a SHA3 Hash/Key depend on password input as String.
+     *
+     * @param keySize Size of hash. Allowed are 224, 256, 384 and 512.
+     * @param password String password which will be hashed
+     * @return SHA3 hash as Hex String
+     */
     @Override
     public String generateKey(int keySize, String password) {
         byte[] bytePW = password.getBytes();
@@ -76,6 +90,12 @@ public class KeyGenSHA3 implements KeyGenSym {
         return output;
     }
 
+    /**
+     * Generate a random SHA3 Hash/Key as byte array.
+     *
+     * @param keySize Size of hash. Allowed are 224, 256, 384 and 512.
+     * @return SHA3 hash as byte array
+     */
     @Override
     public byte[] generateKeyByte(int keySize) {
         SecureRandom scRandom = new SecureRandom();
@@ -87,6 +107,13 @@ public class KeyGenSHA3 implements KeyGenSym {
         return output;
     }
 
+    /**
+     * Generate a SHA3 Hash/Key depend on password input as byte array.
+     *
+     * @param keySize Size of hash. Allowed are 224, 256, 384 and 512.
+     * @param password String password which will be hashed
+     * @return SHA3 hash as byte array
+     */
     @Override
     public byte[] generateKeyByte(int keySize, String password) {
         byte[] bytePW = password.getBytes();
