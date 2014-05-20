@@ -1,7 +1,7 @@
 Project: Cryptoby
 ========
 
-__Cryptoby__ is a simple Java Tool for end- and decryption of any files.
+__Cryptoby__ is a simple Java Tool for en- and decryption of any files.
 
 It uses two forms of encryption:  
 * A __symmetric__ encryption based on AES-256 (http://www.cryptopp.com/wiki/Aes)
@@ -15,22 +15,27 @@ That means, it doesn't use any cryptographic libraries from Java or elsewhere. F
 
 ## Project Setup
 
-1. Project Methode: Scum (http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1)
+1. Project Methode: Scrum (http://app.yodiz.com/home/pages/all-project.vz?cid=10160&pid=1)
 2. Documentations on Google Drive: https://drive.google.com/#folders/0B1I433N3y2uSOHZfTGlsUG83c00
 2. IDE: Netbeans 8
-3. Language: Java (JDK 1.7)
+3. Language: Java (JDK 1.8)
 4. Build-Management-Tool: Maven
 5. Design Pattern: Stragety http://de.wikipedia.org/wiki/Strategie_(Entwurfsmuster)
 
 ## Testing
 
-_Create Test Suite for whole Application_
-
 ### JUnit Tests
 
-Test Public Functions in every Class
+Created JUnit Tests for every public method in all Classes except UI Classes.
 
-## Troubleshooting & Useful Tools
+### Manuel Tests
+
+UI Classes and Methodes are tested manual.
+
+## Pendent Issues
+
+1. Performance issues with creating big RSA keys and RSA decryption
+2. Sometimes problem with large memory usage
 
 Nothing at the moment
 
