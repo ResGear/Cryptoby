@@ -56,6 +56,7 @@ public final class CryptobyClient {
      */
     public static void main(String[] args) {
         CryptobyClient client = new CryptobyClient();
+        System.out.println("Fork me on Github: https://github.com/Reesli/Cryptoby/fork");
         client.getCore().getUi().run();
     }
 
