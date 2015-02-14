@@ -18,7 +18,7 @@ package keygen.imp;
 
 import core.CryptobyCore;
 import helper.CryptobyHelper;
-import helper.GenPrimeThread;
+import prime.imp.GenPrimeThread;
 import keygen.itf.KeyGenAsym;
 import java.math.BigInteger;
 import java.util.logging.Level;
