@@ -17,7 +17,6 @@
 
 package prime.imp;
 
-import prime.imp.MillerRabin;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import org.junit.Test;
