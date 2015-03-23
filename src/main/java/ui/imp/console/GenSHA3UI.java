@@ -198,7 +198,7 @@ public class GenSHA3UI {
         System.out.println("Enter Path to saving Private Key(Type '" + quit + "' to Escape):");
         scanner.useDelimiter("\n");
         if (scanner.hasNext(quit)) {
-            GenSHA3UI.genSHA3KeyFile(console);
+            console.menuGenKey();
         }
         keyPath = scanner.next();
 
@@ -219,7 +219,7 @@ public class GenSHA3UI {
             CryptobyFileManager.putKeyToFile(keyPath, key);
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
-            GenSHA3UI.genSHA3KeyFile(console);
+            console.menuGenKey();
         }
         System.out.println("\nAES Key File saved to this Path:");
         System.out.println(keyPath);
