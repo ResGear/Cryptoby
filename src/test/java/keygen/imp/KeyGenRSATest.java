@@ -16,7 +16,6 @@
  */
 package keygen.imp;
 
-import keygen.imp.KeyGenRSA;
 import client.CryptobyClient;
 import core.CryptobyCore;
 import helper.CryptobyHelper;
@@ -77,6 +76,27 @@ public class KeyGenRSATest {
             byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
             assertTrue(publicKey.length == 256);  
             assertTrue(privateKey.length == 512);
+        }
+    }
+        
+    /**
+     * Test of genPrivateKey method, of class KeyGenRSA.
+     */
+    @Test
+    public void testGenPrivatePublicKey4096() {
+        for (int i = 0; i < rounds; i++) {
+            System.out.println("genKey4096bit");
+            int keySize = 4096;
+            CryptobyClient client = new CryptobyClient();
+            CryptobyCore core = new CryptobyCore(client);
+            KeyGenRSA instance = new KeyGenRSA(core);
+            instance.initGenerator(keySize);
+            String resultPriv = instance.getPrivateKey();
+            String resultPub = instance.getPublicKey();
+            byte[] publicKey = CryptobyHelper.hexStringToBytes(resultPub);
+            byte[] privateKey = CryptobyHelper.hexStringToBytes(resultPriv);
+            assertTrue(publicKey.length == 512);  
+            assertTrue(privateKey.length == 1024);
         }
     }
 
