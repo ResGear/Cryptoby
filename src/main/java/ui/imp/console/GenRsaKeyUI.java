@@ -179,7 +179,7 @@ public class GenRsaKeyUI {
             CryptobyFileManager.putKeyToFile(privateKeyPath, privateKey);
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
-            RsaUI.rsaCrypterFile(console);
+            console.menuGenKey();
         }
         System.out.println("\nPrivate Key File saved to this Path:");
         System.out.println(privateKeyPath);
@@ -189,7 +189,7 @@ public class GenRsaKeyUI {
             CryptobyFileManager.putKeyToFile(publicKeyPath, publicKey);
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
-            RsaUI.rsaCrypterFile(console);
+            console.menuGenKey();
         }
         System.out.println("\nPublic Key File saved to this Path:");
         System.out.println(publicKeyPath);
