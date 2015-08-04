@@ -54,7 +54,7 @@ public class GenPrimeThread extends Thread {
     @Override
     public void run() {
         do {
-            prime = new BigInteger(halfKeyBitSize - 1, 0, scRandom);
+            prime = new BigInteger(halfKeyBitSize - 1, 1, scRandom);
         } while (!(core.getPrimetest().isPrime(prime)) || prime.toByteArray().length != keyByteSize);
     }
 

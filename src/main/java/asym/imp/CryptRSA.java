@@ -95,9 +95,9 @@ public class CryptRSA implements CryptAsym {
                 percentProgress = (int) (((float) i / (float) plainBlocksLen) * 100);
 
                 // Print ProgressBar
-                if (percentProgress > prevPercent) {
-                    CryptobyHelper.printProgressBar(percentProgress);
-                }
+               // if (percentProgress > prevPercent) {
+               //     CryptobyHelper.printProgressBar(percentProgress);
+                //}
                 prevPercent = percentProgress;
                 // Copy Part of PlainInput in to Block
                 System.arraycopy(plainInput, i, plainBlock, 0, plainBlockSize);
@@ -158,7 +158,7 @@ public class CryptRSA implements CryptAsym {
         } else {
             cryptOutput = encryptBlock(plainInput, n);
         }
-        CryptobyHelper.printProgressBar(100);
+        //CryptobyHelper.printProgressBar(100);
         return cryptOutput;
     }
 
@@ -220,9 +220,9 @@ public class CryptRSA implements CryptAsym {
             for (int i = 0; i < dataBlocksLen; i += dataBlockSize) {
 
                 // Convert i to percent for ProgressBar
-                percentProgress = (int) (((float) i / (float) dataBlocksLen) * 100);
+                //percentProgress = (int) (((float) i / (float) dataBlocksLen) * 100);
                 // Print ProgressBar
-                CryptobyHelper.printProgressBar(percentProgress);
+                //CryptobyHelper.printProgressBar(percentProgress);
 
                 System.arraycopy(cryptInput, i, dataBlock, 0, dataBlockSize);
                 // XOR with prevBlock
@@ -271,7 +271,7 @@ public class CryptRSA implements CryptAsym {
             plainOutput = decryptBlock(cryptInput, n, d);
         }
         // Print ProgressBar
-        CryptobyHelper.printProgressBar(100);
+        //CryptobyHelper.printProgressBar(100);
         return plainOutput;
     }
 

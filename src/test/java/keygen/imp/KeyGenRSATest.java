@@ -34,7 +34,7 @@ public class KeyGenRSATest {
      *
      */
     public KeyGenRSATest() {
-        rounds = 1;
+        rounds = 10;
     }
 
     /**

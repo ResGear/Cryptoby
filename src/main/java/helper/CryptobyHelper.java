@@ -46,6 +46,7 @@ public class CryptobyHelper {
         for (byte b : bytes) {
             formatter.format("%02x", b);
         }
+        formatter.close();
         return sb.toString();
     }
 

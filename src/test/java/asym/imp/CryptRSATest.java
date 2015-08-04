@@ -22,6 +22,8 @@ import core.CryptobyCore;
 import helper.CryptobyHelper;
 import keygen.imp.KeyGenRSA;
 import java.util.Arrays;
+import java.util.Random;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -104,15 +106,18 @@ public class CryptRSATest {
         CryptobyClient client = new CryptobyClient();
         CryptobyCore core = new CryptobyCore(client);
         KeyGenRSA generator = new KeyGenRSA(core);
-        generator.initGenerator(keySize);
-        byte[] plainInput = new byte[10000];
-        byte[] publicKey = generator.getPublicKeyByte();
-        byte[] privateKey = generator.getPrivateKeyByte();
-        CryptRSA rsa = new CryptRSA();
-        byte[] expResult = plainInput;
-        byte[] result = rsa.encrypt(plainInput, publicKey);
-        result = rsa.decrypt(result, privateKey);
-        assertArrayEquals(expResult, result);
+		Random rand = new Random();
+		for(int i = 129;i<130;i++){
+	        generator.initGenerator(keySize);
+	        byte[] expResult = new byte[i];
+	        byte[] publicKey = generator.getPublicKeyByte();
+	        byte[] privateKey = generator.getPrivateKeyByte();
+	        CryptRSA rsa = new CryptRSA();
+	        rand.nextBytes(expResult);
+	        byte[] result = rsa.encrypt(expResult, publicKey);
+	        result = rsa.decrypt(result, privateKey);
+	        assertArrayEquals(expResult, result);
+		}
     }
 
     /**
