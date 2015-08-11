@@ -97,6 +97,7 @@ public class GenRsaKeyUI {
         CryptobyHelper.pressEnter();
 
         // Back to Menu Choose PrimeTest
+        scanner.close();
         console.menuGenKey();
     }
 
@@ -196,7 +197,7 @@ public class GenRsaKeyUI {
 
         // Enter for Continues
         CryptobyHelper.pressEnter();
-
+        scanner.close();
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
     }

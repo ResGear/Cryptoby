@@ -77,6 +77,7 @@ public class MillerRabinUI {
         // Back to Menu Choose PrimeTest
         System.out.println("\nGo back to Primetest Menu: Press Enter");
         CryptobyHelper.pressEnter();
+        scanner.close();
         console.menuPrimeTest();
     }
     

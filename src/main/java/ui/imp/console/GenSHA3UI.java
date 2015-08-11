@@ -120,7 +120,7 @@ public class GenSHA3UI {
         } catch (IOException ex) {
             Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        scanner.close();
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
     }
@@ -192,12 +192,13 @@ public class GenSHA3UI {
         } else {
             password = "";
         }
-        
+        scanner.close();
         // Input Path for saving Private Key
         scanner = new Scanner(System.in);
         System.out.println("Enter Path to saving Private Key(Type '" + quit + "' to Escape):");
         scanner.useDelimiter("\n");
         if (scanner.hasNext(quit)) {
+        	scanner.close();
             console.menuGenKey();
         }
         keyPath = scanner.next();
@@ -219,6 +220,7 @@ public class GenSHA3UI {
             CryptobyFileManager.putKeyToFile(keyPath, key);
         } catch (IOException ex) {
             CryptobyHelper.printIOExp();
+            scanner.close();
             console.menuGenKey();
         }
         System.out.println("\nAES Key File saved to this Path:");
@@ -228,9 +230,10 @@ public class GenSHA3UI {
         try {
             System.in.read();
         } catch (IOException ex) {
+        	scanner.close();
             Logger.getLogger(CryptobyConsole.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        scanner.close();
         // Back to Menu Choose PrimeTest
         console.menuGenKey();
     }
