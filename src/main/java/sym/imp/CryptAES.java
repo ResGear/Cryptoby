@@ -18,6 +18,7 @@ package sym.imp;
 
 import helper.CryptobyHelper;
 import sym.itf.CryptSym;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.SecureRandom;
@@ -93,14 +94,14 @@ public class CryptAES implements CryptSym {
         // Encrypt every Block in CBC Mode
         for (int i = 0; i < outputLength - nBytes; i += nBytes) {
 
-            // Convert i to percent for ProgressBar
-            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
-
-            // Print ProgressBar
-            if (percentProgress > prevPercent) {
-                CryptobyHelper.printProgressBar(percentProgress);
-            }
-            prevPercent = percentProgress;
+//            // Convert i to percent for ProgressBar
+//            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
+//
+//            // Print ProgressBar
+//            if (percentProgress > prevPercent) {
+//                CryptobyHelper.printProgressBar(percentProgress);
+//            }
+//            prevPercent = percentProgress;
 
             // Copy current block in to Cipher Array
             System.arraycopy(nextBlock, 0, cipher, 0, nBytes);
@@ -117,7 +118,7 @@ public class CryptAES implements CryptSym {
             // Copy Cipher back in decryptOutput Array
             System.arraycopy(cipher, 0, cryptOutput, i, nBytes);
         }
-        CryptobyHelper.printProgressBar(100);
+//        CryptobyHelper.printProgressBar(100);
         return cryptOutput;
     }
 
@@ -133,16 +134,17 @@ public class CryptAES implements CryptSym {
         int percentProgress;
         int prevPercent = -1;
         byte[] exKey = initKeyExpand(key);
-        byte[] decryptOutput = cryptInput;
-        int outputLength = decryptOutput.length;
+        int inputLength = cryptInput.length;
+        byte[] decryptOutput = new byte[inputLength];
+        System.arraycopy(cryptInput, 0, decryptOutput, 0, inputLength);
         byte[] cipher = new byte[nBytes];
         byte[] inputLengthByte = new byte[nBytes];
-        byte[] plainOutput;
+        byte[] plainOutput = null;
         byte[] initVector = new byte[nBytes];
         byte[] prevBlock = new byte[nBytes];
 
         // Add the initVector Array in to last BlockArray and encrypt it
-        System.arraycopy(decryptOutput, outputLength - nBytes, initVector, 0, nBytes);
+        System.arraycopy(decryptOutput, inputLength - nBytes, initVector, 0, nBytes);
 
         // Decrypt last BlockArray
         initVector = this.decryptCipher(initVector, exKey);
@@ -150,16 +152,16 @@ public class CryptAES implements CryptSym {
         // Copy initVector to prevBlock Array
         System.arraycopy(initVector, 0, prevBlock, 0, nBytes);
 
-        for (int i = 0; i < outputLength - nBytes; i += nBytes) {
+        for (int i = 0; i < inputLength - nBytes; i += nBytes) {
 
-            // Convert i to percent for ProgressBar
-            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
-
-            // Print ProgressBar
-            if (percentProgress > prevPercent) {
-                CryptobyHelper.printProgressBar(percentProgress);
-            }
-            prevPercent = percentProgress;
+//            // Convert i to percent for ProgressBar
+//            percentProgress = (int) (((float) i / (float) (outputLength - nBytes)) * 100);
+//
+//            // Print ProgressBar
+//            if (percentProgress > prevPercent) {
+//                CryptobyHelper.printProgressBar(percentProgress);
+//            }
+//            prevPercent = percentProgress;
 
             // Copy current block in to Cipher Array
             System.arraycopy(decryptOutput, i, cipher, 0, nBytes);
@@ -168,7 +170,7 @@ public class CryptAES implements CryptSym {
             cipher = this.decryptCipher(cipher, exKey);
 
             // CBC Mode: XOR next PlainBlock with encrypted Cipher
-            if (i + nBytes < outputLength) {
+            if (i + nBytes < inputLength) {
                 cipher = CryptobyHelper.xorByteArrays(prevBlock, cipher);
                 System.arraycopy(decryptOutput, i, prevBlock, 0, nBytes);
             }
@@ -179,7 +181,7 @@ public class CryptAES implements CryptSym {
 
         // Read last Index of encryptet Output  
         // and use the Integer Content for lenght of plainOutput
-        System.arraycopy(cryptInput, outputLength - nBytes * 2, inputLengthByte, 0, 4);
+        System.arraycopy(decryptOutput, inputLength - nBytes * 2, inputLengthByte, 0, 4);
         int lengthOriginArray = ByteBuffer.wrap(inputLengthByte).order(ByteOrder.BIG_ENDIAN).getInt();
         try {
             plainOutput = new byte[lengthOriginArray];
@@ -187,7 +189,7 @@ public class CryptAES implements CryptSym {
         } catch (RuntimeException exp) {
             plainOutput = cryptInput;
         }
-        CryptobyHelper.printProgressBar(100);
+//        CryptobyHelper.printProgressBar(100);
         return plainOutput;
     }
 
@@ -416,5 +418,5 @@ public class CryptAES implements CryptSym {
         }
         return array;
     }
-
+    
 }
