@@ -38,10 +38,9 @@ public class PerfMeter {
 			System.gc();
 		}
 		stopwatch.stop();
-		
-		System.out.println("Runtime ms;Memory KB");
+		long totalmem;
+		System.out.println("Round;Runtime ms;Memory KB");
 		for (int repeat = 0; repeat < rounds; ++repeat) {
-			System.gc();
 			stopwatch.reset();
 			stopwatch.start();
 			try {
@@ -57,9 +56,13 @@ public class PerfMeter {
 				e.printStackTrace();
 			}
 			stopwatch.stop();
+			totalmem = getUsedMemoryKB();
 			System.gc();
-			long memory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024;
-			System.out.println(stopwatch.getTime() + ";" + memory);
+			System.out.println((1+repeat)+";"+stopwatch.getTime() + ";" + totalmem);
 		}
+	}
+	
+	private static long getUsedMemoryKB(){
+		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024;
 	}
 }
