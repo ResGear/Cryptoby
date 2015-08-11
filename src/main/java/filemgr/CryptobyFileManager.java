@@ -49,6 +49,7 @@ public class CryptobyFileManager {
         int numByte = bis.available();
         byte[] output = new byte[numByte];
         bis.read(output, 0, numByte);
+        bis.close();
         return output;
     }
 
