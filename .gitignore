@@ -1,2 +1,8 @@
 /target/
 /vpproject/
+/perfTestFile
+/.metadata/
+/.settings/
+/.classpath
+/.DS_Store
+/.project
