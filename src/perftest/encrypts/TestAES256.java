@@ -43,7 +43,7 @@ public class TestAES256 {
 
 	@Test
 	public void testRun(){
-		int rounds = 1;
+		int rounds = 50;
 		
 		System.out.println("Test Performance AES Enc/Dec");
 		System.out.println("Rounds: "+rounds);

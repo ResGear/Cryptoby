@@ -92,7 +92,7 @@ public class TestFileManager {
 
 	@Test
 	public void testRun(){
-		int rounds = 20;
+		int rounds = 50;
 
 		System.out.println("Test Performance Cryptoby FileManager");
 		System.out.println("Rounds: "+rounds);

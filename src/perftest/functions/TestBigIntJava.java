@@ -43,7 +43,7 @@ public class TestBigIntJava {
 
 	@Test
 	public void testRun(){
-		int rounds = 20;
+		int rounds = 50;
 		
 		System.out.println("Test Performance Java BigInteger");
 		System.out.println("Rounds: "+rounds);
